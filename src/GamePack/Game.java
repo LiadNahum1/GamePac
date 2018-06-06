@@ -28,8 +28,9 @@ public class Game extends JFrame implements ActionListener, KeyListener {
 	private RedGhost redGhost;
 	private YellowGhost yellowGhost;
 	private boolean start; 
+	private boolean isFruitsOn;
 	private Vector<Food> fruits; 
-	private RoadTile fruitsTile; 
+	private Vector<RoadTile> fruitsTiles; 
 
 	public static void main(String[]args) {
 		new Game(1);
@@ -41,26 +42,27 @@ public class Game extends JFrame implements ActionListener, KeyListener {
 		this.level = level; 
 		this.setBackground(Color.BLACK);
 		this.setSize(800,800);
-	
+
 		this.start = true; 
-		this.fruitsTile = new RoadTile(null);
+		this.isFruitsOn = false; 
+		this.fruitsTiles = new Vector<>();
 		initializeFruits();
 		initializeBoardTilesS();
 		initializeBoard();
 		if(level == 1) {
-			this.pacman = new NicePacman(new Pair(400,350),this.boardTiles); 
+			this.pacman = new NicePacman(new Pair(16,14),this.boardTiles); 
 		}
 		inisializeNeighborsMat();
 		InisializeGhosts();
-		this.timer = new PacTimer(this,greenGhost,redGhost,yellowGhost);
+		this.timer = new PacTimer(this);
 		this.addKeyListener(this);
 		this.setVisible(true);
 	}
 
 	private void InisializeGhosts() {
-		this.greenGhost = new GreenGhost(new Pair(375,400),pacman, new Pair(16,15), neighbors);
-		this.redGhost = new RedGhost(new Pair(350,400),pacman, new Pair(16,14), neighbors);
-		this.yellowGhost = new YellowGhost(new Pair(400,400),pacman, new Pair(16,16), neighbors);
+		this.greenGhost = new GreenGhost(pacman, new Pair(16,15), neighbors);
+		this.redGhost = new RedGhost(pacman, new Pair(16,14), neighbors);
+		this.yellowGhost = new YellowGhost(pacman, new Pair(16,16), neighbors);
 	}
 
 	public void initializeFruits() {
@@ -79,7 +81,7 @@ public class Game extends JFrame implements ActionListener, KeyListener {
 		for(int i=0;i<32;i++) {
 			for(int j=0;j<32;j++) {
 				neighbors[i][j]=findneighbors(i,j);
-				
+
 			}
 		}
 	}
@@ -110,78 +112,86 @@ public class Game extends JFrame implements ActionListener, KeyListener {
 
 	private void initializeBoardTile (int x,int y) {
 		if(boardTilesS [x][y] == "w")
-			boardTiles[x][y] =new WallTile(this.level);
+			boardTiles[x][y] =new WallTile(this.level, x, y);
 		if(boardTilesS [x][y] == "d")
-			boardTiles[x][y] =new RoadTile(new RegDot()); //regDot
+			boardTiles[x][y] =new RoadTile(x, y, new RegDot()); //regDot
 		if(boardTilesS [x][y] == "0")
-			boardTiles[x][y] =new RoadTile(null); //emptyTile
+			boardTiles[x][y] =new RoadTile(x,y,null); //emptyTile
 		if(boardTilesS[x][y] == "g")
-			boardTiles [x][y] = new GateTile();
+			boardTiles [x][y] = new GateTile(x,y);
 	}
 
 	public void drawFruits() {
 		Random rand = new Random();
-		int i =0;
-		int j=0;
-		BoardTile b = this.boardTiles[i][j];
-		while(!(b instanceof RoadTile) || ((RoadTile) b).getIsSomethingOn()) {
-			i = rand.nextInt(32);
-			j = rand.nextInt(32);
-			b = this.boardTiles[i][j];
-		}
-		if(b instanceof RoadTile) {
-			((RoadTile) b).setFood(this.fruits.remove(0));
-			this.fruitsTile= (RoadTile)b;
+		int x =0;
+		int y=0;
+		BoardTile b = this.boardTiles[x][y];
+		for(int i=0; i< this.fruits.size(); i = i+1) {
+			while(!(b instanceof RoadTile) || ((RoadTile) b).getIsSomethingOn()) {
+				x = rand.nextInt(32);
+				y = rand.nextInt(32);
+				b = this.boardTiles[x][y];
+			}
+			if(b instanceof RoadTile) {
+				((RoadTile) b).setFood(this.fruits.get(i));
+				this.fruitsTiles.add((RoadTile)b);
+			}
 		}
 	}
 	private void dimFruit() {
-		if(this.fruitsTile.getIsSomethingOn()) {
-			this.fruitsTile.dimElement();
+		for(int i=0; i<this.fruitsTiles.size(); i = i+1) {
+			this.fruitsTiles.get(i).dimElement();
 		}
-
+	}
+	private void disappearFruits() {
+		for(int i=0; i<this.fruitsTiles.size(); i = i+1) {
+			this.fruitsTiles.get(i).setFood(null);
+		}
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource().equals(this.timer.getGameTimer())) {
-			if(this.timer.getNumTicksGame() == 7) {
-				this.timer.getGreenGhostsTimer().start();
-				System.out.println("gren");}
-			if(this.timer.getNumTicksGame() == 10)
-				this.timer.getRedGhostsTimer().start();
-			if(this.timer.getNumTicksGame() == 13)
-				this.timer.getYellowGhostsTimer().start();
-		}
-		if(e.getSource().equals(this.timer.getDrowTimer())){
-			repaint();
-		}
-			if(e.getSource().equals(this.timer.getPacmanTimer())) {
+			int numOfTicks = this.timer.getNumOfTicks();
+			if(numOfTicks >= 7) {
+				if(numOfTicks % 6 == 0)
+					redGhost.move();
+				if(numOfTicks % 4 == 0)
+					yellowGhost.move();
+				if(numOfTicks % 2 == 0)
+					greenGhost.move();
+			}
+			
+			//fruits
+			if(numOfTicks  % 20 == 0) {
+				if(!this.fruits.isEmpty()) {
+					drawFruits();
+					this.isFruitsOn = true;
+					System.out.print("jgh");
+				}
+				else
+					this.isFruitsOn = false;
+			}
+			if(numOfTicks % 22 == 0 | numOfTicks % 23 == 0 | numOfTicks % 24 == 0 | numOfTicks % 25 == 0 ) { // dim
+				dimFruit();
+			}
+			if(numOfTicks % 26 ==0) { //disappear
+				disappearFruits();
+				this.isFruitsOn = false;
+			}
 			this.pacman.move();
 			repaint();
 		}
-		if(e.getSource().equals(this.timer.getFruitTimer())) {
-			if(this.timer.getNumTicksFruit() == 0) {
-				
-				if(this.fruits.isEmpty()) {
-					this.timer.getFruitTimer().stop();
-				}
-				else
-					drawFruits();
-			}
-			if(this.timer.getNumTicksFruit() >= 4 & this.timer.getNumTicksFruit() < 10) { //dim
-				dimFruit();
-			}
-			if(this.timer.getNumTicksFruit() == 10) {//disappear
-				this.fruitsTile.setFood(null);
-			}
-		}
+		/*if(e.getSource().equals(this.timer.getDrowTimer())){
+			repaint();
+		}*/
 	}
 
 
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if(e.getKeyCode() == KeyEvent.VK_SPACE) {
-			this.timer.start();
+			this.timer.getGameTimer().start();
 		}
 		else {
 			this.pacman.manageMovement(e);
@@ -203,7 +213,7 @@ public class Game extends JFrame implements ActionListener, KeyListener {
 		// TODO Auto-generated method stub
 
 	}
-	
+
 	public void paint(Graphics g){	
 		if(this.start) {
 			for(int i=0; i<this.boardTiles.length; i = i+1) {
@@ -214,51 +224,58 @@ public class Game extends JFrame implements ActionListener, KeyListener {
 			start = false; 
 		}
 		this.pacman.draw(this, g);
-		this.greenGhost.draw(this, g);
-		this.redGhost.draw(this, g);		
-		this.yellowGhost.draw(this, g);
-	}
+		for(int i=0; i<this.fruitsTiles.size(); i = i+1) {
+			g.drawImage(this.fruitsTiles.get(i).getImage(), this.fruitsTiles.get(i).getX(), this.fruitsTiles.get(i).getY(), this);
 
-	public BoardTile getBoardTile(Pair place) {
-		return this.boardTiles[place.getX()][place.getY()];
-	}
-	
-	public void initializeBoardTilesS() {
-		this.boardTilesS = new String[][] 
-				{{"w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w"},
-			{"w", "d","d","d","d","d","d","d","d","d","d","d","d","d","d","w","w","d","d","d","d","d","d","d","d","d","d","d","d","d","d","w"},
-			{"w", "d","w","w","w","w","d","w","w","w","w","w","w","w","d","w","w","d","w","w","w","w","w","w","w","d","w","w","w","w","d","w"},
-			{"w", "d","w","w","w","w","d","w","w","w","w","w","w","w","d","w","w","d","w","w","w","w","w","w","w","d","w","w","w","w","d","w"},
-			{"w", "d","w","w","w","w","d","w","w","w","w","w","w","w","d","w","w","d","w","w","w","w","w","w","w","d","w","w","w","w","d","w"},
-			{"w", "d","w","w","w","w","d","w","w","w","w","w","w","w","d","w","w","d","w","w","w","w","w","w","w","d","w","w","w","w","d","w"},
-			{"w", "d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","w"},
-			{"w", "d","w","w","w","w","d","w","d","w","w","w","w","w","w","w","w","w","w","w","w","w","w","d","w","d","w","w","w","w","d","w"},
-			{"w", "d","w","w","w","w","d","w","d","w","w","w","w","w","w","w","w","w","w","w","w","w","w","d","w","d","w","w","w","w","d","w"},
-			{"w", "d","d","d","d","d","d","w","d","d","d","d","d","d","d","w","w","d","d","d","d","d","d","d","w","d","w","w","w","w","d","w"},
-			{"w", "w","w","w","w","w","d","w","w","w","w","w","w","w","0","w","w","0","w","w","w","w","w","w","w","d","w","w","w","w","w","w"},
-			{"w", "w","w","w","w","w","d","w","w","w","w","w","w","w","0","w","w","0","w","w","w","w","w","w","w","d","w","w","w","w","w","w"},
-			{"w", "w","w","w","w","w","d","w","0","0","0","0","0","0","0","w","w","0","0","0","0","0","0","0","w","d","w","w","w","w","w","w"},
-			{"w", "w","w","w","w","w","d","w","0","w","w","w","w","w","0","w","w","0","w","w","w","w","w","0","w","d","w","w","w","w","w","w"},
-			{"w", "w","w","w","w","w","d","w","0","w","w","0","0","0","0","0","0","0","0","0","0","w","w","0","w","d","w","w","w","w","w","w"},
-			{"w", "w","w","w","w","w","d","0","0","w","w","0","w","w","w","g","g","w","w","w","0","w","w","0","w","0","w","w","w","w","w","w"},
-			{"w", "w","w","w","w","w","d","w","0","w","w","0","w","w","0","0","0","0","w","w","0","w","w","0","w","d","w","w","w","w","w","w"},
-			{"w", "w","w","w","w","w","d","w","0","w","w","0","w","w","w","w","w","w","w","w","0","w","w","0","w","d","w","w","w","w","w","w"},
-			{"w", "w","w","w","w","w","d","w","0","w","w","0","0","0","0","0","0","0","0","0","0","w","w","0","w","d","w","w","w","w","w","w"},
-			{"w", "w","w","w","w","w","d","w","0","w","w","w","w","w","w","w","w","w","w","w","w","w","w","0","w","d","w","w","w","w","w","w"},
-			{"w", "d","d","d","d","d","d","d","d","d","d","d","d","d","d","w","w","d","d","d","d","d","d","d","d","d","d","d","d","d","d","w"},
-			{"w", "d","w","w","w","w","d","w","w","w","w","w","w","w","d","w","w","d","w","w","w","w","w","w","w","d","w","w","w","w","d","w"},
-			{"w", "d","w","w","w","w","d","w","w","w","w","w","w","w","d","w","w","d","w","w","w","w","w","w","w","d","w","w","w","w","d","w"},
-			{"w", "d","d","d","w","w","d","d","d","d","d","d","d","d","d","w","w","d","d","d","d","d","d","d","d","d","w","w","d","d","d","w"},
-			{"w", "w","w","d","w","w","d","w","d","w","w","w","w","w","w","w","w","w","w","w","w","w","w","d","w","d","w","w","d","w","w","w"},
-			{"w", "d","d","d","w","w","d","w","d","d","d","d","d","d","d","w","w","d","d","d","d","d","d","d","w","d","w","w","d","d","d","w"},
-			{"w", "w","w","d","w","w","d","w","d","w","w","w","w","w","d","w","w","d","w","w","w","w","w","d","w","d","w","w","d","w","w","w"},
-			{"w", "d","d","d","d","d","d","w","d","d","d","d","d","d","d","w","w","d","d","d","d","d","d","d","w","d","d","d","d","d","d","w"},
-			{"w", "d","w","w","w","w","w","w","w","w","w","w","w","w","d","w","w","d","w","w","w","w","w","w","w","w","w","w","w","w","d","w"},
-			{"w", "d","w","w","w","w","w","w","w","w","w","w","w","w","d","w","w","d","w","w","w","w","w","w","w","w","w","w","w","w","d","w"},
-			{"w", "d","d","d","d","d","d","d","d","d","d","d","d","d","d","w","w","d","d","d","d","d","d","d","d","d","d","d","d","d","d","w"},
-			{"w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w"}};
+		}
+		if(!isFruitsOn) {
+			this.fruitsTiles.clear();
+		}
+	this.greenGhost.draw(this, g);
+	this.redGhost.draw(this, g);		
+	this.yellowGhost.draw(this, g);
+}
 
-	}
+public BoardTile getBoardTile(Pair place) {
+	return this.boardTiles[place.getX()][place.getY()];
+}
+
+public void initializeBoardTilesS() {
+	this.boardTilesS = new String[][] 
+			{{"w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w"},
+		{"w", "d","d","d","d","d","d","d","d","d","d","d","d","d","d","w","w","d","d","d","d","d","d","d","d","d","d","d","d","d","d","w"},
+		{"w", "d","w","w","w","w","d","w","w","w","w","w","w","w","d","w","w","d","w","w","w","w","w","w","w","d","w","w","w","w","d","w"},
+		{"w", "d","w","w","w","w","d","w","w","w","w","w","w","w","d","w","w","d","w","w","w","w","w","w","w","d","w","w","w","w","d","w"},
+		{"w", "d","w","w","w","w","d","w","w","w","w","w","w","w","d","w","w","d","w","w","w","w","w","w","w","d","w","w","w","w","d","w"},
+		{"w", "d","w","w","w","w","d","w","w","w","w","w","w","w","d","w","w","d","w","w","w","w","w","w","w","d","w","w","w","w","d","w"},
+		{"w", "d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","w"},
+		{"w", "d","w","w","w","w","d","w","d","w","w","w","w","w","w","w","w","w","w","w","w","w","w","d","w","d","w","w","w","w","d","w"},
+		{"w", "d","w","w","w","w","d","w","d","w","w","w","w","w","w","w","w","w","w","w","w","w","w","d","w","d","w","w","w","w","d","w"},
+		{"w", "d","d","d","d","d","d","w","d","d","d","d","d","d","d","w","w","d","d","d","d","d","d","d","w","d","w","w","w","w","d","w"},
+		{"w", "w","w","w","w","w","d","w","w","w","w","w","w","w","0","w","w","0","w","w","w","w","w","w","w","d","w","w","w","w","w","w"},
+		{"w", "w","w","w","w","w","d","w","w","w","w","w","w","w","0","w","w","0","w","w","w","w","w","w","w","d","w","w","w","w","w","w"},
+		{"w", "w","w","w","w","w","d","w","0","0","0","0","0","0","0","w","w","0","0","0","0","0","0","0","w","d","w","w","w","w","w","w"},
+		{"w", "w","w","w","w","w","d","w","0","w","w","w","w","w","0","w","w","0","w","w","w","w","w","0","w","d","w","w","w","w","w","w"},
+		{"w", "w","w","w","w","w","d","w","0","w","w","0","0","0","0","0","0","0","0","0","0","w","w","0","w","d","w","w","w","w","w","w"},
+		{"w", "w","w","w","w","w","d","0","0","w","w","0","w","w","w","g","g","w","w","w","0","w","w","0","w","0","w","w","w","w","w","w"},
+		{"w", "w","w","w","w","w","d","w","0","w","w","0","w","w","0","0","0","0","w","w","0","w","w","0","w","d","w","w","w","w","w","w"},
+		{"w", "w","w","w","w","w","d","w","0","w","w","0","w","w","w","w","w","w","w","w","0","w","w","0","w","d","w","w","w","w","w","w"},
+		{"w", "w","w","w","w","w","d","w","0","w","w","0","0","0","0","0","0","0","0","0","0","w","w","0","w","d","w","w","w","w","w","w"},
+		{"w", "w","w","w","w","w","d","w","0","w","w","w","w","w","w","w","w","w","w","w","w","w","w","0","w","d","w","w","w","w","w","w"},
+		{"w", "d","d","d","d","d","d","d","d","d","d","d","d","d","d","w","w","d","d","d","d","d","d","d","d","d","d","d","d","d","d","w"},
+		{"w", "d","w","w","w","w","d","w","w","w","w","w","w","w","d","w","w","d","w","w","w","w","w","w","w","d","w","w","w","w","d","w"},
+		{"w", "d","w","w","w","w","d","w","w","w","w","w","w","w","d","w","w","d","w","w","w","w","w","w","w","d","w","w","w","w","d","w"},
+		{"w", "d","d","d","w","w","d","d","d","d","d","d","d","d","d","w","w","d","d","d","d","d","d","d","d","d","w","w","d","d","d","w"},
+		{"w", "w","w","d","w","w","d","w","d","w","w","w","w","w","w","w","w","w","w","w","w","w","w","d","w","d","w","w","d","w","w","w"},
+		{"w", "d","d","d","w","w","d","w","d","d","d","d","d","d","d","w","w","d","d","d","d","d","d","d","w","d","w","w","d","d","d","w"},
+		{"w", "w","w","d","w","w","d","w","d","w","w","w","w","w","d","w","w","d","w","w","w","w","w","d","w","d","w","w","d","w","w","w"},
+		{"w", "d","d","d","d","d","d","w","d","d","d","d","d","d","d","w","w","d","d","d","d","d","d","d","w","d","d","d","d","d","d","w"},
+		{"w", "d","w","w","w","w","w","w","w","w","w","w","w","w","d","w","w","d","w","w","w","w","w","w","w","w","w","w","w","w","d","w"},
+		{"w", "d","w","w","w","w","w","w","w","w","w","w","w","w","d","w","w","d","w","w","w","w","w","w","w","w","w","w","w","w","d","w"},
+		{"w", "d","d","d","d","d","d","d","d","d","d","d","d","d","d","w","w","d","d","d","d","d","d","d","d","d","d","d","d","d","d","w"},
+		{"w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w"}};
+
+}
 
 
 }

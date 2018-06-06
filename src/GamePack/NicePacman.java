@@ -14,7 +14,7 @@ public class NicePacman extends Pacman{
 	private ImageIcon [] pacmanIcons;
 	private ImageIcon currentIcon;
 	private ImageIcon fullPac; 
-	private Pair currentPosition;
+	private Pair currentPosition; // on board
 	private Pair lastPosition;
 	private int dx;
 	private int dy; 
@@ -32,7 +32,7 @@ public class NicePacman extends Pacman{
 		this.currentPosition = initialPosition;
 		this.lastPosition = new Pair(currentPosition.getX(), currentPosition.getY());
 		this.currentIcon = this.pacmanIcons[0];
-		this.dx = -5;
+		this.dx = -1;
 		this.dy = 0; 
 		this.direction = "l"; 
 		this.isFull = false; 
@@ -54,39 +54,12 @@ public class NicePacman extends Pacman{
 
 	}
 	public boolean checkIfCanMove() {
-		int xTop = this.currentPosition.getX() + this.dx;
-		int yTop = this.currentPosition.getY() + this.dy;
-		int xBot = this.currentPosition.getX() + this.dx;
-		int yBot = this.currentPosition.getY() + 25 + this.dy-1;
-		if(this.direction.equals("l")) {
-			xTop = xTop/25;
-			yTop = yTop/25;
-			xBot = xBot/25;
-			yBot = yBot/25;
-		}
-		else if(this.direction.equals("u")) {
-			xTop = xTop/25;
-			yTop = yTop/25;
-			xBot = xBot/25;
-			yBot = (yBot+25)/25;
-		}
-		else if(this.direction.equals("r")) {
-			xTop = (xTop+25)/25;
-			yTop = yTop/25;
-			xBot = (xBot+25)/25;
-			yBot = yBot/25;
-		}
-		else { //d 
-			xTop = xTop/25;
-			yTop = (yTop+25)/25;
-			xBot = xBot/25;
-			yBot = yBot/25;
-		}
-		if(this.board[yTop][xTop] instanceof RoadTile & this.board[yBot][xBot] instanceof RoadTile )
+		int x = this.currentPosition.getX() + this.dx;
+		int y = this.currentPosition.getY() + this.dy; 
+		if(this.board[y][x] instanceof RoadTile) {
 			return true;
-		else 
-			return false;
-
+		}
+		return false; 
 	}
 	public ImageIcon getCurrentIcon() {
 		return this.currentIcon;
@@ -97,30 +70,30 @@ public class NicePacman extends Pacman{
 	}
 	public void manageMovement(KeyEvent e) {
 		if(e.getKeyCode()== KeyEvent.VK_LEFT) {
-			this.dx = -5;
+			this.dx = -1;
 			this.dy= 0;
 			this.direction = "l";
 			this.currentIcon = this.pacmanIcons[0];
 		}
 		if(e.getKeyCode()== KeyEvent.VK_RIGHT) {
-			this.dx = 5;
+			this.dx = 1;
 			this.dy= 0;
 			this.direction = "r";
 			this.currentIcon = this.pacmanIcons[1];
 		}
 		if(e.getKeyCode()== KeyEvent.VK_UP) {
 			this.dx = 0;
-			this.dy= -5;
+			this.dy= -1;
 			this.direction = "u";
 			this.currentIcon = this.pacmanIcons[2];
 		}
 		if(e.getKeyCode()== KeyEvent.VK_DOWN) {
 			this.dx = 0;
-			this.dy= 5;
+			this.dy= 1;
 			this.direction = "d";
 			this.currentIcon = this.pacmanIcons[3];
 		}
-		move();
+			move();
 	}
 
 	@Override
@@ -134,10 +107,10 @@ public class NicePacman extends Pacman{
 			im = this.fullPac;
 			this.isFull = false;
 		}
-		g.fillRect(this.lastPosition.getX(), this.lastPosition.getY(), 25, 25);
+		g.fillRect(this.lastPosition.getX()*25, this.lastPosition.getY()*25, 25, 25);
 		Image offIm = game.createImage(25 , 25);
 		Graphics offGr = offIm.getGraphics();	
 		offGr.drawImage(im.getImage(), 0,0, game);
-		g.drawImage(offIm,this.currentPosition.getX(), this.currentPosition.getY(), game);
+		g.drawImage(offIm,this.currentPosition.getX() * 25, this.currentPosition.getY()*25, game);
 	}
 }

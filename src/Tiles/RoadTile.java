@@ -11,8 +11,8 @@ public class RoadTile extends BoardTile {
 	private ImageIcon road; 
 	private Food food; 
 	private boolean dimmed; 
-	public RoadTile(Food food) {
-		super();
+	public RoadTile(int x, int y,Food food) {
+		super(x,y);
 		imageIcon = new ImageIcon("pictures/boards/road.png");
 		setFood(food);
 		this.dimmed = false; 

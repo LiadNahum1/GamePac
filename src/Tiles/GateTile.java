@@ -4,8 +4,8 @@ import javax.swing.*;
 import GamePack.*;
 
 public class GateTile extends BoardTile {
-	public GateTile (){
-        super();
+	public GateTile (int x, int y){
+        super(x, y);
        imageIcon = new ImageIcon("pictures/boards/gate.png");
     }
     public boolean isMovable(Pacman pac){
