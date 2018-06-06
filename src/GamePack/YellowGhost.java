@@ -1,11 +1,16 @@
 package GamePack;
-import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.util.Vector;
 
 public class YellowGhost extends Ghost{
+	private  Pair tileAnderAttack;
+	private Pair prevTileAnderAttack;
+	private Image attackImg;
+	private boolean inAttack;
+
 	public YellowGhost( Pacman pac, Pair boardTileIn, Vector<String>[][] neighbors ) {
-		super( pac, boardTileIn,neighbors, "yellow",new Pair(31,31));
+		super( pac, boardTileIn,neighbors, "yellow",new Pair(1,30));
 	}
 
 		@Override
@@ -26,12 +31,23 @@ public class YellowGhost extends Ghost{
 			
 		}
 
-		@Override
-		public void attack() {
-			// TODO Auto-generated method stub
-			
+		public void advanceAttack() { //to finish
+			if(inAttack) {
+			this.prevTileAnderAttack.setX(this.boardTileIn.getX());
+			this.prevTileAnderAttack.setY(this.boardTileIn.getY());
+		this.tileAnderAttack = advanceMove();
+			}
 		}
 
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			super.actionPerformed(e);
+				if(timeFromChase >= 5 & timeFromChase <= 10) {
+					dimGhost();
+				}
+				if(timeFromChase > 11)
+					advanceAttack();
+			}
 		
 
 

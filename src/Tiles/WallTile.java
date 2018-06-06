@@ -6,7 +6,7 @@ public class WallTile extends BoardTile {
 
 	private ImageIcon [] pictures;
 	public WallTile (int level, int x, int y){
-		super(x,y);
+		super(x,y ,false);
 		inisializePictures();
 		imageIcon = pictures[level-1]; 
 	}

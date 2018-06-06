@@ -27,11 +27,7 @@ public class GreenGhost extends Ghost {
 		
 	}
 
-	@Override
-	public void attack() {
-		// TODO Auto-generated method stub
-		
-	}
+
 
 	
 	
