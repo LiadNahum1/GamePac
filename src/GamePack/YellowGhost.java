@@ -4,8 +4,8 @@ import java.awt.event.ActionEvent;
 import java.util.Vector;
 
 public class YellowGhost extends Ghost{
-	public YellowGhost(Pair pxIn, Pair chasePlace, Pair boardTileIn, Vector<String>[][] neighbors ,Graphics g) {
-		super(pxIn, chasePlace, boardTileIn,neighbors, "yellow", g);
+	public YellowGhost(Pair pxIn, Pacman pac, Pair boardTileIn, Vector<String>[][] neighbors ) {
+		super(pxIn, pac, boardTileIn,neighbors, "yellow",new Pair(31,31));
 	}
 
 		@Override
@@ -22,6 +22,12 @@ public class YellowGhost extends Ghost{
 
 		@Override
 		public void visit(AngryPacman pacman) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
 			
 		}

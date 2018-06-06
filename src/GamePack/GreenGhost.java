@@ -4,8 +4,10 @@ import java.awt.event.ActionEvent;
 import java.util.Vector;
 
 public class GreenGhost extends Ghost {
-	public GreenGhost(Pair inisialPxIn, Pair packmanPosition,Pair inisialPositionTile,Vector<String>[][] neighbors, Graphics g) {
-		super(inisialPxIn,packmanPosition , inisialPositionTile , neighbors,"green",g);
+	public GreenGhost(Pair inisialPxIn, Pacman pac,Pair inisialPositionTile,Vector<String>[][] neighbors) {
+		super(inisialPxIn,pac , inisialPositionTile , neighbors,"green",new Pair(1,1));
+		System.out.println("built");
+			
 	}
 
 	@Override
@@ -25,4 +27,11 @@ public class GreenGhost extends Ghost {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 }

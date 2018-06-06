@@ -31,15 +31,18 @@ public class Game extends JFrame implements ActionListener, KeyListener {
 	private Vector<Food> fruits; 
 	private RoadTile fruitsTile; 
 
+	public static void main(String[]args) {
+		new Game(1);
+	}
+
 
 	public Game(int level) {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.level = level; 
 		this.setBackground(Color.BLACK);
 		this.setSize(800,800);
-		
+	
 		this.start = true; 
-		this.timer = new PacTimer(this,greenGhost,redGhost,yellowGhost);
 		this.fruitsTile = new RoadTile(null);
 		initializeFruits();
 		initializeBoardTilesS();
@@ -49,12 +52,15 @@ public class Game extends JFrame implements ActionListener, KeyListener {
 		}
 		inisializeNeighborsMat();
 		InisializeGhosts();
+		this.timer = new PacTimer(this,greenGhost,redGhost,yellowGhost);
 		this.addKeyListener(this);
 		this.setVisible(true);
 	}
 
 	private void InisializeGhosts() {
-		this.greenGhost = new GreenGhost(new Pair(400,400),pacman.getCurrentPosition(), new Pair(16,16), neighbors, null);
+		this.greenGhost = new GreenGhost(new Pair(375,400),pacman, new Pair(16,15), neighbors);
+		this.redGhost = new RedGhost(new Pair(350,400),pacman, new Pair(16,14), neighbors);
+		this.yellowGhost = new YellowGhost(new Pair(400,400),pacman, new Pair(16,16), neighbors);
 	}
 
 	public void initializeFruits() {
@@ -113,10 +119,6 @@ public class Game extends JFrame implements ActionListener, KeyListener {
 			boardTiles [x][y] = new GateTile();
 	}
 
-	public static void main(String[]args) {
-		new Game(1);
-	}
-
 	public void drawFruits() {
 		Random rand = new Random();
 		int i =0;
@@ -141,15 +143,18 @@ public class Game extends JFrame implements ActionListener, KeyListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-	/*	if(e.getSource().equals(this.timer.getGameTimer())) {
-			if(this.timer.getNumTicksGame() == 7)
+		if(e.getSource().equals(this.timer.getGameTimer())) {
+			if(this.timer.getNumTicksGame() == 7) {
 				this.timer.getGreenGhostsTimer().start();
+				System.out.println("gren");}
 			if(this.timer.getNumTicksGame() == 10)
 				this.timer.getRedGhostsTimer().start();
 			if(this.timer.getNumTicksGame() == 13)
 				this.timer.getYellowGhostsTimer().start();
-		}*/
-		
+		}
+		if(e.getSource().equals(this.timer.getDrowTimer())){
+			repaint();
+		}
 			if(e.getSource().equals(this.timer.getPacmanTimer())) {
 			this.pacman.move();
 			repaint();
@@ -198,7 +203,8 @@ public class Game extends JFrame implements ActionListener, KeyListener {
 		// TODO Auto-generated method stub
 
 	}
-	public void paint(Graphics g){
+	
+	public void paint(Graphics g){	
 		if(this.start) {
 			for(int i=0; i<this.boardTiles.length; i = i+1) {
 				for(int j=0; j<this.boardTiles.length; j =j+1) {
@@ -208,7 +214,15 @@ public class Game extends JFrame implements ActionListener, KeyListener {
 			start = false; 
 		}
 		this.pacman.draw(this, g);
+		this.greenGhost.draw(this, g);
+		this.redGhost.draw(this, g);		
+		this.yellowGhost.draw(this, g);
 	}
+
+	public BoardTile getBoardTile(Pair place) {
+		return this.boardTiles[place.getX()][place.getY()];
+	}
+	
 	public void initializeBoardTilesS() {
 		this.boardTilesS = new String[][] 
 				{{"w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w"},
@@ -225,11 +239,11 @@ public class Game extends JFrame implements ActionListener, KeyListener {
 			{"w", "w","w","w","w","w","d","w","w","w","w","w","w","w","0","w","w","0","w","w","w","w","w","w","w","d","w","w","w","w","w","w"},
 			{"w", "w","w","w","w","w","d","w","0","0","0","0","0","0","0","w","w","0","0","0","0","0","0","0","w","d","w","w","w","w","w","w"},
 			{"w", "w","w","w","w","w","d","w","0","w","w","w","w","w","0","w","w","0","w","w","w","w","w","0","w","d","w","w","w","w","w","w"},
-			{"w", "w","w","w","w","w","d","w","0","w","w","w","0","0","0","0","0","0","0","0","w","w","w","0","w","d","w","w","w","w","w","w"},
-			{"w", "w","w","w","w","w","d","0","0","w","w","w","0","w","w","g","g","w","w","0","w","w","w","0","w","0","w","w","w","w","w","w"},
-			{"w", "w","w","w","w","w","d","w","0","w","w","w","0","w","w","w","w","w","w","0","w","w","w","0","w","d","w","w","w","w","w","w"},
-			{"w", "w","w","w","w","w","d","w","0","w","w","w","0","0","0","0","0","0","0","0","w","w","w","0","w","d","w","w","w","w","w","w"},
-			{"w", "w","w","w","w","w","d","w","0","w","w","w","w","w","w","w","w","w","w","w","w","w","w","0","w","d","w","w","w","w","w","w"},
+			{"w", "w","w","w","w","w","d","w","0","w","w","0","0","0","0","0","0","0","0","0","0","w","w","0","w","d","w","w","w","w","w","w"},
+			{"w", "w","w","w","w","w","d","0","0","w","w","0","w","w","w","g","g","w","w","w","0","w","w","0","w","0","w","w","w","w","w","w"},
+			{"w", "w","w","w","w","w","d","w","0","w","w","0","w","w","0","0","0","0","w","w","0","w","w","0","w","d","w","w","w","w","w","w"},
+			{"w", "w","w","w","w","w","d","w","0","w","w","0","w","w","w","w","w","w","w","w","0","w","w","0","w","d","w","w","w","w","w","w"},
+			{"w", "w","w","w","w","w","d","w","0","w","w","0","0","0","0","0","0","0","0","0","0","w","w","0","w","d","w","w","w","w","w","w"},
 			{"w", "w","w","w","w","w","d","w","0","w","w","w","w","w","w","w","w","w","w","w","w","w","w","0","w","d","w","w","w","w","w","w"},
 			{"w", "d","d","d","d","d","d","d","d","d","d","d","d","d","d","w","w","d","d","d","d","d","d","d","d","d","d","d","d","d","d","w"},
 			{"w", "d","w","w","w","w","d","w","w","w","w","w","w","w","d","w","w","d","w","w","w","w","w","w","w","d","w","w","w","w","d","w"},
@@ -245,6 +259,7 @@ public class Game extends JFrame implements ActionListener, KeyListener {
 			{"w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w"}};
 
 	}
+
 
 }
 
