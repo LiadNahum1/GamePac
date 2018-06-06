@@ -35,5 +35,14 @@ public class Pair {
 	public int sumSetY(int y) {
 		return this.y = this.y + y;
 	}
-	
+	@Override
+	public boolean equals (Object other) {
+		if(!(other instanceof Pair))
+			return false;
+		if(this.x != ((Pair) other).getX())
+			return false;
+		if(this.y != ((Pair) other).getY())
+			return false;
+		return true;
+	}
 }

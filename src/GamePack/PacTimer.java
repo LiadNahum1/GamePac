@@ -4,14 +4,15 @@ import java.awt.event.ActionListener;
 
 import javax.swing.Timer;
 
-public class PacTimer  {
+public class PacTimer implements ActionListener {
 	private Timer gameTimer; // main timer of the game 
 	private int numTicksOfGame;
 	private int speed;
 
 	public PacTimer(ActionListener game) {
 		this.gameTimer = new Timer(1000, game);
-		this.numTicksOfGame = 0; 
+		gameTimer.addActionListener(this);
+		this.numTicksOfGame = 1; 
 		this.speed = 1;
 	}
 
@@ -31,5 +32,10 @@ public class PacTimer  {
 	}
 	private void updateGameSpeed() {
 		this.gameTimer.setDelay(1/speed*1000);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		this.numTicksOfGame++;
 	}
 }

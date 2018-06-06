@@ -6,7 +6,6 @@ import java.util.Vector;
 public class GreenGhost extends Ghost {
 	public GreenGhost( Pacman pac,Pair inisialPositionTile,Vector<String>[][] neighbors) {
 		super(pac , inisialPositionTile , neighbors,"green",new Pair(1,1));
-		System.out.println("built");
 			
 	}
 

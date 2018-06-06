@@ -85,21 +85,19 @@ public class Game extends JFrame implements ActionListener, KeyListener {
 			}
 		}
 	}
-	private Vector<String> findneighbors(int curY,int curX) {
-		if(this.boardTilesS[curY][curX] == "w") 
-			return null;
-		else {
-			Vector <String> possibleDirs = new Vector <>();//the frame of the board is all wals so there wont be problems of edged
-			if(this.boardTilesS[curY+1][curX]!="w") //can move up
+	private Vector<String> findneighbors(int x,int y) {
+		Vector <String> possibleDirs = new Vector <>();//the frame of the board is all wals so there wont be problems of edged
+		if(this.boardTilesS[x][y] != "w") {
+			if(this.boardTilesS[x-1][y]!="w") //can move up
 				possibleDirs.add("u");
-			if(this.boardTilesS[curY-1][curX]!="w")//can move down
+			if(this.boardTilesS[x+1][y]!="w")//can move down
 				possibleDirs.add("d");
-			if(this.boardTilesS[curY][curX+1]!="w")//can move right
+			if(this.boardTilesS[x][y+1]!="w")//can move right
 				possibleDirs.add("r");
-			if(this.boardTilesS[curY][curX-1]!="w")//can move left
+			if(this.boardTilesS[x][y-1]!="w")//can move left
 				possibleDirs.add("l");
-			return possibleDirs;
 		}
+			return possibleDirs;
 	}
 	private void initializeBoard() {
 		this.boardTiles = new BoardTile [32][32];  
@@ -153,10 +151,10 @@ public class Game extends JFrame implements ActionListener, KeyListener {
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource().equals(this.timer.getGameTimer())) {
 			int numOfTicks = this.timer.getNumOfTicks();
-			if(numOfTicks >= 7) {
+			if(numOfTicks >= 8) {
 				if(numOfTicks % 6 == 0)
 					redGhost.move();
-				if(numOfTicks % 4 == 0)
+				if(numOfTicks % 4 == 0) 
 					yellowGhost.move();
 				if(numOfTicks % 2 == 0)
 					greenGhost.move();
@@ -167,7 +165,6 @@ public class Game extends JFrame implements ActionListener, KeyListener {
 				if(!this.fruits.isEmpty()) {
 					drawFruits();
 					this.isFruitsOn = true;
-					System.out.print("jgh");
 				}
 				else
 					this.isFruitsOn = false;
@@ -182,9 +179,7 @@ public class Game extends JFrame implements ActionListener, KeyListener {
 			this.pacman.move();
 			repaint();
 		}
-		/*if(e.getSource().equals(this.timer.getDrowTimer())){
-			repaint();
-		}*/
+		
 	}
 
 

@@ -21,27 +21,27 @@ public abstract class Ghost  implements Visitor {
 	private HashMap <String,Image> position;
 	private Image currPositionIm;
 	protected Boolean isStart;
-	
-	
-	public Ghost(Pacman pac ,Pair boardTileIn,Vector<String> [][] neighbors ,String ghostColor ,Pair closestWall ) {
-	this.pacman = pac;
-	this.lastBoardTileIn = boardTileIn;
-	this.boardTileIn = boardTileIn;
-	this.neighbors = neighbors;
-	this.TimeFromExit = 1;
-	this.chasePlace = closestWall;
-	this.curPos = "u";
-	this.isChase = false;
-	updateDirsPic(ghostColor);
-	this.currPositionIm = position.get(curPos);
+
+
+	public Ghost(Pacman pac ,Pair boardTileIn ,Vector<String> [][] neighbors ,String ghostColor ,Pair closestWall ) {
+		this.pacman = pac;
+		this.lastBoardTileIn = new Pair(0,0);
+		this.boardTileIn = boardTileIn;
+		this.neighbors = neighbors;
+		this.TimeFromExit = 1;
+		this.chasePlace = closestWall;
+		this.curPos = "u";
+		this.isChase = true;
+		updateDirsPic(ghostColor);
+		this.currPositionIm = position.get(curPos);
 	}
 	private void updateDirsPic(String ghostColor) { 
 		position = new HashMap<String ,Image>();
-	position.put("u", new ImageIcon("pictures/figures/" + ghostColor +"_u.png").getImage());
-	position.put("l", new ImageIcon("pictures/figures/" + ghostColor +"_l.png").getImage());
-	position.put("r", new ImageIcon("pictures/figures/" + ghostColor +"_r.png").getImage());
-	position.put("d", new ImageIcon("pictures/figures/" + ghostColor +"_d.png").getImage());
-	position.put("sceard", new ImageIcon("pictures/figures/scared.png").getImage());
+		position.put("u", new ImageIcon("pictures/figures/" + ghostColor +"_u.png").getImage());
+		position.put("l", new ImageIcon("pictures/figures/" + ghostColor +"_l.png").getImage());
+		position.put("r", new ImageIcon("pictures/figures/" + ghostColor +"_r.png").getImage());
+		position.put("d", new ImageIcon("pictures/figures/" + ghostColor +"_d.png").getImage());
+		position.put("sceard", new ImageIcon("pictures/figures/scared.png").getImage());
 	}
 	public void collide(Pacman pacman) {
 		pacman.impact(this);
@@ -50,21 +50,24 @@ public abstract class Ghost  implements Visitor {
 		String dir = findMoveDir();
 		this.currPositionIm = this.position.get(dir);
 		this.curPos = dir;
+		this.lastBoardTileIn.setX(this.boardTileIn.getX());
+		this.lastBoardTileIn.setY(this.boardTileIn.getY());
+		
 		if(curPos == "u")
 		{
-			this.boardTileIn = new Pair(this.boardTileIn.getX(),this.boardTileIn.getY()-1);
+			this.boardTileIn = new Pair(this.boardTileIn.getX()-1,this.boardTileIn.getY());
 		}
 		if(curPos == "d")
 		{
-			this.boardTileIn = new Pair(this.boardTileIn.getX(),this.boardTileIn.getY()+1);
+			this.boardTileIn = new Pair(this.boardTileIn.getX()+1,this.boardTileIn.getY());
 		}
 		if(curPos == "l")
 		{
-			this.boardTileIn = new Pair(this.boardTileIn.getX()-1,this.boardTileIn.getY());
-	}
+			this.boardTileIn = new Pair(this.boardTileIn.getX(),this.boardTileIn.getY()-1);
+		}
 		if(curPos == "r")
 		{
-			this.boardTileIn = new Pair(this.boardTileIn.getX()+1,this.boardTileIn.getY());
+			this.boardTileIn = new Pair(this.boardTileIn.getX(),this.boardTileIn.getY()+1);
 		}
 		if(this.boardTileIn.equals(chasePlace)) {
 			this.isChase = true;
@@ -82,29 +85,29 @@ public abstract class Ghost  implements Visitor {
 			this.chasePlace = pacman.getCurrentPosition();
 		if(this.chasePlace.getY() < this.boardTileIn.getY() & posDirs.contains("u"))
 			return "u";
-		if(this.chasePlace.getY() > this.boardTileIn.getY() & posDirs.contains("d"))
+		if(this.chasePlace.getY() >= this.boardTileIn.getY() & posDirs.contains("d"))
 			return "d";
 		if(this.chasePlace.getX() < this.boardTileIn.getX() & posDirs.contains("r"))
 			return "r";
-		if(this.chasePlace.getX() > this.boardTileIn.getX() & posDirs.contains("l"))
+		if(this.chasePlace.getX() >= this.boardTileIn.getX() & posDirs.contains("l"))
 			return "l";
 		else {
 			return posDirs.get(0);
 		}
 	}
 	public void draw(Game game, Graphics g) { 
-		if(!this.lastBoardTileIn.equals(this.boardTileIn)) {
-		Image offIm1 = game.createImage(25 , 25);//this will draw last board tile
-		Graphics offGr1 = offIm1.getGraphics();	
-		offGr1.drawImage(game.getBoardTile(this.lastBoardTileIn).getImage(), 0,0, game);
-		g.drawImage(offIm1,this.lastBoardTileIn.getX()*25, this.lastBoardTileIn.getY()*25, game);
-		this.lastBoardTileIn.setX(this.boardTileIn.getX());
-		this.lastBoardTileIn.setY(this.boardTileIn.getY());
-		}
-		Image offIm2 = game.createImage(25 , 25);//this will draw next board tile
-		Graphics offGr2 = offIm2.getGraphics();	
-		offGr2.drawImage(this.currPositionIm, 0,0, game);
-		g.drawImage(offIm2,this.boardTileIn.getX()*25, this.boardTileIn.getY()*25, game);
+		//if(!this.lastBoardTileIn.equals(boardTileIn)) {
+			//this.lastBoardTileIn.setX(this.boardTileIn.getX());
+			//this.lastBoardTileIn.setY(this.boardTileIn.getY());
+			Image offIm1 = game.createImage(25 , 25);//this will draw last board tile
+			Graphics offGr1 = offIm1.getGraphics();	
+			offGr1.drawImage(game.getBoardTile(this.lastBoardTileIn).getImage(), 0,0, game);
+			g.drawImage(offIm1,this.lastBoardTileIn.getY()*25,this.lastBoardTileIn.getX()*25, game);
+			Image offIm2 = game.createImage(25 , 25);//this will draw next board tile
+			Graphics offGr2 = offIm2.getGraphics();	
+			offGr2.drawImage(this.currPositionIm, 0,0, game);
+			g.drawImage(offIm2,this.boardTileIn.getY()*25, this.boardTileIn.getX()*25, game);
+		//}
 	}
 	public abstract void attack();
 	public abstract void visit(NicePacman pacman);
