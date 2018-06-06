@@ -4,8 +4,8 @@ import java.awt.event.ActionEvent;
 import java.util.Vector;
 
 public class YellowGhost extends Ghost{
-	public YellowGhost(Pair pxIn, Pacman pac, Pair boardTileIn, Vector<String>[][] neighbors ) {
-		super(pxIn, pac, boardTileIn,neighbors, "yellow",new Pair(31,31));
+	public YellowGhost( Pacman pac, Pair boardTileIn, Vector<String>[][] neighbors ) {
+		super( pac, boardTileIn,neighbors, "yellow",new Pair(31,31));
 	}
 
 		@Override
@@ -27,10 +27,12 @@ public class YellowGhost extends Ghost{
 		}
 
 		@Override
-		public void actionPerformed(ActionEvent e) {
+		public void attack() {
 			// TODO Auto-generated method stub
 			
 		}
+
+		
 
 
 }

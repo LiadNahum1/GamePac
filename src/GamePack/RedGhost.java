@@ -8,8 +8,8 @@ import java.util.Vector;
 import javax.swing.ImageIcon;
 
 public class RedGhost extends Ghost {
-		public RedGhost(Pair inisialPxIn, Pacman pac,Pair inisialPositionTile,Vector<String> [][] neighbors) {
-			super(inisialPxIn,pac, inisialPositionTile ,neighbors , "red" ,new Pair(1,1));
+		public RedGhost(Pacman pac,Pair inisialPositionTile,Vector<String> [][] neighbors) {
+			super(pac, inisialPositionTile ,neighbors , "red" ,new Pair(1,1));
 		}
 
 		@Override
@@ -31,11 +31,9 @@ public class RedGhost extends Ghost {
 		}
 
 		@Override
-		public void actionPerformed(ActionEvent e) {
+		public void attack() {
 			// TODO Auto-generated method stub
 			
 		}
-
-		
 
 }
