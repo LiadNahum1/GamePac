@@ -95,18 +95,18 @@ public abstract class Ghost  implements Visitor {
 			return posDirs.get(0);
 		}
 	}
-	public void draw(Game game, Graphics g) { 
+	public void draw(Board board, Graphics g) { 
 		//if(!this.lastBoardTileIn.equals(boardTileIn)) {
 			//this.lastBoardTileIn.setX(this.boardTileIn.getX());
 			//this.lastBoardTileIn.setY(this.boardTileIn.getY());
-			Image offIm1 = game.createImage(25 , 25);//this will draw last board tile
+			Image offIm1 = board.createImage(20 , 20);//this will draw last board tile
 			Graphics offGr1 = offIm1.getGraphics();	
-			offGr1.drawImage(game.getBoardTile(this.lastBoardTileIn).getImage(), 0,0, game);
-			g.drawImage(offIm1,this.lastBoardTileIn.getY()*25,this.lastBoardTileIn.getX()*25, game);
-			Image offIm2 = game.createImage(25 , 25);//this will draw next board tile
+			offGr1.drawImage(board.getBoardTile(this.lastBoardTileIn).getImage(), 0,0, board);
+			g.drawImage(offIm1,this.lastBoardTileIn.getY()*20,this.lastBoardTileIn.getX()*20, board);
+			Image offIm2 = board.createImage(20 , 20);//this will draw next board tile
 			Graphics offGr2 = offIm2.getGraphics();	
-			offGr2.drawImage(this.currPositionIm, 0,0, game);
-			g.drawImage(offIm2,this.boardTileIn.getY()*25, this.boardTileIn.getX()*25, game);
+			offGr2.drawImage(this.currPositionIm, 0,0, board);
+			g.drawImage(offIm2,this.boardTileIn.getY()*20, this.boardTileIn.getX()*20, board);
 		//}
 	}
 	public abstract void attack();

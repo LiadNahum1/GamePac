@@ -7,15 +7,14 @@ import javax.swing.JLabel;
 public abstract class BoardTile {
 	private int x; //position on matrix
 	private int y; 
+	protected ImageIcon imageIcon; 
 	public BoardTile(int x, int y) {
 		this.x = x;
 		this.y = y; 
 	}
-	private static final long serialVersionUID = 1L;
-	public ImageIcon imageIcon; 
 	
 	public Image getImage() {
-		return imageIcon.getImage();
+		return this.imageIcon.getImage();
 	}
 	
 	public int getX() {

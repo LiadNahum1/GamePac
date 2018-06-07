@@ -9,50 +9,39 @@ import Food.*;
 public class RoadTile extends BoardTile {
 	private boolean isSomethingOn; 
 	private ImageIcon road; 
-	private Food food; 
-	private boolean dimmed; 
+	private Food food;
+	
 	public RoadTile(int x, int y,Food food) {
 		super(x,y);
-		imageIcon = new ImageIcon("pictures/boards/road.png");
+		this.road = new ImageIcon("pictures/boards/road.png");
 		setFood(food);
-		this.dimmed = false; 
 	}
 
 	public boolean getIsSomethingOn() {
 		return this.isSomethingOn;
 	}
-	public void setIsSomethingOn(Food food) {
-		setFood(food);
-	}
-	public Image getImage() {
-		return getCurrentImage().getImage();
-	}
-	public ImageIcon getCurrentImage() {
-		if(getIsSomethingOn()) {
-			return this.food.getImage();
-		}
-		else
-			return imageIcon;
-	}
+
 	public void setFood(Food food) {
 		this.food = food; 
 		if(food == null) {
+			this.imageIcon = this.road;
 			this.isSomethingOn = false;
 		}
 		else {
+			this.imageIcon = this.food.getImage();
 			this.isSomethingOn = true; 
 		}
 	}
 	public void dimElement() {
-		if(!this.dimmed) {
-			this.dimmed = true;
+		if(this.imageIcon.equals(this.road)) {
+			this.imageIcon = this.food.getImage(); 
 		}
 		else {
-			this.dimmed = false; 
+			this.imageIcon = this.road;
 		}
 	}
 	/*returns num of points the player gets for this eating*/
-	public int eat() {
+	public int eaten() {
 		if(isSomethingOn) {
 			int worth = this.food.getWorth();
 			setFood(null);
