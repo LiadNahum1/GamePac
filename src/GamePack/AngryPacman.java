@@ -19,4 +19,8 @@ public class AngryPacman extends Pacman {
 		this.pacmanIcons[3] = new ImageIcon("pictures\\figures\\AngryPacman\\down.png");
 		this.pacmanIcons[4] = new ImageIcon("pictures\\figures\\AngryPacman\\fullPacman.png");
 	}
+	public void impact(Visitor v) {
+		v.visit(this);
+	}
+	
 }

@@ -20,7 +20,12 @@ public class RoadTile extends BoardTile {
 	public boolean getIsSomethingOn() {
 		return this.isSomethingOn;
 	}
-
+	public void setIsSomethingOn(boolean bool) {
+		this.isSomethingOn = bool;
+	}
+	public Food getFood() {
+		return this.food;
+	}
 	public void setFood(Food food) {
 		this.food = food; 
 		if(food == null) {
@@ -33,7 +38,7 @@ public class RoadTile extends BoardTile {
 		}
 	}
 	public void dimElement() {
-		if(this.imageIcon.equals(this.road)) {
+		if(this.imageIcon.equals(this.road) & this.food != null) {
 			this.imageIcon = this.food.getImage(); 
 		}
 		else {
@@ -42,7 +47,7 @@ public class RoadTile extends BoardTile {
 	}
 	/*returns num of points the player gets for this eating*/
 	public int eaten() {
-		if(isSomethingOn) {
+		if(this.food!=null) {
 			int worth = this.food.getWorth();
 			setFood(null);
 			return worth;

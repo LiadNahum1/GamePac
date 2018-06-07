@@ -11,27 +11,32 @@ import Tiles.RoadTile;
 public abstract class Pacman implements Visited{
 	protected ImageIcon [] pacmanIcons;
 	protected ImageIcon currentIcon;
-	private ImageIcon fullPac; 
 	private Pair currentPosition; // on board
 	private Pair lastPosition;
 	private int dx;
 	private int dy; 
+	private ImageIcon fullPac; 
 	private boolean isFull;
 	private BoardTile [][] board; 
 	private String direction; //"l", "r", "u","d"
+	private boolean isPacDie;
 
 	public Pacman(Pair initialPosition, BoardTile[][]board) {
 		this.pacmanIcons = new ImageIcon[5];
 		this.fullPac = new ImageIcon("pictures\\figures\\NicePacman\\fullPac.png");
+		this.isFull = false; 
+		this.isPacDie = false;
+		this.board = board; 
+		initializePacman(initialPosition);
+	}
+	public void initializePacman(Pair initialPosition) {
 		this.currentPosition = initialPosition;
 		this.lastPosition = new Pair(currentPosition.getX(), currentPosition.getY());
 		this.dx = 0;
 		this.dy = -1; 
 		this.direction = "l"; 
-		this.isFull = false; 
-		this.board = board; 
-	}
 
+	}
 	/*moves pacman if can */
 	public void move() {
 		if(checkIfCanMove()) {
@@ -39,6 +44,8 @@ public abstract class Pacman implements Visited{
 			this.lastPosition.setY(this.currentPosition.getY());
 			this.currentPosition.sumSetX(this.dx);
 			this.currentPosition.sumSetY(this.dy);
+		    ((RoadTile)this.board[this.currentPosition.getX()][this.currentPosition.getY()]).setIsSomethingOn(true);
+			((RoadTile)this.board[this.lastPosition.getX()][this.lastPosition.getY()]).setIsSomethingOn(false);
 		}
 	}
 	public boolean checkIfCanMove() {
@@ -100,8 +107,12 @@ public abstract class Pacman implements Visited{
 		offGr.drawImage(im.getImage(), 0,0, board);
 		g.drawImage(offIm,this.currentPosition.getY() * 20, this.currentPosition.getX()*20, board);
 	}
-	public void impact(Visitor v) {
-	//	v.visit(this);
+	public void dead() {
+		this.isPacDie = true;
+	}
+	
+	public boolean isPacDead() {
+		return this.isPacDie;
 	}
 
 }

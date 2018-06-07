@@ -18,5 +18,8 @@ public class DefendedPacman extends Pacman {
 		this.pacmanIcons[3] = new ImageIcon("pictures\\figures\\DefendedPacman\\down.png");
 		this.pacmanIcons[4] = new ImageIcon("pictures\\figures\\DefendedPacman\\fullPacman.png");
 	}
-
+	public void impact(Visitor v) {
+		v.visit(this);
+	}
+	
 }

@@ -9,7 +9,7 @@ public class PacTimer  {
 	private int speed;
 
 	public PacTimer(ActionListener game ,ActionListener greenGhost,ActionListener redGhost,ActionListener yellowGhost) {
-		this.gameTimer = new Timer(100, game);
+		this.gameTimer = new Timer(500, game);
 		this.gameTimer.addActionListener(greenGhost);
 		this.gameTimer.addActionListener(redGhost);
 		this.gameTimer.addActionListener(yellowGhost);

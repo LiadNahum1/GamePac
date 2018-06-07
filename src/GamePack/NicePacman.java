@@ -22,4 +22,8 @@ public class NicePacman extends Pacman{
 		this.currentIcon = this.pacmanIcons[0];
 
 	}
+	public void impact(Visitor v) {
+		v.visit(this);
+	}
+	
 }
