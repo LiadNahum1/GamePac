@@ -16,8 +16,8 @@ public abstract class Ghost  implements Visitor, ActionListener {
 	protected Vector<String> [][] neighbors;
 	protected Pair boardTileIn;
 	private Pair lastBoardTileIn;
+	protected int timeFromStart;
 	protected int timeFromChase;
-	private Pacman pacman; //delete pacman
 	private Pair chaseWall;
 	protected Boolean isChase;
 	private HashMap <String,Image> position;
@@ -26,14 +26,15 @@ public abstract class Ghost  implements Visitor, ActionListener {
 	private boolean isDim;
 
 
-	public Ghost(Pacman pac ,Pair boardTileIn ,Vector<String> [][] neighbors ,String ghostColor ,Pair closestWall ) {
-		this.pacman = pac;
+	public Ghost(Pair boardTileIn ,Vector<String> [][] neighbors ,String ghostColor ,Pair closestWall ) {
 		this.lastBoardTileIn = new Pair(0,0);
 		this.boardTileIn = boardTileIn;
 		this.neighbors = neighbors;
 		this.timeFromChase = 0; //didntStart
 		this.chaseWall = closestWall;
 		this.curPos = "u"; 
+		this.timeFromStart = 1;
+		this.isStart = false;
 		this.isChase = false;
 		this.isDim = false;
 		updateDirsPic(ghostColor);
@@ -88,80 +89,53 @@ public abstract class Ghost  implements Visitor, ActionListener {
 			return this.curPos;
 		if(posDirs.size() == 1)
 			return posDirs.get(0);
-		else {
-			if(isChase) {
-				if(posDirs.size() > 2) {
-					if(curPos == "u") posDirs.remove("d");
-					if(curPos == "d") posDirs.remove("u");
-					if(curPos == "r") posDirs.remove("l");
-					if(curPos == "l") posDirs.remove("r");
-				}
-				Random r = new Random ();
-				int  n = r.nextInt(posDirs.size());
-				return posDirs.get(n);
+		if(isChase) {
+			if(posDirs.size() > 2) {
+				if(curPos == "u") posDirs.remove("d");
+				if(curPos == "d") posDirs.remove("u");
+				if(curPos == "r") posDirs.remove("l");
+				if(curPos == "l") posDirs.remove("r");
 			}
+			Random r = new Random ();
+			int  n = r.nextInt(posDirs.size());
+			return posDirs.get(n);
 		}
-<<<<<<< HEAD
+		else
+			return bestMove(posDirs);
 	}
-	public void draw(Board board, Graphics g) { 
-		//if(!this.lastBoardTileIn.equals(boardTileIn)) {
-			//this.lastBoardTileIn.setX(this.boardTileIn.getX());
-			//this.lastBoardTileIn.setY(this.boardTileIn.getY());
-			Image offIm1 = board.createImage(20 , 20);//this will draw last board tile
-=======
-		return bestNove(posDirs);
-	}
-	private String bestNove(Vector<String> posDirs) {
+
+	private String bestMove(Vector<String> posDirs) {
 		if(posDirs.contains("u"))
 			return "u";
 		if(this.chaseWall.getY() == 1 ) 
 			return "l";
 		else
 			return "r";
-		}
-		public void draw(Game game, Graphics g) { 
-			if(!isDim) {
-			Image offIm1 = game.createImage(20, 20);//this will draw last board tile
->>>>>>> branch 'master' of https://github.com/LiadNahum1/GamePac.git
+	}
+	public void draw(Board board, Graphics g) { 
+		if(!isDim) {
+			Image offIm1 = board.createImage(20, 20);//this will draw last board tile
 			Graphics offGr1 = offIm1.getGraphics();	
-<<<<<<< HEAD
 			offGr1.drawImage(board.getBoardTile(this.lastBoardTileIn).getImage(), 0,0, board);
 			g.drawImage(offIm1,this.lastBoardTileIn.getY()*20,this.lastBoardTileIn.getX()*20, board);
 			Image offIm2 = board.createImage(20 , 20);//this will draw next board tile
-=======
-			offGr1.drawImage(game.getBoardTile(this.lastBoardTileIn).getImage(),0,0, game);
-			g.drawImage(offIm1,this.lastBoardTileIn.getY()*20,this.lastBoardTileIn.getX()*20, game);
-			Image offIm2 = game.createImage(20 , 20);//this will draw next board tile
->>>>>>> branch 'master' of https://github.com/LiadNahum1/GamePac.git
 			Graphics offGr2 = offIm2.getGraphics();	
-<<<<<<< HEAD
 			offGr2.drawImage(this.currPositionIm, 0,0, board);
 			g.drawImage(offIm2,this.boardTileIn.getY()*20, this.boardTileIn.getX()*20, board);
-		//}
+		}
 	}
-	public abstract void attack();
+	public void dimGhost() {
+		if(this.isDim)
+			this.isDim = false;
+		else
+			this.isDim = true;
+	}
+	public void start() {
+		this.isStart = true;
+	}
+	public abstract void actionPerformed(ActionEvent e);
 	public abstract void visit(NicePacman pacman);
 	public abstract void visit(DefendedPacman pacman);
 	public abstract void visit(AngryPacman pacman);
-=======
-			offGr2.drawImage(this.currPositionIm, 0,0, game);
-			g.drawImage(offIm2,this.boardTileIn.getY()*20, this.boardTileIn.getX()*20, game);
-			}
-			
-		}
-		public void dimGhost() {
-			if(this.isDim)
-				this.isDim = false;
-			else
-				this.isDim = true;
-		}
-		public void actionPerformed(ActionEvent e) {
-			if(timeFromChase != 1 & timeFromChase != 2) 
-				this.move();
-		}
-		public abstract void visit(NicePacman pacman);
-		public abstract void visit(DefendedPacman pacman);
-		public abstract void visit(AngryPacman pacman);
->>>>>>> branch 'master' of https://github.com/LiadNahum1/GamePac.git
 
-	}
+}

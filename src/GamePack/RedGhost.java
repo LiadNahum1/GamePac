@@ -12,8 +12,8 @@ public class RedGhost extends Ghost {
 	private Image attackImg;
 	private boolean inAttack;
 
-	public RedGhost(Pacman pac,Pair inisialPositionTile,Vector<String> [][] neighbors) {
-		super(pac, inisialPositionTile ,neighbors , "red" ,new Pair(1,1));
+	public RedGhost(Pair inisialPositionTile,Vector<String> [][] neighbors) {
+		super(inisialPositionTile ,neighbors , "red" ,new Pair(1,1));
 		this.attackImg = new ImageIcon("pictures/figures/fire.png").getImage();
 		this.inAttack = false;
 	}
@@ -61,17 +61,19 @@ public class RedGhost extends Ghost {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		super.actionPerformed(e);
-		if(timeFromChase >= 5 & timeFromChase <= 10) {
-			dimGhost();
+		if(this.isStart) {
+			if( timeFromStart%6 == 0) {
+				if(timeFromChase != 1 & timeFromChase != 2) //should the ghost wait two steps or two seconds
+					this.move();
+				if(timeFromChase >= 5 & timeFromChase <= 10) {
+					dimGhost();
+				}
+				if(timeFromChase > 11)
+					advanceAttack();
+				if( timeFromChase!= 0)
+					timeFromChase++;
+			}
+			timeFromStart++;
 		}
-		if(timeFromChase > 11)
-			advanceAttack();
-	}
-
-	@Override
-	public void attack() {
-		// TODO Auto-generated method stub
-		
 	}
 }

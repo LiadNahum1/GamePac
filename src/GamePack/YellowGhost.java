@@ -9,52 +9,53 @@ public class YellowGhost extends Ghost{
 	private Image attackImg;
 	private boolean inAttack;
 
-	public YellowGhost( Pacman pac, Pair boardTileIn, Vector<String>[][] neighbors ) {
-		super( pac, boardTileIn,neighbors, "yellow",new Pair(1,30));
+	public YellowGhost(  Pair boardTileIn, Vector<String>[][] neighbors ) {
+		super(boardTileIn,neighbors, "yellow",new Pair(1,30));
 	}
 
-		@Override
-		public void visit(NicePacman pacman) {
-			// TODO Auto-generated method stub
-			
-		}
+	@Override
+	public void visit(NicePacman pacman) {
+		// TODO Auto-generated method stub
 
-		@Override
-		public void visit(DefendedPacman pacman) {
-			// TODO Auto-generated method stub
-			
-		}
+	}
 
-		@Override
-		public void visit(AngryPacman pacman) {
-			// TODO Auto-generated method stub
-			
-		}
+	@Override
+	public void visit(DefendedPacman pacman) {
+		// TODO Auto-generated method stub
 
-		public void advanceAttack() { //to finish
-			if(inAttack) {
+	}
+
+	@Override
+	public void visit(AngryPacman pacman) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void advanceAttack() { //to finish
+		if(inAttack) {
 			this.prevTileAnderAttack.setX(this.boardTileIn.getX());
 			this.prevTileAnderAttack.setY(this.boardTileIn.getY());
-		this.tileAnderAttack = advanceMove();
-			}
+			this.tileAnderAttack = advanceMove();
 		}
+	}
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			super.actionPerformed(e);
-				if(timeFromChase >= 5 & timeFromChase <= 10) {
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(this.isStart) {
+			if( timeFromStart%4 == 0) {
+				if(timeFromChase != 1 & timeFromChase != 2) 
+					this.move();
+				if(timeFromChase >= 5 & timeFromChase <= 10) { //problems
 					dimGhost();
 				}
 				if(timeFromChase > 11)
 					advanceAttack();
+				if( timeFromChase!= 0)
+					timeFromChase++;
 			}
-
-		@Override
-		public void attack() {
-			// TODO Auto-generated method stub
-			
+			timeFromStart++;
 		}
-		
+	}
 
 
 }
