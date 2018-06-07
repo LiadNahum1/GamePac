@@ -13,17 +13,19 @@ public class YellowGhost extends Ghost{
 	private boolean inAttack;
 	private String attackPos;
 
-	public YellowGhost(  Pair boardTileIn, Vector<String>[][] neighbors ) {
-		super(boardTileIn,neighbors, "yellow",new Pair(1,30) ,"u");
+	public YellowGhost(  Pair boardTileIn, Pacman pacman, Vector<String>[][] neighbors ) {
+		super(boardTileIn,pacman, neighbors, "yellow",new Pair(1,30) ,"u");
 		this.attackImg = new ImageIcon("pictures/figures/iceWave.png").getImage();
 		this.inAttack = false;
 		prevTileAnderAttack = new Pair(0,0);
 		tileAnderAttack = new Pair(0,0);
+
 	}
 
 	@Override
 	public void visit(NicePacman pacman) {
-		// TODO Auto-generated method stub
+		pacman.dead();
+		
 
 	}
 
@@ -77,19 +79,24 @@ public class YellowGhost extends Ghost{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(this.isStart) {
-			if( timeFromStart%4 == 0) {
-				if(timeFromChase != 1 & timeFromChase != 2) //should the ghost wait two steps or two seconds
-					this.move();
+		Pair boardTileOfPac = new Pair(this.pacman.getCurrentPosition().getX(), this.pacman.getCurrentPosition().getY());
+		if(this.tileAnderAttack.equals(boardTileOfPac))
+			collide(this.pacman);
+		else {
+			if(this.isStart) {
+				if( timeFromStart%4 == 0) {
+					if(timeFromChase != 1 & timeFromChase != 2) //should the ghost wait two steps or two seconds
+						this.move();
+				}
+				if(timeFromChase >= 5 & timeFromChase < 11) 
+					dimGhost();
+				if(timeFromChase >= 11) 
+					advanceAttack();
+				if( timeFromChase != 0) 
+					timeFromChase++;
 			}
-			if(timeFromChase >= 5 & timeFromChase < 11) 
-				dimGhost();
-			if(timeFromChase >= 11) 
-				advanceAttack();
-			if( timeFromChase != 0) 
-				timeFromChase++;
+			timeFromStart++;
 		}
-		timeFromStart++;
 	}
 
 

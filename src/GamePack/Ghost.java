@@ -1,5 +1,6 @@
 
 package GamePack;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -14,6 +15,7 @@ import javax.swing.ImageIcon;
 public abstract class Ghost  implements Visitor, ActionListener {
 	protected String curPos;
 	protected Vector<String> [][] neighbors;
+	protected Pacman pacman; 
 	protected Pair boardTileIn;
 	private Pair lastBoardTileIn;
 	protected int timeFromStart;
@@ -26,20 +28,23 @@ public abstract class Ghost  implements Visitor, ActionListener {
 	private boolean isDim;
 
 
-	public Ghost(Pair boardTileIn ,Vector<String> [][] neighbors ,String ghostColor ,Pair closestWall ,String curPos ) {
-		this.lastBoardTileIn = new Pair(0,0);
-		this.boardTileIn = boardTileIn;
+	public Ghost(Pair boardTileIn ,Pacman pacman, Vector<String> [][] neighbors ,String ghostColor ,Pair closestWall ,String curPos ) {
+		this.lastBoardTileIn = new Pair(0,0); 
+		this.boardTileIn = boardTileIn;     
 		this.neighbors = neighbors;
-		this.timeFromChase = 0; //didntStart
-		this.chaseWall = closestWall;
-		this.curPos = curPos; 
+		this.timeFromChase = 0; //didntStart   
+		this.chaseWall = closestWall;     
+		this.curPos = curPos;  
 		this.timeFromStart = 1;
-		this.isStart = false;
+		this.isStart = false;  
 		this.isChase = false;
 		this.isDim = false;
+		this.pacman = pacman;
 		updateDirsPic(ghostColor);
 		this.currPositionIm = position.get(curPos);
 	}
+
+	
 	private void updateDirsPic(String ghostColor) { 
 		position = new HashMap<String ,Image>();
 		position.put("u", new ImageIcon("pictures/figures/" + ghostColor +"_u.png").getImage());
@@ -132,7 +137,21 @@ public abstract class Ghost  implements Visitor, ActionListener {
 	public void start() {
 		this.isStart = true;
 	}
-	public abstract void actionPerformed(ActionEvent e);
+	public void actionPerformed(ActionEvent e) {
+		Pair boardTileOfPac = new Pair(this.pacman.getCurrentPosition().getX(), this.pacman.getCurrentPosition().getY());
+		if(this.boardTileIn.equals(boardTileOfPac)) {
+			collide(this.pacman);
+		}
+	}
+	public void setLastBoardTileIn(Pair boardTile) {
+		this.lastBoardTileIn = boardTile;
+	}
+	public Pair getBoardTileIn() {
+		return this.boardTileIn;
+	}
+	public void setStart(boolean bool) {
+		this.isStart = bool;
+	}
 	public abstract void visit(NicePacman pacman);
 	public abstract void visit(DefendedPacman pacman);
 	public abstract void visit(AngryPacman pacman);

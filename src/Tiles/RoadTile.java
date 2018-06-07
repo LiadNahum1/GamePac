@@ -12,7 +12,7 @@ public class RoadTile extends BoardTile {
 	private Food food;
 	
 	public RoadTile(int x, int y,Food food) {
-		super(x,y,true ,true);
+		super(x,y,true);
 		this.road = new ImageIcon("pictures/boards/road.png");
 		setFood(food);
 	}

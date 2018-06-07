@@ -30,11 +30,13 @@ public abstract class Pacman implements Visited{
 		initializePacman(initialPosition);
 	}
 	public void initializePacman(Pair initialPosition) {
+		this.currentIcon = this.pacmanIcons[0];
 		this.currentPosition = initialPosition;
 		this.lastPosition = new Pair(currentPosition.getX(), currentPosition.getY());
 		this.dx = 0;
 		this.dy = -1; 
 		this.direction = "l"; 
+		this.isPacDie = false; 
 
 	}
 	/*moves pacman if can */
@@ -109,6 +111,7 @@ public abstract class Pacman implements Visited{
 	}
 	public void dead() {
 		this.isPacDie = true;
+
 	}
 	
 	public boolean isPacDead() {

@@ -65,9 +65,9 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 	}
 
 	private void InisializeGhosts() {
-		this.greenGhost = new GreenGhost( new Pair(16,15), neighbors);
-		this.redGhost = new RedGhost( new Pair(16,14), neighbors);
-		this.yellowGhost = new YellowGhost( new Pair(16,16), neighbors);
+		this.greenGhost = new GreenGhost( new Pair(16,15), this.pacman, neighbors);
+		this.redGhost = new RedGhost( new Pair(16,14),this.pacman, neighbors);
+		this.yellowGhost = new YellowGhost( new Pair(16,16),this.pacman, neighbors);
 
 	}
 	public void initializeFruits() {
@@ -92,7 +92,10 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 	}
 	private Vector<String> findneighbors(int x,int y) {
 		Vector <String> possibleDirs = new Vector <>();//the frame of the board is all wals so there wont be problems of edged
-		if(this.boardTilesS[x][y] != "w") {
+		if(this.boardTilesS[x][y] == "w") {
+			return null;
+		}
+		else {
 			if(this.boardTilesS[x-1][y]!="w") //can move up
 				possibleDirs.add("u");
 			if(this.boardTilesS[x+1][y]!="w")//can move down
@@ -101,8 +104,9 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 				possibleDirs.add("r");
 			if(this.boardTilesS[x][y-1]!="w")//can move left
 				possibleDirs.add("l");
+			return possibleDirs;
 		}
-		return possibleDirs;
+
 	}
 	private void initializeBoard() {
 		this.boardTiles = new BoardTile [32][32];  
@@ -167,7 +171,6 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 				revivePacman();
 			}
 		}
-		
 		else {
 			if(e.getSource().equals(this.timer.getGameTimer())) {
 				if(this.numTicksOfGame == 7) 
@@ -176,9 +179,8 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 					yellowGhost.start();
 				if(this.numTicksOfGame == 11) 
 					redGhost.start();
-				this.numTicksOfGame++;
+				this.numTicksOfGame =this.numTicksOfGame + 1;
 			}
-
 			//fruits
 			if(this.numTicksOfGame % 20 == 0) {
 				if(!this.fruits.isEmpty()) {
@@ -190,7 +192,6 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 			}
 			if(numTicksOfGame % 23 == 0 | numTicksOfGame % 25 == 0 | numTicksOfGame % 27 == 0 | numTicksOfGame % 29 == 0 ) { // dim
 				dimFruit();
-				System.out.println("dim" + this.fruits.size());
 			}
 			if(numTicksOfGame % 26 ==0) { //disappear
 				disappearFruits();
@@ -203,12 +204,25 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 	}
 	private void revivePacman() {
 		this.pacman.initializePacman(new Pair(14,16));
+		Pair lastPosGreen = this.greenGhost.getBoardTileIn();
+		Pair lastPosRed = this.redGhost.getBoardTileIn();
+		Pair lastPosYellow = this.yellowGhost.getBoardTileIn();
+		this.timer.getGameTimer().removeActionListener(this.greenGhost);
+		this.timer.getGameTimer().removeActionListener(this.redGhost);
+		this.timer.getGameTimer().removeActionListener(this.yellowGhost);
 		InisializeGhosts();
+		this.greenGhost.setLastBoardTileIn(lastPosGreen);
+		this.redGhost.setLastBoardTileIn(lastPosRed);
+		this.yellowGhost.setLastBoardTileIn(lastPosYellow);
+		this.timer.getGameTimer().addActionListener(this.greenGhost);
+		this.timer.getGameTimer().addActionListener(this.redGhost);
+		this.timer.getGameTimer().addActionListener(this.yellowGhost);
+		this.numTicksOfGame = 1;
 	}
 
 	private void endGame() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	private void checkIfPacEat() {
@@ -298,7 +312,7 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 		g.setColor(Color.blue);
 		g.setFont(new Font(Font.DIALOG_INPUT,  Font.BOLD, 30));
 		g.drawString("Score: " + this.numPoints, 400, 700);
-		
+
 		//draw lives
 		drawLives(g);
 	}

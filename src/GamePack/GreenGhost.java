@@ -4,15 +4,15 @@ import java.awt.event.ActionEvent;
 import java.util.Vector;
 
 public class GreenGhost extends Ghost {
-	public GreenGhost( Pair inisialPositionTile,Vector<String>[][] neighbors) {
-		super(inisialPositionTile , neighbors,"green",new Pair(1,1) ,"u");
+	public GreenGhost( Pair inisialPositionTile, Pacman pacman,Vector<String>[][] neighbors) {
+		super(inisialPositionTile , pacman, neighbors,"green",new Pair(1,1) ,"u");
 
 	}
 
 	@Override
 	public void visit(NicePacman pacman) {
-		// TODO Auto-generated method stub
-
+		System.out.println("pc dead");
+		pacman.dead();
 	}
 
 	@Override
@@ -30,6 +30,7 @@ public class GreenGhost extends Ghost {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		super.actionPerformed(e);
 		if(this.isStart) {
 			if( timeFromStart%2 == 0) {
 				if(timeFromChase != 1 & timeFromChase != 2) 
