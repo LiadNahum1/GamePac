@@ -10,7 +10,7 @@ public class PacTimer implements ActionListener {
 	private int speed;
 
 	public PacTimer(ActionListener game) {
-		this.gameTimer = new Timer(1000, game);
+		this.gameTimer = new Timer(100, game);
 		gameTimer.addActionListener(this);
 		this.numTicksOfGame = 1; 
 		this.speed = 1;

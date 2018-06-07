@@ -7,8 +7,10 @@ import javax.swing.JLabel;
 public abstract class BoardTile {
 	private int x; //position on matrix
 	private int y; 
+
 	protected ImageIcon imageIcon; 
-	public BoardTile(int x, int y) {
+	private boolean isMovable;
+	public BoardTile(int x, int y , boolean isMovable) {
 		this.x = x;
 		this.y = y; 
 	}
@@ -22,5 +24,13 @@ public abstract class BoardTile {
 	}
 	public int getY() {
 		return this.y;
+	}
+
+	public boolean isMovable() {
+		return isMovable;
+	}
+
+	public void setMovable(boolean isMovable) {
+		this.isMovable = isMovable;
 	}
 }
