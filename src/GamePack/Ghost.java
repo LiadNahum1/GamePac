@@ -26,13 +26,13 @@ public abstract class Ghost  implements Visitor, ActionListener {
 	private boolean isDim;
 
 
-	public Ghost(Pair boardTileIn ,Vector<String> [][] neighbors ,String ghostColor ,Pair closestWall ) {
+	public Ghost(Pair boardTileIn ,Vector<String> [][] neighbors ,String ghostColor ,Pair closestWall ,String curPos ) {
 		this.lastBoardTileIn = new Pair(0,0);
 		this.boardTileIn = boardTileIn;
 		this.neighbors = neighbors;
 		this.timeFromChase = 0; //didntStart
 		this.chaseWall = closestWall;
-		this.curPos = "u"; 
+		this.curPos = curPos; 
 		this.timeFromStart = 1;
 		this.isStart = false;
 		this.isChase = false;
@@ -84,22 +84,21 @@ public abstract class Ghost  implements Visitor, ActionListener {
 		return nextTile;
 	}
 	private String findMoveDir() {
-		Vector <String> posDirs =neighbors[this.boardTileIn.getX()][this.boardTileIn.getY()];
-		if(posDirs.size()==2 & posDirs.contains(this.curPos))
-			return this.curPos;
-		if(posDirs.size() == 1)
+		@SuppressWarnings("unchecked")
+		Vector <String> posDirs =(Vector<String>) neighbors[this.boardTileIn.getX()][this.boardTileIn.getY()].clone();
+		if(posDirs.contains(curPos)) {
+			if(curPos == "u") posDirs.remove("d");
+			if(curPos == "d") posDirs.remove("u");
+			if(curPos == "r") posDirs.remove("l");
+			if(curPos == "l") posDirs.remove("r");
+		}
+		if(posDirs.size() == 1) 
 			return posDirs.get(0);
-		if(isChase) {
-			if(posDirs.size() > 2) {
-				if(curPos == "u") posDirs.remove("d");
-				if(curPos == "d") posDirs.remove("u");
-				if(curPos == "r") posDirs.remove("l");
-				if(curPos == "l") posDirs.remove("r");
-			}
+			if(isChase) {
 			Random r = new Random ();
 			int  n = r.nextInt(posDirs.size());
 			return posDirs.get(n);
-		}
+			}
 		else
 			return bestMove(posDirs);
 	}
@@ -113,11 +112,11 @@ public abstract class Ghost  implements Visitor, ActionListener {
 			return "r";
 	}
 	public void draw(Board board, Graphics g) { 
-		if(!isDim) {
 			Image offIm1 = board.createImage(20, 20);//this will draw last board tile
 			Graphics offGr1 = offIm1.getGraphics();	
 			offGr1.drawImage(board.getBoardTile(this.lastBoardTileIn).getImage(), 0,0, board);
 			g.drawImage(offIm1,this.lastBoardTileIn.getY()*20,this.lastBoardTileIn.getX()*20, board);
+			if(!isDim) {
 			Image offIm2 = board.createImage(20 , 20);//this will draw next board tile
 			Graphics offGr2 = offIm2.getGraphics();	
 			offGr2.drawImage(this.currPositionIm, 0,0, board);

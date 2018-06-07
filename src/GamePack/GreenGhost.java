@@ -5,7 +5,7 @@ import java.util.Vector;
 
 public class GreenGhost extends Ghost {
 	public GreenGhost( Pair inisialPositionTile,Vector<String>[][] neighbors) {
-		super(inisialPositionTile , neighbors,"green",new Pair(1,1));
+		super(inisialPositionTile , neighbors,"green",new Pair(1,1) ,"u");
 
 	}
 
