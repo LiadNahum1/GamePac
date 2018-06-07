@@ -29,22 +29,27 @@ public abstract class Ghost  implements Visitor, ActionListener {
 
 
 	public Ghost(Pair boardTileIn ,Pacman pacman, Vector<String> [][] neighbors ,String ghostColor ,Pair closestWall ,String curPos ) {
-		this.lastBoardTileIn = new Pair(0,0); 
-		this.boardTileIn = boardTileIn;     
+		inisializedata(boardTileIn , new Pair(0,0) , curPos);
 		this.neighbors = neighbors;
-		this.timeFromChase = 0; //didntStart   
 		this.chaseWall = closestWall;     
-		this.curPos = curPos;  
-		this.timeFromStart = 1;
-		this.isStart = false;  
-		this.isChase = false;
-		this.isDim = false;
 		this.pacman = pacman;
 		updateDirsPic(ghostColor);
 		this.currPositionIm = position.get(curPos);
 	}
 
 	
+	private void inisializedata(Pair boardTileIn , Pair lastBoardTileIn ,String curPos) {
+		this.lastBoardTileIn = lastBoardTileIn; 
+		this.boardTileIn = boardTileIn;     
+		this.timeFromChase = 0; //didnt Start chasing    
+		this.timeFromStart = 1;
+		this.curPos = curPos;  
+		this.isStart = false;  
+		this.isChase = false;
+		this.isDim = false;
+		this.currPositionIm = position.get(curPos);
+		}
+
 	private void updateDirsPic(String ghostColor) { 
 		position = new HashMap<String ,Image>();
 		position.put("u", new ImageIcon("pictures/figures/" + ghostColor +"_u.png").getImage());
