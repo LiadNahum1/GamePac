@@ -19,13 +19,13 @@ public abstract class Ghost  implements Visitor, ActionListener {
 	protected Vector<String> [][] neighbors;
 	protected Pacman pacman; 
 	protected Pair boardTileIn;
-	private Pair lastBoardTileIn;
+	protected Pair lastBoardTileIn;
 	protected int timeFromStart;
 	protected int timeFromChase;
 	private Pair chaseWall;
 	protected Boolean isChase;
 	protected HashMap <String,Image> position;
-	private Image currPositionIm;
+	protected Image currPositionIm;
 	protected Boolean isStart;
 	private boolean isDim;
 	protected BoardTile[][]boardTiles;
