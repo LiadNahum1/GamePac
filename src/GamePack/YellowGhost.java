@@ -28,16 +28,12 @@ public class YellowGhost extends Ghost{
 
 	@Override
 	public void visit(NicePacman pacman) {
-		this.mode = Mode.FREEZE; 
-		this.ticks = this.ticks + 1;
-		setCurrentPositionIm(this.freeze);
-		this.inAttack = false; 
+
 	}
 
 	@Override
 	public void visit(DefendedPacman pacman) {
-		// TODO Auto-generated method stub
-
+		pacman.freeze();
 	}
 
 	@Override
@@ -46,12 +42,13 @@ public class YellowGhost extends Ghost{
 		this.mode = Mode.FREEZE; 
 		this.ticks = this.ticks + 1;
 		setCurrentPositionIm(this.freeze);
+		this.prevTileAnderAttack.setX(this.tileAnderAttack.getX());
+		this.prevTileAnderAttack.setY(this.tileAnderAttack.getY());
 		this.inAttack = false; 
 		
 	}
 	@Override
 	public void draw(Board board, Graphics g) { 
-		if(this.mode.equals(Mode.ALIVE)|this.mode.equals(Mode.FREEZE)) {
 			super.draw(board, g);
 			Image offIm1 = board.createImage(20, 20);//this will draw last board tile
 			Graphics offGr1 = offIm1.getGraphics();	
@@ -63,7 +60,6 @@ public class YellowGhost extends Ghost{
 				offGr2.drawImage(this.attackImg, 0,0, board);
 				g.drawImage(offIm2,this.tileAnderAttack.getY()*20, this.tileAnderAttack.getX()*20, board);
 			}
-		}
 	}
 	public void advanceAttack() { //to finish
 		if(inAttack) {

@@ -43,12 +43,12 @@ public class GreenGhost extends Ghost {
 	}
 	public void die() {
 		disappear();
-		this.mode = Mode.DIE;
+		this.mode = Mode.DEAD;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(!this.mode.equals(Mode.DIE)) {
+		if(!this.mode.equals(Mode.DEAD)) {
 			if(this.mode.equals(Mode.DISAPPEAR) & this.ticks < speed * 5) {
 				this.ticks= this.ticks+ 1;
 			}
@@ -71,7 +71,7 @@ public class GreenGhost extends Ghost {
 	}
 	public void draw(Board board, Graphics g) { 
 		//draw one last time
-		if(this.mode.equals(Mode.DIE)){
+		if(this.mode.equals(Mode.DEAD)){
 			if(this.ticks== 0) {
 				super.draw(board, g);
 				this.ticks= this.ticks+1;
