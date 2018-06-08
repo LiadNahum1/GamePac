@@ -6,6 +6,8 @@ import java.util.Vector;
 
 import javax.swing.ImageIcon;
 
+import Tiles.BoardTile;
+
 public class RedGhost extends Ghost {
 	private  Pair tileAnderAttack;
 	private Pair prevTileAnderAttack;
@@ -13,8 +15,8 @@ public class RedGhost extends Ghost {
 	private String attackPos;
 	private boolean inAttack;
 
-	public RedGhost(Pair inisialPositionTile,Pacman pacman, Vector<String> [][] neighbors) {
-		super(inisialPositionTile ,pacman, neighbors , "red" ,new Pair(1,1) , "r");
+	public RedGhost(BoardTile[][]board, Pair inisialPositionTile,Pacman pacman, Vector<String> [][] neighbors) {
+		super(board, inisialPositionTile ,pacman, neighbors , "red" ,new Pair(1,1) , "r");
 		this.attackImg = new ImageIcon("pictures/figures/fire.png").getImage();
 		this.inAttack = false;
 		this.prevTileAnderAttack = new Pair(0,0);

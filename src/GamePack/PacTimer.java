@@ -8,11 +8,12 @@ public class PacTimer  {
 	private Timer gameTimer; // main timer of the game ;
 	private int speed;
 
-	public PacTimer(ActionListener game ,ActionListener greenGhost,ActionListener redGhost,ActionListener yellowGhost) {
+	public PacTimer(ActionListener game ,ActionListener greenGhost,ActionListener redGhost,ActionListener yellowGhost, ActionListener pacman) {
 		this.gameTimer = new Timer(500, game);
 		this.gameTimer.addActionListener(greenGhost);
 		this.gameTimer.addActionListener(redGhost);
 		this.gameTimer.addActionListener(yellowGhost);
+		this.gameTimer.addActionListener(pacman);
 		this.speed = 1;
 	}
 
@@ -30,5 +31,6 @@ public class PacTimer  {
 	private void updateGameSpeed() {
 		this.gameTimer.setDelay(1/speed*1000);
 	}
+	
 
 }

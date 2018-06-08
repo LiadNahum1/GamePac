@@ -37,7 +37,6 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 	private boolean isFruitsOn;
 	private Vector<Food> fruits; 
 	private Vector<RoadTile> fruitsTiles; 
-	private int numPoints; 
 	private int numTicksOfGame;
 	private int numOfLives = 3;
 
@@ -51,33 +50,60 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 		initializeFruits();
 		initializeBoardTilesS();
 		initializeBoard();
-		if(level == 1) {
-			this.pacman = new NicePacman(new Pair(14,16),this.boardTiles); 
-		}
+		initializePacman();
 		inisializeNeighborsMat();
 		InisializeGhosts();
-		this.timer = new PacTimer(this ,greenGhost,redGhost,yellowGhost);
+		this.timer = new PacTimer(this ,greenGhost,redGhost,yellowGhost,this.pacman);
 		this.numTicksOfGame = 1;
-		this.numPoints = 0;
 		this.addKeyListener(this);
 		this.setSize(800,800);
 		this.setVisible(true);
 	}
 
+	private void initializePacman() {
+		if(level == 1) 
+			this.pacman = new NicePacman(new Pair(14,16),this.boardTiles); 
+		if(level == 2)
+			this.pacman = new DefendedPacman(new Pair(14,16),this.boardTiles);
+		if(level == 3)
+			this.pacman = new AngryPacman(new Pair(14,16),this.boardTiles);
+	}
+
 	private void InisializeGhosts() {
-		this.greenGhost = new GreenGhost( new Pair(16,15), this.pacman, neighbors);
-		this.redGhost = new RedGhost( new Pair(16,14),this.pacman, neighbors);
-		this.yellowGhost = new YellowGhost( new Pair(16,16),this.pacman, neighbors);
+		this.greenGhost = new GreenGhost(this.boardTiles, new Pair(16,15), this.pacman, neighbors);
+		this.redGhost = new RedGhost(this.boardTiles, new Pair(16,14),this.pacman, neighbors);
+		this.yellowGhost = new YellowGhost(this.boardTiles, new Pair(16,16),this.pacman, neighbors);
 
 	}
 	public void initializeFruits() {
 		this.fruits = new Vector<>();
-		//for level one
-		for(int i=0; i< 2; i = i+1) {
-			this.fruits.add(new PineApple());
+		if(this.level == 1) {
+			for(int i=0; i< 2; i = i+1) {
+				this.fruits.add(new PineApple());
+			}
+			for(int i=0; i< 2; i = i+1) {
+				this.fruits.add(new Apple());
+			}
 		}
-		for(int i=0; i< 2; i = i+1) {
-			this.fruits.add(new Apple());
+		else if(this.level == 2) {
+			for(int i=0; i< 4; i = i+1) {
+				this.fruits.add(new PineApple());
+			}
+			for(int i=0; i< 4; i = i+1) {
+				this.fruits.add(new Apple());
+			}
+			this.fruits.add(new StrawBerry());
+		}
+		else {
+			for(int i=0; i< 5; i = i+1) {
+				this.fruits.add(new PineApple());
+			}
+			for(int i=0; i< 5; i = i+1) {
+				this.fruits.add(new Apple());
+			}
+			for(int i=0; i< 2; i = i+1) {
+				this.fruits.add(new StrawBerry());
+			}
 		}
 	}
 	@SuppressWarnings("unchecked")
@@ -138,6 +164,7 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 		int x =0;
 		int y=0;
 		BoardTile b = this.boardTiles[x][y];
+		this.fruitsTiles.clear();
 		for(int i=0; i< this.fruits.size(); i = i+1) {
 			while(!(b instanceof RoadTile) || ((RoadTile) b).getIsSomethingOn()) {
 				x = rand.nextInt(32);
@@ -168,7 +195,7 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 			if(this.numOfLives == 0) 
 				endGame();
 			else {
-				revivePacman();
+				repaint();
 			}
 		}
 		else {
@@ -197,26 +224,16 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 				disappearFruits();
 				this.isFruitsOn = false;
 			}
-			this.pacman.move(); //move pacman
 			checkIfPacEat();
+			repaint();
 		}
-		repaint();
+
 	}
-	private void revivePacman() {
+	private void revivePacman() {		
 		this.pacman.initializePacman(new Pair(14,16));
-		Pair lastPosGreen = this.greenGhost.getBoardTileIn();
-		Pair lastPosRed = this.redGhost.getBoardTileIn();
-		Pair lastPosYellow = this.yellowGhost.getBoardTileIn();
-		this.timer.getGameTimer().removeActionListener(this.greenGhost);
-		this.timer.getGameTimer().removeActionListener(this.redGhost);
-		this.timer.getGameTimer().removeActionListener(this.yellowGhost);
-		InisializeGhosts();
-		this.greenGhost.setLastBoardTileIn(lastPosGreen);
-		this.redGhost.setLastBoardTileIn(lastPosRed);
-		this.yellowGhost.setLastBoardTileIn(lastPosYellow);
-		this.timer.getGameTimer().addActionListener(this.greenGhost);
-		this.timer.getGameTimer().addActionListener(this.redGhost);
-		this.timer.getGameTimer().addActionListener(this.yellowGhost);
+		this.greenGhost.inisializeData(new Pair(16,15), new Pair(0,0), "u");
+		this.redGhost.inisializeData(new Pair(16,14), new Pair(0,0), "r");
+		this.yellowGhost.inisializeData(new Pair(16,16), new Pair(0,0), "u");
 		this.numTicksOfGame = 1;
 	}
 
@@ -233,14 +250,11 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 		RoadTile pacTile = (RoadTile)this.boardTiles[i][j];
 		for(int k=0; k<this.fruitsTiles.size(); k =k+1) {
 			if(pacTile.equals(this.fruitsTiles.get(k))) {
-				System.out.print("yes");
 				this.fruitsTiles.remove(k);
 				Food food = pacTile.getFood();
 				this.fruits.remove(food);
 			}
 		}
-		this.numPoints = this.numPoints + pacTile.eaten();
-
 	}
 
 
@@ -291,14 +305,16 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 			g.drawImage(offIm, 0, 0, this);
 			start = false; 
 		}
+		if(this.pacman.isPacDead()) {
+			this.start = true; 
+			revivePacman();
+		}
+
 		//pacman draw
 		this.pacman.draw(this, g);
 		//fruits draw
 		for(int i=0; i<this.fruitsTiles.size(); i = i+1) {
 			g.drawImage(this.fruitsTiles.get(i).getImage(), this.fruitsTiles.get(i).getY()*20, this.fruitsTiles.get(i).getX()*20, this);
-		}
-		if(!isFruitsOn) {
-			this.fruitsTiles.clear();
 		}
 
 		//ghosts draw
@@ -311,10 +327,11 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 		g.fillRect(400,650, 400, 150);
 		g.setColor(Color.blue);
 		g.setFont(new Font(Font.DIALOG_INPUT,  Font.BOLD, 30));
-		g.drawString("Score: " + this.numPoints, 400, 700);
+		g.drawString("Score: " + this.pacman.getScore(), 400, 700);
 
 		//draw lives
 		drawLives(g);
+
 	}
 
 	public BoardTile getBoardTile(Pair place) {
@@ -360,7 +377,6 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 	public static void main(String[]args) {
 		new Board(1);
 	}
-
 
 }
 

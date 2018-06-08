@@ -1,14 +1,17 @@
 package GamePack;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 import javax.swing.ImageIcon;
 
+import Food.Food;
 import Tiles.BoardTile;
 import Tiles.RoadTile;
 
-public abstract class Pacman implements Visited{
+public abstract class Pacman implements Visited, ActionListener{
 	protected ImageIcon [] pacmanIcons;
 	protected ImageIcon currentIcon;
 	private Pair currentPosition; // on board
@@ -20,13 +23,14 @@ public abstract class Pacman implements Visited{
 	private BoardTile [][] board; 
 	private String direction; //"l", "r", "u","d"
 	private boolean isPacDie;
-
+	private int score;
 	public Pacman(Pair initialPosition, BoardTile[][]board) {
 		this.pacmanIcons = new ImageIcon[5];
 		this.fullPac = new ImageIcon("pictures\\figures\\NicePacman\\fullPac.png");
 		this.isFull = false; 
 		this.isPacDie = false;
 		this.board = board; 
+		this.score = 0;
 		initializePacman(initialPosition);
 	}
 	public void initializePacman(Pair initialPosition) {
@@ -37,7 +41,7 @@ public abstract class Pacman implements Visited{
 		this.dy = -1; 
 		this.direction = "l"; 
 		this.isPacDie = false; 
-
+		
 	}
 	/*moves pacman if can */
 	public void move() {
@@ -47,7 +51,7 @@ public abstract class Pacman implements Visited{
 			this.currentPosition.sumSetX(this.dx);
 			this.currentPosition.sumSetY(this.dy);
 		    ((RoadTile)this.board[this.currentPosition.getX()][this.currentPosition.getY()]).setIsSomethingOn(true);
-			((RoadTile)this.board[this.lastPosition.getX()][this.lastPosition.getY()]).setIsSomethingOn(false);
+		    ((RoadTile)this.board[this.lastPosition.getX()][this.lastPosition.getY()]).setIsSomethingOn(false);
 		}
 	}
 	public boolean checkIfCanMove() {
@@ -92,7 +96,20 @@ public abstract class Pacman implements Visited{
 		}
 			move();
 	}
+	public void actionPerformed(ActionEvent e) {
+		move(); //move pacman	
+		eat();
+	}
+	public void eat() {
+		this.score = this.score + ((RoadTile)this.board[getCurrentPosition().getX()][getCurrentPosition().getY()]).eaten();
+	}
 
+	public int getScore() {
+		return this.score;
+	}
+	public void reduceScore(int reduce) {
+		this.score = this.score - reduce;
+	}
 	public void draw(Board board, Graphics g) {
 		ImageIcon im = getCurrentIcon();
 	/*	if(!isFull) {
@@ -119,3 +136,4 @@ public abstract class Pacman implements Visited{
 	}
 
 }
+

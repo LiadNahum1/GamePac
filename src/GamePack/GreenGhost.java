@@ -3,46 +3,85 @@ import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.util.Vector;
 
+import Tiles.BoardTile;
+
 public class GreenGhost extends Ghost {
-	public GreenGhost( Pair inisialPositionTile, Pacman pacman,Vector<String>[][] neighbors) {
-		super(inisialPositionTile , pacman, neighbors,"green",new Pair(1,1) ,"u");
-
+	public GreenGhost( BoardTile[][]board, Pair inisialPositionTile, Pacman pacman,Vector<String>[][] neighbors) {
+		super(board, inisialPositionTile , pacman, neighbors,"green",new Pair(1,1) ,"u");
+		this.ticks= 0;
 	}
 
 	@Override
+	/*pacman dies*/
 	public void visit(NicePacman pacman) {
-		System.out.println("pc dead");
 		pacman.dead();
+		
 	}
 
 	@Override
+	/*ghost disappear for 5 seconds*/
 	public void visit(DefendedPacman pacman) {
-		// TODO Auto-generated method stub
-
+		if(this.mode.equals(Mode.ALIVE))
+			disappear();
 	}
 
 	@Override
+	/*ghost dies*/
 	public void visit(AngryPacman pacman) {
-		// TODO Auto-generated method stub
-
+		die();
 	}
-
+	public void disappear() {
+		this.mode = Mode.DISAPPEAR;
+		int x = getBoardTileIn().getX();
+		int y = getBoardTileIn().getY();
+		setCurrentPositionIm(this.boardTiles[x][y].getImage());
+	}
+	public void revive() {
+		this.ticks= 0;
+		this.mode = Mode.ALIVE;
+		setCurrentPositionIm(this.position.get(this.curPos));
+	}
+	public void die() {
+		disappear();
+		this.mode = Mode.DIE;
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		super.actionPerformed(e);
-		if(this.isStart) {
-			if( timeFromStart%2 == 0) {
-				if(timeFromChase != 1 & timeFromChase != 2) 
-					this.move();
-				if( timeFromChase!= 0)
-					timeFromChase++;
+		if(!this.mode.equals(Mode.DIE)) {
+			if(this.mode.equals(Mode.DISAPPEAR) & this.ticks < speed * 5) {
+				this.ticks= this.ticks+ 1;
 			}
-			timeFromStart++;
+			else {
+				super.actionPerformed(e);
+				if(this.ticks== speed*5) {
+					revive();
+				}
+				if(this.isStart) {
+					if( timeFromStart%2 == 0) {
+						if(timeFromChase != 1 & timeFromChase != 2) 
+							this.move();
+						if( timeFromChase!= 0)
+							timeFromChase++;
+					}
+					timeFromStart++;
+				}
+			}
 		}
 	}
-
-
-
-
+	public void draw(Board board, Graphics g) { 
+		//draw one last time
+		if(this.mode.equals(Mode.DIE)){
+			if(this.ticks== 0) {
+				super.draw(board, g);
+				this.ticks= this.ticks+1;
+			}
+		}
+		else {
+			//draw if ghost is alive or if its the first tick of the ghost in disappear mode
+			if(this.mode.equals(Mode.ALIVE) | this.ticks== 1) {
+				super.draw(board, g);
+			}
+		}
+	}
 }

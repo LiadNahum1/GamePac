@@ -12,6 +12,8 @@ import java.util.Vector;
 
 import javax.swing.ImageIcon;
 
+import Tiles.BoardTile;
+
 public abstract class Ghost  implements Visitor, ActionListener {
 	protected String curPos;
 	protected Vector<String> [][] neighbors;
@@ -22,23 +24,27 @@ public abstract class Ghost  implements Visitor, ActionListener {
 	protected int timeFromChase;
 	private Pair chaseWall;
 	protected Boolean isChase;
-	private HashMap <String,Image> position;
+	protected HashMap <String,Image> position;
 	private Image currPositionIm;
 	protected Boolean isStart;
 	private boolean isDim;
+	protected BoardTile[][]boardTiles;
+	protected Mode mode; 
+	protected int speed;
+	protected int ticks;
 
 
-	public Ghost(Pair boardTileIn ,Pacman pacman, Vector<String> [][] neighbors ,String ghostColor ,Pair closestWall ,String curPos ) {
-		inisializedata(boardTileIn , new Pair(0,0) , curPos);
+	public Ghost(BoardTile[][]board, Pair boardTileIn ,Pacman pacman, Vector<String> [][] neighbors ,String ghostColor ,Pair closestWall ,String curPos ) {
+		updateDirsPic(ghostColor);
+		inisializeData(boardTileIn , new Pair(0,0) , curPos);
 		this.neighbors = neighbors;
 		this.chaseWall = closestWall;     
 		this.pacman = pacman;
-		updateDirsPic(ghostColor);
-		this.currPositionIm = position.get(curPos);
+		this.boardTiles = board;
 	}
 
-	
-	private void inisializedata(Pair boardTileIn , Pair lastBoardTileIn ,String curPos) {
+
+	public void inisializeData(Pair boardTileIn , Pair lastBoardTileIn ,String curPos) {
 		this.lastBoardTileIn = lastBoardTileIn; 
 		this.boardTileIn = boardTileIn;     
 		this.timeFromChase = 0; //didnt Start chasing    
@@ -47,8 +53,11 @@ public abstract class Ghost  implements Visitor, ActionListener {
 		this.isStart = false;  
 		this.isChase = false;
 		this.isDim = false;
+		this.mode = Mode.ALIVE;
+		this.speed = 2;
+		this.ticks = 0;
 		this.currPositionIm = position.get(curPos);
-		}
+	}
 
 	private void updateDirsPic(String ghostColor) { 
 		position = new HashMap<String ,Image>();
@@ -104,11 +113,11 @@ public abstract class Ghost  implements Visitor, ActionListener {
 		}
 		if(posDirs.size() == 1) 
 			return posDirs.get(0);
-			if(isChase) {
+		if(isChase) {
 			Random r = new Random ();
 			int  n = r.nextInt(posDirs.size());
 			return posDirs.get(n);
-			}
+		}
 		else
 			return bestMove(posDirs);
 	}
@@ -127,11 +136,11 @@ public abstract class Ghost  implements Visitor, ActionListener {
 			offGr1.drawImage(board.getBoardTile(this.lastBoardTileIn).getImage(), 0,0, board);
 			g.drawImage(offIm1,this.lastBoardTileIn.getY()*20,this.lastBoardTileIn.getX()*20, board);
 			if(!isDim) {
-			Image offIm2 = board.createImage(20 , 20);//this will draw next board tile
-			Graphics offGr2 = offIm2.getGraphics();	
-			offGr2.drawImage(this.currPositionIm, 0,0, board);
-			g.drawImage(offIm2,this.boardTileIn.getY()*20, this.boardTileIn.getX()*20, board);
-		}
+				Image offIm2 = board.createImage(20 , 20);//this will draw next board tile
+				Graphics offGr2 = offIm2.getGraphics();	
+				offGr2.drawImage(this.currPositionIm, 0,0, board);
+				g.drawImage(offIm2,this.boardTileIn.getY()*20, this.boardTileIn.getX()*20, board);
+			}
 	}
 	public void dimGhost() {
 		if(this.isDim)
@@ -157,8 +166,10 @@ public abstract class Ghost  implements Visitor, ActionListener {
 	public void setStart(boolean bool) {
 		this.isStart = bool;
 	}
+	public void setCurrentPositionIm(Image im) {
+		this.currPositionIm = im;
+	}
 	public abstract void visit(NicePacman pacman);
 	public abstract void visit(DefendedPacman pacman);
 	public abstract void visit(AngryPacman pacman);
-
 }

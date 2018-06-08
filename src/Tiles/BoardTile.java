@@ -33,4 +33,5 @@ public abstract class BoardTile {
 	public void setMovable(boolean isMovable) {
 		this.isMovable = isMovable;
 	}
+	
 }
