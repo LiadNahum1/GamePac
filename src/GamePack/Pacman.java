@@ -22,16 +22,25 @@ public abstract class Pacman implements Visited, ActionListener{
 	private boolean isFull;
 	private BoardTile [][] board; 
 	private String direction; //"l", "r", "u","d"
-	private boolean isPacDie;
+	private Mode mode;
 	private int score;
+	private int freezeTicks;
+	private ImageIcon [] freezeIcon; 
 	public Pacman(Pair initialPosition, BoardTile[][]board) {
 		this.pacmanIcons = new ImageIcon[5];
+		this.freezeIcon = new ImageIcon[4];
 		this.fullPac = new ImageIcon("pictures\\figures\\NicePacman\\fullPac.png");
+		initialFreezeIcons();
 		this.isFull = false; 
-		this.isPacDie = false;
 		this.board = board; 
 		this.score = 0;
 		initializePacman(initialPosition);
+	}
+	private void initialFreezeIcons() {
+		this.freezeIcon[0] = new ImageIcon("pictures\\figures\\freeze\\l.png");
+		this.freezeIcon[1] = new ImageIcon("pictures\\figures\\freeze\\r.png");
+		this.freezeIcon[2] = new ImageIcon("pictures\\figures\\freeze\\u.png");
+		this.freezeIcon[3] = new ImageIcon("pictures\\figures\\freeze\\d.png");
 	}
 	public void initializePacman(Pair initialPosition) {
 		this.currentIcon = this.pacmanIcons[0];
@@ -40,8 +49,9 @@ public abstract class Pacman implements Visited, ActionListener{
 		this.dx = 0;
 		this.dy = -1; 
 		this.direction = "l"; 
-		this.isPacDie = false; 
-		
+		this.mode = Mode.ALIVE;  
+		this.freezeTicks = 0;
+
 	}
 	/*moves pacman if can */
 	public void move() {
@@ -51,6 +61,7 @@ public abstract class Pacman implements Visited, ActionListener{
 			this.currentPosition.sumSetX(this.dx);
 			this.currentPosition.sumSetY(this.dy);
 		}
+		
 	}
 	public boolean checkIfCanMove() {
 		int x = this.currentPosition.getX() + this.dx;
@@ -68,36 +79,48 @@ public abstract class Pacman implements Visited, ActionListener{
 		return this.currentPosition;
 	}
 	public void manageMovement(KeyEvent e) {
-		if(e.getKeyCode()== KeyEvent.VK_LEFT) {
-			this.dx = 0;
-			this.dy= -1;
-			this.direction = "l";
-			this.currentIcon = this.pacmanIcons[0];
-		}
-		if(e.getKeyCode()== KeyEvent.VK_RIGHT) {
-			this.dx = 0;
-			this.dy= 1;
-			this.direction = "r";
-			this.currentIcon = this.pacmanIcons[1];
-		}
-		if(e.getKeyCode()== KeyEvent.VK_UP) {
-			this.dx = -1;
-			this.dy= 0;
-			this.direction = "u";
-			this.currentIcon = this.pacmanIcons[2];
-		}
-		if(e.getKeyCode()== KeyEvent.VK_DOWN) {
-			this.dx = 1;
-			this.dy= 0;
-			this.direction = "d";
-			this.currentIcon = this.pacmanIcons[3];
-		}
+		if(!this.mode.equals(Mode.FREEZE)) {
+			if(e.getKeyCode()== KeyEvent.VK_LEFT) {
+				this.dx = 0;
+				this.dy= -1;
+				this.direction = "l";
+				this.currentIcon = this.pacmanIcons[0];
+			}
+			if(e.getKeyCode()== KeyEvent.VK_RIGHT) {
+				this.dx = 0;
+				this.dy= 1;
+				this.direction = "r";
+				this.currentIcon = this.pacmanIcons[1];
+			}
+			if(e.getKeyCode()== KeyEvent.VK_UP) {
+				this.dx = -1;
+				this.dy= 0;
+				this.direction = "u";
+				this.currentIcon = this.pacmanIcons[2];
+			}
+			if(e.getKeyCode()== KeyEvent.VK_DOWN) {
+				this.dx = 1;
+				this.dy= 0;
+				this.direction = "d";
+				this.currentIcon = this.pacmanIcons[3];
+			}
 			move();
 			eat();
+		}
 	}
 	public void actionPerformed(ActionEvent e) {
-		move(); //move pacman	
-		eat();
+		if(this.mode.equals(Mode.FREEZE) & this.freezeTicks < 4*3) {
+			this.freezeTicks = this.freezeTicks +1;
+			System.out.println(this.freezeTicks);
+		}
+		else {
+			if(this.freezeTicks == 4*3) {
+				this.mode = Mode.ALIVE;
+				this.freezeTicks = 0;
+			}
+		//	move(); //move pacman	
+		//	eat();
+		}
 	}
 	public void eat() {
 		this.score = this.score + ((RoadTile)this.board[getCurrentPosition().getX()][getCurrentPosition().getY()]).eaten();
@@ -111,7 +134,7 @@ public abstract class Pacman implements Visited, ActionListener{
 	}
 	public void draw(Board board, Graphics g) {
 		ImageIcon im = getCurrentIcon();
-	/*	if(!isFull) {
+		/*	if(!isFull) {
 			im = getCurrentIcon();
 			this.isFull = true; 
 		}
@@ -126,12 +149,26 @@ public abstract class Pacman implements Visited, ActionListener{
 		g.drawImage(offIm,this.currentPosition.getY() * 20, this.currentPosition.getX()*20, board);
 	}
 	public void dead() {
-		this.isPacDie = true;
+		this.mode = Mode.DEAD;
 
 	}
-	
-	public boolean isPacDead() {
-		return this.isPacDie;
+	public void freeze() {
+		this.mode = Mode.FREEZE;
+		if(this.freezeTicks == 0)
+			reduceScore(10);
+		if(this.direction.equals("l"))
+			this.currentIcon = this.freezeIcon[0];
+		if(this.direction.equals("r"))
+			this.currentIcon = this.freezeIcon[1];
+		if(this.direction.equals("u"))
+			this.currentIcon = this.freezeIcon[2];
+		else
+			this.currentIcon = this.freezeIcon[3];
+
+	}
+
+	public Mode getMode() {
+		return this.mode;
 	}
 
 }

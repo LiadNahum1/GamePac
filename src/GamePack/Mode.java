@@ -1,5 +1,5 @@
 package GamePack;
 
 public enum Mode {
-	ALIVE, DISAPPEAR, FREEZE, DIE;
+	ALIVE, DISAPPEAR, FREEZE, DEAD;
 }

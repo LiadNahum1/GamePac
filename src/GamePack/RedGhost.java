@@ -25,7 +25,6 @@ public class RedGhost extends Ghost {
 
 	@Override
 	public void visit(NicePacman pacman) {
-		pacman.dead();
 		// TODO Auto-generated method stub
 
 	}
@@ -38,8 +37,7 @@ public class RedGhost extends Ghost {
 
 	@Override
 	public void visit(AngryPacman pacman) {
-		// TODO Auto-generated method stub
-
+		pacman.dead();
 	}
 	@Override
 	public void draw(Board board, Graphics g) { 

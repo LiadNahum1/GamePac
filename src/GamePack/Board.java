@@ -192,7 +192,7 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(this.pacman.isPacDead()) {
+		if(this.pacman.getMode().equals(Mode.DEAD)) {
 			this.numOfLives = this.numOfLives - 1;
 			if(this.numOfLives == 0) 
 				endGame();
@@ -270,7 +270,6 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 			checkIfPacEat();
 			repaint();
 		}
-
 	}
 
 
@@ -307,7 +306,7 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 			g.drawImage(offIm, 0, 0, this);
 			start = false; 
 		}
-		if(this.pacman.isPacDead()) {
+		if(this.pacman.getMode().equals(Mode.DEAD)) {
 			this.start = true; 
 			revivePacman();
 		}
@@ -377,7 +376,7 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 
 	}
 	public static void main(String[]args) {
-		new Board(2);
+		new Board(1);
 	}
 
 }
