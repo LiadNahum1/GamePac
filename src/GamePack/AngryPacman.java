@@ -21,10 +21,5 @@ public class AngryPacman extends Pacman {
 	public void impact(Visitor v) {
 		v.visit(this);
 	}
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		super.actionPerformed(e);
-		
-	}
 	
 }

@@ -50,8 +50,6 @@ public abstract class Pacman implements Visited, ActionListener{
 			this.lastPosition.setY(this.currentPosition.getY());
 			this.currentPosition.sumSetX(this.dx);
 			this.currentPosition.sumSetY(this.dy);
-		    ((RoadTile)this.board[this.currentPosition.getX()][this.currentPosition.getY()]).setIsSomethingOn(true);
-		    ((RoadTile)this.board[this.lastPosition.getX()][this.lastPosition.getY()]).setIsSomethingOn(false);
 		}
 	}
 	public boolean checkIfCanMove() {
@@ -95,6 +93,7 @@ public abstract class Pacman implements Visited, ActionListener{
 			this.currentIcon = this.pacmanIcons[3];
 		}
 			move();
+			eat();
 	}
 	public void actionPerformed(ActionEvent e) {
 		move(); //move pacman	

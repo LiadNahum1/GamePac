@@ -37,6 +37,7 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 	private boolean isFruitsOn;
 	private Vector<Food> fruits; 
 	private Vector<RoadTile> fruitsTiles; 
+	private int numPoints; 
 	private int numTicksOfGame;
 	private int numOfLives = 3;
 
@@ -53,8 +54,9 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 		initializePacman();
 		inisializeNeighborsMat();
 		InisializeGhosts();
-		this.timer = new PacTimer(this ,greenGhost,redGhost,yellowGhost,this.pacman);
+		this.timer = new PacTimer(this ,greenGhost,redGhost,yellowGhost, this.pacman);
 		this.numTicksOfGame = 1;
+		this.numPoints = 0;
 		this.addKeyListener(this);
 		this.setSize(800,800);
 		this.setVisible(true);
@@ -78,12 +80,12 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 	public void initializeFruits() {
 		this.fruits = new Vector<>();
 		if(this.level == 1) {
-			for(int i=0; i< 2; i = i+1) {
-				this.fruits.add(new PineApple());
-			}
-			for(int i=0; i< 2; i = i+1) {
-				this.fruits.add(new Apple());
-			}
+		for(int i=0; i< 2; i = i+1) {
+			this.fruits.add(new PineApple());
+		}
+		for(int i=0; i< 2; i = i+1) {
+			this.fruits.add(new Apple());
+		}
 		}
 		else if(this.level == 2) {
 			for(int i=0; i< 4; i = i+1) {
@@ -375,7 +377,7 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 
 	}
 	public static void main(String[]args) {
-		new Board(1);
+		new Board(2);
 	}
 
 }
