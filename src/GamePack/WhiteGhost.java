@@ -1,15 +1,21 @@
 package GamePack;
 
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.util.Vector;
+
+import javax.swing.ImageIcon;
 
 import Tiles.BoardTile;
 
 public class WhiteGhost extends Ghost{
 private boolean canHit;
+private Image cantHitIm;
 	public WhiteGhost(BoardTile[][]board, Pair inisialPositionTile,Pacman pacman, Vector<String> [][] neighbors) {
 		super(board, inisialPositionTile ,pacman, neighbors , "white" ,new Pair(1,30) , "l");
 		this.canHit = true;
+		this.cantHitIm = new ImageIcon("pictures/figures/scared.png").getImage();
+		
 	}
 
 	@Override
@@ -51,6 +57,8 @@ private boolean canHit;
 				}
 				if(timeFromChase >= 5 & timeFromChase < 11) 
 					dimGhost();
+				if(!canHit)
+					this.currPositionIm = this.cantHitIm;
 				if( timeFromChase != 0) 
 					timeFromChase++;
 			timeFromStart++;
