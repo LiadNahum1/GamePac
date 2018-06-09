@@ -19,8 +19,7 @@ public class PinkGhost extends Ghost{
 
 	@Override
 	public void visit(NicePacman pacman) {
-		// TODO Auto-generated method stub
-
+	this.pacman.dead();
 	}
 
 	@Override
@@ -31,8 +30,7 @@ public class PinkGhost extends Ghost{
 
 	@Override
 	public void visit(AngryPacman pacman) {
-		// TODO Auto-generated method stub
-
+this.pacman.dead();
 	}
 	@Override
 	public void draw(Board board, Graphics g) { 

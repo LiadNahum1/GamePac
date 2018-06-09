@@ -38,6 +38,7 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 	private boolean start; 
 	private boolean isFruitsOn;
 	private Vector<Food> fruits; 
+	private Vector<Food> fruitsEaten;
 	private Vector<RoadTile> fruitsTiles; 
 	private int numPoints; 
 	private int numTicksOfGame;
@@ -92,6 +93,7 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 	}
 	public void initializeFruits() {
 		this.fruits = new Vector<>();
+		this.fruitsEaten = new Vector<>();
 		if(this.level == 1) {
 			for(int i=0; i< 2; i = i+1) {
 				this.fruits.add(new PineApple());
@@ -294,6 +296,7 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 				this.fruitsTiles.remove(k);
 				Food food = pacTile.getFood();
 				this.fruits.remove(food);
+				System.out.println("ad");
 			}
 		}
 	}
@@ -372,16 +375,21 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 
 		//score draw
 		g.setColor(Color.black);
-		g.fillRect(400,650, 400, 150);
+		g.fillRect(0,680, 200, 100);
 		g.setColor(Color.blue);
 		g.setFont(new Font(Font.DIALOG_INPUT,  Font.BOLD, 30));
-		g.drawString("Score: " + this.pacman.getScore(), 400, 700);
+		g.drawString("Score: " + this.pacman.getScore(), 20, 720);
 
 		//draw lives
 		drawLives(g);
-
+		//draw fruits
+		drawFruitsScors(g);
 	}
 
+	private void drawFruitsScors(Graphics g) {
+		for(int i=0 ;i<this.fruitsEaten.size(); i = i +1) {
+			g.drawImage(this.fruitsEaten.get(i).getBigImage(), 100 + 30*i, 650, this);	}
+		}
 	public BoardTile getBoardTile(Pair place) {
 		return this.boardTiles[place.getX()][place.getY()];
 	}

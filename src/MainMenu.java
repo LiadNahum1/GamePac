@@ -22,6 +22,7 @@ import GamePack.Board;
 public class MainMenu extends JFrame implements ActionListener {
 	private JButton start;
 	private JButton exit; 
+	private JButton top5; 
 	private final int size = 500;
 
 	public MainMenu() {
@@ -44,6 +45,14 @@ public class MainMenu extends JFrame implements ActionListener {
 		exit.setFont(new Font("Serif", Font.BOLD, 20));
 		exit.addActionListener(this);
 		cp.add(this.exit);
+		
+		this.top5 = new JButton("Top 5 Scores");
+		this.top5.setBackground(Color.RED);
+		this.top5.setBounds(180, 350, 150, 35);
+		top5.setFont(new Font("Serif", Font.BOLD, 20));
+		this.top5.addActionListener(this);	
+		cp.add(this.top5);
+
 		this.setSize(size, size);
 		this.setResizable(false);
 		this.setVisible(true);
@@ -67,7 +76,7 @@ public class MainMenu extends JFrame implements ActionListener {
 			}
 		}
 		if(e.getSource().equals(this.start)) {
-			new Board(1);
+			new Board(3);
 			this.setVisible(false);
 		}
 	}

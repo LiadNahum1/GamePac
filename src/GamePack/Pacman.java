@@ -26,6 +26,7 @@ public abstract class Pacman implements Visited, ActionListener{
 	private int score;
 	private int freezeTicks;
 	private ImageIcon [] freezeIcon; 
+
 	public Pacman(Pair initialPosition, BoardTile[][]board) {
 		this.pacmanIcons = new ImageIcon[5];
 		this.freezeIcon = new ImageIcon[4];
@@ -124,6 +125,7 @@ public abstract class Pacman implements Visited, ActionListener{
 	}
 	public void eat() {
 		this.score = this.score + ((RoadTile)this.board[getCurrentPosition().getX()][getCurrentPosition().getY()]).eaten();
+	
 	}
 
 	public int getScore() {

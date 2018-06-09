@@ -26,14 +26,13 @@ private Image cantHitIm;
 
 	@Override
 	public void visit(DefendedPacman pacman) {
-		// TODO Auto-generated method stub
-		
-	}
+		if(this.canHit)
+	this.pacman.freeze();	}
 
 	@Override
 	public void visit(AngryPacman pacman) {
-		// TODO Auto-generated method stub
-		
+		if(this.canHit)
+		this.pacman.dead();
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
