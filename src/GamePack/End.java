@@ -81,7 +81,6 @@ public class End extends JFrame implements ActionListener {
 		model.addColumn("Last Name");
 		model.addColumn("Time");
 		model.addColumn("Score");
-		model.addRow(new Object[] {"Liad","Nahum","243","ssdf"});
 		this.scrollPane = new JScrollPane(this.records);
 		this.records.setFillsViewportHeight(true);
 		this.records.setEnabled(false);
@@ -91,13 +90,13 @@ public class End extends JFrame implements ActionListener {
 	}
 	private void addToTabel(String content) {
 		DefaultTableModel model = (DefaultTableModel) this.records.getModel();
-		String []name = content.split(",");
-		model.addRow(new Object[] {name[0], name[1],  board.getNumTicksWithoutStop(), board.getScoreOfPlayer()+""});
+		String []data = content.split(",");
+		model.addRow(new Object[] {data[0], data[1], data[2], data[3]});
 	}
 
 	private void writeIntoFile(String content) {
 		try  {
-			String path=System.getProperty("user.dir")+ "/recorded.txt";
+			String path=System.getProperty("user.dir")+ "/records.txt";
 			File file = new File(path);
 			FileWriter fw = new FileWriter(file.getAbsoluteFile(),true); //append to file
 			BufferedWriter bw = new BufferedWriter(fw);
@@ -117,7 +116,8 @@ public class End extends JFrame implements ActionListener {
 				JOptionPane.showMessageDialog(this, "Please insert data","", JOptionPane.OK_OPTION);
 			}
 			else {
-				String content = this.nameT.getText() +","+ this.lastT.getText();
+				String content = this.nameT.getText() +","+ this.lastT.getText() + "," + board.getNumTicksWithoutStop() + 
+						","+ board.getScoreOfPlayer();
 				writeIntoFile(content);
 				addToTabel(content);
 			}
