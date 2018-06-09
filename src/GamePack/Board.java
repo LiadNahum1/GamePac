@@ -295,6 +295,7 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 			if(pacTile.equals(this.fruitsTiles.get(k))) {
 				this.fruitsTiles.remove(k);
 				Food food = pacTile.getFood();
+			//	this.fruitsEaten.add(food);
 				this.fruits.remove(food);
 				System.out.println("ad");
 			}
@@ -383,7 +384,7 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 		//draw lives
 		drawLives(g);
 		//draw fruits
-		drawFruitsScors(g);
+		//drawFruitsScors(g);
 	}
 
 	private void drawFruitsScors(Graphics g) {
