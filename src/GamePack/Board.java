@@ -30,9 +30,11 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 	private Vector<String> [][] neighbors;
 	private int level; 
 	private Pacman pacman;
+	private WhiteGhost whiteGhost;
 	private GreenGhost greenGhost;
 	private RedGhost redGhost;
 	private YellowGhost yellowGhost;
+	private PinkGhost pinkGhost;
 	private boolean start; 
 	private boolean isFruitsOn;
 	private Vector<Food> fruits; 
@@ -54,7 +56,7 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 		initializePacman();
 		inisializeNeighborsMat();
 		InisializeGhosts();
-		this.timer = new PacTimer(this ,greenGhost,redGhost,yellowGhost, this.pacman);
+		this.timer = new PacTimer(this ,whiteGhost,pinkGhost,greenGhost,redGhost,yellowGhost, this.pacman);
 		this.numTicksOfGame = 1;
 		this.numPoints = 0;
 		this.addKeyListener(this);
@@ -75,6 +77,16 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 		this.greenGhost = new GreenGhost(this.boardTiles, new Pair(16,15), this.pacman, neighbors);
 		this.redGhost = new RedGhost(this.boardTiles, new Pair(16,14),this.pacman, neighbors);
 		this.yellowGhost = new YellowGhost(this.boardTiles, new Pair(16,16),this.pacman, neighbors);
+		if(level == 1 )
+			this.pinkGhost = new PinkGhost(this.boardTiles, new Pair(16,17),this.pacman, neighbors);
+		if(level == 2 )
+			this.whiteGhost = new WhiteGhost(this.boardTiles, new Pair(16,17),this.pacman, neighbors);
+		if(level == 3 ) {
+			this.pinkGhost = new PinkGhost(this.boardTiles, new Pair(16,17),this.pacman, neighbors);
+			this.whiteGhost = new WhiteGhost(this.boardTiles, new Pair(16,18),this.pacman, neighbors);
+			
+		}
+			
 
 	}
 	public void initializeFruits() {
@@ -126,13 +138,14 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 		else {
 			if(this.boardTilesS[x-1][y]!="w") //can move up
 				possibleDirs.add("u");
-			if(this.boardTilesS[x+1][y]!="w")//can move down
+			if(this.boardTilesS[x+1][y]!="w" & this.boardTilesS[x+1][y]!="g") //can move down
 				possibleDirs.add("d");
 			if(this.boardTilesS[x][y+1]!="w")//can move right
 				possibleDirs.add("r");
 			if(this.boardTilesS[x][y-1]!="w")//can move left
 				possibleDirs.add("l");
 			return possibleDirs;
+			
 		}
 
 	}
@@ -208,6 +221,16 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 					yellowGhost.start();
 				if(this.numTicksOfGame == 11) 
 					redGhost.start();
+				if(this.numTicksOfGame == 13) {
+					if(level == 1 )
+					pinkGhost.start();
+				if(level == 2)
+					whiteGhost.start();
+				if(level == 3) {
+					pinkGhost.start();
+					whiteGhost.start();
+				}
+				}
 				this.numTicksOfGame =this.numTicksOfGame + 1;
 			}
 			//fruits
@@ -236,7 +259,15 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 		this.greenGhost.inisializeData(new Pair(16,15), new Pair(0,0), "u");
 		this.redGhost.inisializeData(new Pair(16,14), new Pair(0,0), "r");
 		this.yellowGhost.inisializeData(new Pair(16,16), new Pair(0,0), "u");
-		this.numTicksOfGame = 1;
+		if(level == 1)
+			this.pinkGhost.inisializeData(new Pair(16,17), new Pair(0,0), "l");
+		if(level == 2)
+			this.whiteGhost.inisializeData(new Pair(16,17), new Pair(0,0), "l");
+		if(level == 3) {
+			this.pinkGhost.inisializeData(new Pair(16,17), new Pair(0,0), "l");
+		this.whiteGhost.inisializeData(new Pair(16,18), new Pair(0,0), "l");
+		}
+			this.numTicksOfGame = 1;
 	}
 
 	private void endGame() {
@@ -322,7 +353,15 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 		this.greenGhost.draw(this, g);
 		this.redGhost.draw(this, g);		
 		this.yellowGhost.draw(this, g);
-
+		if(level == 1)
+		this.pinkGhost.draw(this, g);
+		if(level == 2)
+			this.whiteGhost.draw(this, g);
+		if(level == 3) {
+			this.pinkGhost.draw(this, g);
+		this.whiteGhost.draw(this, g);
+		}
+		
 		//score draw
 		g.setColor(Color.black);
 		g.fillRect(400,650, 400, 150);
@@ -382,13 +421,13 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 					{"w", "d","w","w","w","w","d","w","w","w","w","w","w","w","w","w","w","d","w","w","w","w","w","w","w","d","w","w","w","w","d","w"},
 					{"w", "d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","w"},
 					{"w", "d","w","w","w","w","d","w","w","w","w","w","w","w","0","w","w","0","w","w","w","w","w","w","w","d","w","w","w","w","d","w"},
-					{"w", "d","w","w","w","w","d","w","w","d","d","d","w","w","d","w","w","d","w","w","d","d","d","w","w","d","w","w","w","w","d","w"},
+					{"w", "d","w","w","w","w","d","w","w","d","d","d","w","w","0","w","w","0","w","w","d","d","d","w","w","d","w","w","w","w","d","w"},
 					{"w", "d","d","d","d","d","d","w","w","0","w","0","w","w","0","w","w","0","w","w","0","w","0","w","w","d","d","d","d","d","d","w"},
-					{"w", "0","w","w","w","w","d","w","w","0","w","0","w","w","d","w","w","d","w","w","0","w","0","w","w","d","w","d","w","d","w","w"},
+					{"w", "0","w","w","w","w","d","w","w","0","w","0","w","w","0","w","w","0","w","w","0","w","0","w","w","d","w","d","w","d","w","w"},
 					{"w", "0","w","w","w","w","d","w","w","0","w","0","w","w","0","w","w","0","w","w","0","w","0","w","w","d","w","d","d","d","w","w"},
-					{"w", "0","w","w","w","w","d","w","0","0","0","0","0","0","d","w","w","d","0","0","0","0","0","0","w","d","w","d","w","d","w","w"},
+					{"w", "0","w","w","w","w","d","w","0","0","0","0","0","0","0","w","w","0","0","0","0","0","0","0","w","d","w","d","w","d","w","w"},
 					{"w", "d","d","d","d","d","d","w","0","w","w","w","w","w","0","w","w","0","w","w","w","w","w","0","w","d","w","d","w","d","w","w"},
-					{"w", "w","w","0","w","w","d","w","0","w","w","0","0","0","d","0","0","d","0","0","0","w","w","0","w","d","w","d","w","d","w","w"},
+					{"w", "w","w","0","w","w","d","w","0","w","w","0","0","0","0","0","0","0","0","0","0","w","w","0","w","d","w","d","w","d","w","w"},
 					{"w", "d","d","d","d","d","d","0","0","w","w","0","w","w","w","g","g","w","w","w","0","w","w","0","0","d","w","d","d","d","w","w"},
 					{"w", "w","w","0","w","w","d","w","0","w","w","0","w","w","gh","gh","gh","gh","w","w","0","w","w","0","w","d","w","w","d","w","w","w"},
 					{"w", "d","d","d","d","d","d","w","0","w","w","0","w","w","w","w","w","w","w","w","0","w","w","0","w","d","w","d","d","d","w","w"},
@@ -416,14 +455,14 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 					{"w", "d","d","d","d","d","d","d","d","0","0","0","0","0","0","0","0","0","0","0","0","0","0","d","d","d","d","d","d","d","d","w"},
 					{"w", "d","w","w","w","w","d","w","d","w","w","w","w","w","w","w","w","w","w","w","w","w","w","d","w","d","w","w","w","w","d","w"},
 					{"w", "d","w","w","w","w","d","w","d","w","w","w","w","w","w","w","w","w","w","w","w","w","w","d","w","d","w","w","w","w","d","w"},
-					{"w", "d","d","d","d","d","d","w","d","d","d","d","d","d","d","w","w","d","d","d","d","d","d","d","w","d","d","d","d","d","d","w"},
-					{"w", "d","w","w","w","w","d","w","0","w","w","0","w","w","0","w","w","0","w","w","0","w","w","w","w","d","w","w","w","w","d","w"},
-					{"w", "d","w","w","w","w","d","w","0","w","w","0","w","w","0","w","w","0","w","w","0","w","w","w","w","d","w","w","w","w","d","w"},
-					{"w", "d","0","0","0","0","d","w","0","w","w","0","0","0","0","w","w","0","0","0","0","0","0","0","w","d","0","0","0","0","d","w"},
-					{"w", "d","w","w","w","w","d","w","0","w","w","w","w","w","0","w","w","0","w","w","w","w","w","0","w","d","w","w","w","w","d","w"},
+					{"w", "d","d","d","d","d","d","w","d","d","d","d","d","d","d","w","w","w","d","d","d","d","d","d","w","d","d","d","d","d","d","w"},
+					{"w", "d","w","w","w","w","d","w","0","w","w","0","w","w","0","w","w","w","0","w","0","w","w","w","w","d","w","w","w","w","d","w"},
+					{"w", "d","w","w","w","w","d","w","0","w","w","0","w","w","0","w","w","w","0","w","0","w","w","w","w","d","w","w","w","w","d","w"},
+					{"w", "d","0","0","0","0","d","w","0","w","w","0","0","0","0","w","w","w","0","0","0","0","0","0","w","d","0","0","0","0","d","w"},
+					{"w", "d","w","w","w","w","d","w","0","w","w","w","w","w","0","w","w","w","0","w","w","w","w","0","w","d","w","w","w","w","d","w"},
 					{"w", "d","w","w","w","w","d","w","0","w","w","0","0","0","0","0","0","0","0","0","0","w","w","0","w","d","w","w","w","w","d","w"},
-					{"w", "d","w","w","w","w","d","0","0","w","w","0","w","w","w","g","g","w","w","w","0","w","w","0","0","d","w","w","w","w","d","w"},
-					{"w", "d","w","w","w","w","d","w","0","w","w","0","w","w","gh","gh","gh","gh","w","w","0","w","w","0","w","d","w","w","w","w","d","w"},
+					{"w", "d","w","w","w","w","d","0","0","w","w","0","w","w","g","g","g","g","g","w","0","w","w","0","0","d","w","w","w","w","d","w"},
+					{"w", "d","w","w","w","w","d","w","0","w","w","0","w","w","gh","gh","gh","gh","gh","w","0","w","w","0","w","d","w","w","w","w","d","w"},
 					{"w", "d","0","0","0","0","d","w","0","w","w","0","w","w","w","w","w","w","w","w","0","w","w","0","w","d","0","0","0","0","d","w"},
 					{"w", "d","w","w","w","w","d","w","0","w","w","0","0","0","0","0","0","0","0","0","0","w","w","0","w","d","w","w","w","w","d","w"},
 					{"w", "d","w","w","w","w","d","w","0","w","w","w","w","w","w","w","w","w","w","w","w","w","w","0","w","d","w","w","w","w","d","w"},
@@ -442,45 +481,8 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 					
 	}
 
-/*	public void initializeBoardTilesS() {
-		this.boardTilesS = new String[][] 
-				{{"w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w"},
-			{"w", "e","d","d","d","d","d","d","d","d","d","d","d","d","d","w","w","d","d","d","d","d","d","d","d","d","d","d","d","d","e","w"},
-			{"w", "d","w","w","w","w","d","w","w","w","w","w","w","w","d","w","w","d","w","w","w","w","w","w","w","d","w","w","w","w","d","w"},
-			{"w", "d","w","w","w","w","d","w","w","w","w","w","w","w","d","w","w","d","w","w","w","w","w","w","w","d","w","w","w","w","d","w"},
-			{"w", "d","w","w","w","w","d","w","w","w","w","w","w","w","d","w","w","d","w","w","w","w","w","w","w","d","w","w","w","w","d","w"},
-			{"w", "d","w","w","w","w","d","w","w","w","w","w","w","w","d","w","w","d","w","w","w","w","w","w","w","d","w","w","w","w","d","w"},
-			{"w", "d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","w"},
-			{"w", "d","w","w","w","w","d","w","d","w","w","w","w","w","w","w","w","w","w","w","w","w","w","d","w","d","w","w","w","w","d","w"},
-			{"w", "d","w","w","w","w","d","w","d","w","w","w","w","w","w","w","w","w","w","w","w","w","w","d","w","d","w","w","w","w","d","w"},
-			{"w", "d","d","d","d","d","d","w","d","d","d","d","d","d","d","w","w","d","d","d","d","d","d","d","w","d","d","d","d","d","d","w"},
-			{"w", "w","w","w","w","w","d","w","w","w","w","w","w","w","0","w","w","0","w","w","w","w","w","w","w","d","w","w","w","w","w","w"},
-			{"w", "w","w","w","w","w","d","w","w","w","w","w","w","w","0","w","w","0","w","w","w","w","w","w","w","d","w","w","w","w","w","w"},
-			{"w", "w","w","w","w","w","d","w","0","0","0","0","0","0","0","w","w","0","0","0","0","0","0","0","w","d","w","w","w","w","w","w"},
-			{"w", "w","w","w","w","w","d","w","0","w","w","w","w","w","0","w","w","0","w","w","w","w","w","0","w","d","w","w","w","w","w","w"},
-			{"w", "w","w","w","w","w","d","w","0","w","w","0","0","0","0","0","0","0","0","0","0","w","w","0","w","d","w","w","w","w","w","w"},
-			{"w", "w","w","w","w","w","d","0","0","w","w","0","w","w","w","g","g","w","w","w","0","w","w","0","0","d","w","w","w","w","w","w"},
-			{"w", "w","w","w","w","w","d","w","0","w","w","0","w","w","gh","gh","gh","gh","w","w","0","w","w","0","w","d","w","w","w","w","w","w"},
-			{"w", "w","w","w","w","w","d","w","0","w","w","0","w","w","w","w","w","w","w","w","0","w","w","0","w","d","w","w","w","w","w","w"},
-			{"w", "w","w","w","w","w","d","w","0","w","w","0","0","0","0","0","0","0","0","0","0","w","w","0","w","d","w","w","w","w","w","w"},
-			{"w", "w","w","w","w","w","d","w","0","w","w","w","w","w","w","w","w","w","w","w","w","w","w","0","w","d","w","w","w","w","w","w"},
-			{"w", "d","d","d","d","d","d","d","d","d","d","d","d","d","d","w","w","d","d","d","d","d","d","d","d","d","d","d","d","d","d","w"},
-			{"w", "d","w","w","w","w","d","w","w","w","w","w","w","w","d","w","w","d","w","w","w","w","w","w","w","d","w","w","w","w","d","w"},
-			{"w", "d","w","w","w","w","d","w","w","w","w","w","w","w","d","w","w","d","w","w","w","w","w","w","w","d","w","w","w","w","d","w"},
-			{"w", "d","d","d","w","w","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","w","w","d","d","d","w"},
-			{"w", "w","w","d","w","w","d","w","d","w","w","w","w","w","w","w","w","w","w","w","w","w","w","d","w","d","w","w","d","w","w","w"},
-			{"w", "d","d","d","w","w","d","w","d","d","d","d","d","d","d","w","w","d","d","d","d","d","d","d","w","d","w","w","d","d","d","w"},
-			{"w", "w","w","d","w","w","d","w","d","w","w","w","w","w","d","w","w","d","w","w","w","w","w","d","w","d","w","w","d","w","w","w"},
-			{"w", "d","d","d","d","d","d","w","d","d","d","d","d","d","d","w","w","d","d","d","d","d","d","d","w","d","d","d","d","d","d","w"},
-			{"w", "d","w","w","w","w","w","w","w","w","w","w","w","w","d","w","w","d","w","w","w","w","w","w","w","w","w","w","w","w","d","w"},
-			{"w", "d","w","w","w","w","w","w","w","w","w","w","w","w","d","w","w","d","w","w","w","w","w","w","w","w","w","w","w","w","d","w"},
-			{"w", "e","d","d","d","d","d","d","d","d","d","d","d","d","d","w","w","d","d","d","d","d","d","d","d","d","d","d","d","d","e","w"},
-			{"w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w"}};
-
-	}
-	*/
 	public static void main(String[]args) {
-		new Board(1);
+		new Board(2);
 	}
 
 }
