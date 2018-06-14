@@ -1,10 +1,10 @@
 package GamePack;
 
+
 /*The class defines a pair */
 public class Pair {
 	private int x;
 	private int y;
-	
 	/*constructor*/
 	public Pair(int x, int y){
 		this.x= x;
