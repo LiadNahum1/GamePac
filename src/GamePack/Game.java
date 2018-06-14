@@ -85,7 +85,10 @@ public class Game extends JFrame implements ActionListener  {
 		//JLabel time
 		//JLabel level
 
-		//new EndGame(this);
+		
+		
+		//sdjgreklfdgk,erldf
+		//new EndGame(this); 
 		this.setVisible(false);
 	}
 	public void nextLevel() {
