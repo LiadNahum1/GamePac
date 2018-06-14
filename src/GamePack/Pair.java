@@ -4,7 +4,7 @@ package GamePack;
 public class Pair {
 	private int x;
 	private int y;
-	
+	private int a;
 	/*constructor*/
 	public Pair(int x, int y){
 		this.x= x;
