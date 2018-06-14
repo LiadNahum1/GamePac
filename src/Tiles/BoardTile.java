@@ -4,17 +4,20 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 
+import Food.Food;
+
 public abstract class BoardTile {
 	private int x; //position on matrix
 	private int y; 
-
 	protected ImageIcon imageIcon; 
-	private boolean isMovable;
-	public BoardTile(int x, int y , boolean isMovable) {
+	private boolean isSomethingOn;
+
+	public BoardTile(int x, int y , boolean isSomethingOn) {
 		this.x = x;
 		this.y = y; 
+		this.isSomethingOn = isSomethingOn;
+
 	}
-	
 	public Image getImage() {
 		return this.imageIcon.getImage();
 	}
@@ -26,12 +29,12 @@ public abstract class BoardTile {
 		return this.y;
 	}
 
-	public boolean isMovable() {
-		return isMovable;
+	public boolean getIsSomethingOn() {
+		return this.isSomethingOn;
 	}
-
-	public void setMovable(boolean isMovable) {
-		this.isMovable = isMovable;
+	public void setIsSomethingOn(boolean bool) {
+		this.isSomethingOn = bool;
 	}
+	
 	
 }

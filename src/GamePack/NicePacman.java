@@ -14,8 +14,8 @@ import Tiles.RoadTile;
 public class NicePacman extends Pacman{
 	
 
-	public NicePacman(Pair initialPosition, BoardTile[][]board) {
-		super(initialPosition, board);
+	public NicePacman(Pair initialPosition, BoardTile[][]board, String [][]boardStr) {
+		super(initialPosition, board, boardStr);
 		this.pacmanIcons[0] = new ImageIcon("pictures\\figures\\NicePacman\\left.png");
 		this.pacmanIcons[1] = new ImageIcon("pictures\\figures\\NicePacman\\right.png");
 		this.pacmanIcons[2] = new ImageIcon("pictures\\figures\\NicePacman\\up.png");

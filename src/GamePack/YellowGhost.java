@@ -86,12 +86,12 @@ public class YellowGhost extends Ghost{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(this.mode.equals(Mode.FREEZE) & this.ticks < 5*this.speed) {
+		if(this.mode.equals(Mode.FREEZE) & this.ticks < 5) {
 			this.ticks = this.ticks +1;
 		}
 		else
 		{
-			if(this.ticks == 5*this.speed) {
+			if(this.ticks == 5) {
 				unfreeze();
 			}
 			super.actionPerformed(e);

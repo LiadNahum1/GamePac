@@ -20,20 +20,22 @@ public abstract class Pacman implements Visited, ActionListener{
 	private int dy; 
 	private ImageIcon fullPac; 
 	private boolean isFull;
-	private BoardTile [][] board; 
+	private BoardTile [][] board;
+	private String [][]boardStr; 
 	private String direction; //"l", "r", "u","d"
 	private Mode mode;
 	private int score;
 	private int freezeTicks;
 	private ImageIcon [] freezeIcon; 
 
-	public Pacman(Pair initialPosition, BoardTile[][]board) {
+	public Pacman(Pair initialPosition, BoardTile[][]board, String [][]boardStr) {
 		this.pacmanIcons = new ImageIcon[5];
 		this.freezeIcon = new ImageIcon[4];
 		this.fullPac = new ImageIcon("pictures\\figures\\NicePacman\\fullPac.png");
 		initialFreezeIcons();
 		this.isFull = false; 
-		this.board = board; 
+		this.board = board;
+		this.boardStr = boardStr;
 		this.score = 0;
 		initializePacman(initialPosition);
 	}
@@ -67,10 +69,10 @@ public abstract class Pacman implements Visited, ActionListener{
 	public boolean checkIfCanMove() {
 		int x = this.currentPosition.getX() + this.dx;
 		int y = this.currentPosition.getY() + this.dy; 
-		if(this.board[x][y] instanceof RoadTile) {
-			return true;
+		if(this.boardStr[x][y].equals("w") |this.boardStr[x][y].equals("gh")|this.boardStr[x][y].equals("g")) {
+			return false;  
 		}
-		return false; 
+		return true; 
 	}
 	public ImageIcon getCurrentIcon() {
 		return this.currentIcon;
@@ -119,13 +121,14 @@ public abstract class Pacman implements Visited, ActionListener{
 				this.mode = Mode.ALIVE;
 				this.freezeTicks = 0;
 			}
+			
 		//	move(); //move pacman	
 		//	eat();
 		}
 	}
 	public void eat() {
-		this.score = this.score + ((RoadTile)this.board[getCurrentPosition().getX()][getCurrentPosition().getY()]).eaten();
-	
+		RoadTile tile = ((RoadTile)this.board[getCurrentPosition().getX()][getCurrentPosition().getY()]);
+		this.score = this.score + tile.eaten();
 	}
 
 	public int getScore() {
@@ -136,14 +139,14 @@ public abstract class Pacman implements Visited, ActionListener{
 	}
 	public void draw(Board board, Graphics g) {
 		ImageIcon im = getCurrentIcon();
-		/*	if(!isFull) {
+		if(!isFull) {
 			im = getCurrentIcon();
 			this.isFull = true; 
 		}
 		else {
 			im = this.fullPac;
 			this.isFull = false;
-		}*/
+		}
 		g.fillRect(this.lastPosition.getY()*20, this.lastPosition.getX()*20, 20, 20);
 		Image offIm = board.createImage(20 , 20);
 		Graphics offGr = offIm.getGraphics();	

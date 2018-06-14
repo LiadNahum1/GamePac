@@ -33,6 +33,9 @@ public class PacTimer  {
 	private void updateGameSpeed() {
 		this.gameTimer.setDelay(1/speed*1000);
 	}
+	public void stop() {
+		this.gameTimer.stop();
+	}
 	
 
 }

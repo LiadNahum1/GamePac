@@ -23,7 +23,7 @@ import Tiles.GateTile;
 import Tiles.RoadTile;
 import Tiles.WallTile;
 
-public class Board extends JFrame implements ActionListener, KeyListener {
+public class Board extends JPanel implements ActionListener, KeyListener {
 	private BoardTile [][] boardTiles;
 	private String [][] boardTilesS; 
 	private PacTimer timer;
@@ -38,15 +38,12 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 	private boolean start; 
 	private boolean isFruitsOn;
 	private Vector<Food> fruits; 
-	private Vector<Food> fruitsEaten;
 	private Vector<RoadTile> fruitsTiles; 
-	private int numPoints; 
 	private int numTicksOfGame;
 	private int numTicksWithoutStop;
 	private int numOfLives = 3;
 
 	public Board(int level) {
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.level = level; 
 		this.setBackground(Color.BLACK);
 		this.start = true; 
@@ -60,19 +57,19 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 		InisializeGhosts();
 		this.timer = new PacTimer(this ,whiteGhost,pinkGhost,greenGhost,redGhost,yellowGhost, this.pacman);
 		this.numTicksOfGame = 1;
-		this.numPoints = 0;
 		this.addKeyListener(this);
-		this.setSize(800,800);
+		this.setPreferredSize(new Dimension(640,640));
+
 		this.setVisible(true);
 	}
 
 	private void initializePacman() {
 		if(level == 1) 
-			this.pacman = new NicePacman(new Pair(14,16),this.boardTiles); 
+			this.pacman = new NicePacman(new Pair(14,16),this.boardTiles, this.boardTilesS); 
 		if(level == 2)
-			this.pacman = new DefendedPacman(new Pair(14,16),this.boardTiles);
+			this.pacman = new DefendedPacman(new Pair(14,16),this.boardTiles, this.boardTilesS);
 		if(level == 3)
-			this.pacman = new AngryPacman(new Pair(14,16),this.boardTiles);
+			this.pacman = new AngryPacman(new Pair(14,16),this.boardTiles, this.boardTilesS);
 	}
 
 	private void InisializeGhosts() {
@@ -93,7 +90,6 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 	}
 	public void initializeFruits() {
 		this.fruits = new Vector<>();
-		this.fruitsEaten = new Vector<>();
 		if(this.level == 1) {
 			for(int i=0; i< 2; i = i+1) {
 				this.fruits.add(new PineApple());
@@ -164,17 +160,15 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 		if(boardTilesS [x][y] == "w")
 			boardTiles[x][y] =new WallTile(this.level, x, y);
 		if(boardTilesS [x][y] == "d")
-			boardTiles[x][y] =new RoadTile(x, y, new RegDot()); //regDot
+			boardTiles[x][y] =new RoadTile(x, y, true, new RegDot()); //regDot
 		if(boardTilesS [x][y] == "0")
-			boardTiles[x][y] =new RoadTile(x,y,null); //emptyTile
+			boardTiles[x][y] =new RoadTile(x,y, false,null); //emptyTile
 		if(boardTilesS[x][y] == "g")
 			boardTiles [x][y] = new GateTile(x,y);
-		if(boardTilesS[x][y] == "gh") {// ghost on it
-			boardTiles [x][y] = new RoadTile(x,y, null);
-			((RoadTile)boardTiles[x][y]).setIsSomethingOn(true);
-		}
+		if(boardTilesS[x][y] == "gh") // ghost on it
+			boardTiles [x][y] = new RoadTile(x,y, true, null);
 		if(boardTilesS[x][y] == "e") {
-			boardTiles [x][y] = new RoadTile(x,y, new Energy());
+			boardTiles [x][y] = new RoadTile(x,y, true, new Energy());
 		}
 	}
 	public void drawFruits() {
@@ -182,29 +176,23 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 		int x =0;
 		int y=0;
 		BoardTile b = this.boardTiles[x][y];
+		for(int i=0; i< this.fruitsTiles.size(); i = i+1) {
+			this.fruitsTiles.get(i).setFood(null);
+		}
 		this.fruitsTiles.clear();
 		for(int i=0; i< this.fruits.size(); i = i+1) {
-			while(!(b instanceof RoadTile) || ((RoadTile) b).getIsSomethingOn()) {
+			while(b.getIsSomethingOn()) {
 				x = rand.nextInt(32);
 				y = rand.nextInt(32);
 				b = this.boardTiles[x][y];
 			}
-			if(b instanceof RoadTile) {
+			if(!b.getIsSomethingOn()) {
 				((RoadTile) b).setFood(this.fruits.get(i));
 				this.fruitsTiles.add((RoadTile)b);
 			}
 		}
 	}
-	private void dimFruit() {
-		for(int i=0; i<this.fruitsTiles.size(); i = i+1) {
-			this.fruitsTiles.get(i).dimElement();
-		}
-	}
-	private void disappearFruits() {
-		for(int i=0; i<this.fruitsTiles.size(); i = i+1) {
-			this.fruitsTiles.get(i).setFood(null);
-		}
-	}
+
 	public int getNumTicksWithoutStop() {
 		return this.numTicksWithoutStop;
 	}
@@ -214,11 +202,15 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		this.numTicksWithoutStop = this.numTicksWithoutStop +1;
+		int timerSpeed = this.timer.getSpeed();
+		if(this.numTicksWithoutStop % timerSpeed == 0)
+			this.numTicksWithoutStop = this.numTicksWithoutStop + 1; // real seconds 
 		if(this.pacman.getMode().equals(Mode.DEAD)) {
 			this.numOfLives = this.numOfLives - 1;
-			if(this.numOfLives == 0) 
+			if(this.numOfLives == 0) {
+				this.timer.stop();
 				endGame();
+			}
 			else {
 				repaint();
 			}
@@ -243,21 +235,24 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 				}
 				this.numTicksOfGame =this.numTicksOfGame + 1;
 			}
+
 			//fruits
-			if(this.numTicksOfGame % 20 == 0) {
-				if(!this.fruits.isEmpty()) {
-					drawFruits();
-					this.isFruitsOn = true;
+			if(this.numTicksOfGame > 10 * timerSpeed) {
+				
+				if(this.numTicksOfGame % 6*timerSpeed == 0 ) {
+					if(!this.fruits.isEmpty()) {
+						drawFruits();
+						this.isFruitsOn = true;
+					}
+					else
+						this.isFruitsOn = false;
 				}
-				else
+				if(numTicksOfGame % 6*timerSpeed > 2*timerSpeed & numTicksOfGame% 6*timerSpeed <5*timerSpeed) { // dim
+					isFruitsOn = !isFruitsOn; 
+				}
+				if(numTicksOfGame % 6*timerSpeed == 5*timerSpeed) { //disappear
 					this.isFruitsOn = false;
-			}
-			if(numTicksOfGame % 23 == 0 | numTicksOfGame % 25 == 0 | numTicksOfGame % 27 == 0 | numTicksOfGame % 29 == 0 ) { // dim
-				dimFruit();
-			}
-			if(numTicksOfGame % 26 ==0) { //disappear
-				disappearFruits();
-				this.isFruitsOn = false;
+				}
 			}
 			checkIfPacEat();
 			repaint();
@@ -282,6 +277,8 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 
 	private void endGame() {
 		new End(this);
+		this.setVisible(false);
+	
 
 	}
 
@@ -291,15 +288,13 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 
 		//position of pacman in matrix is for sure a RoadTile
 		RoadTile pacTile = (RoadTile)this.boardTiles[i][j];
-		for(int k=0; k<this.fruitsTiles.size(); k =k+1) {
-			if(pacTile.equals(this.fruitsTiles.get(k))) {
-				this.fruitsTiles.remove(k);
-				Food food = pacTile.getFood();
-			//	this.fruitsEaten.add(food);
-				this.fruits.remove(food);
-				System.out.println("ad");
-			}
-		}
+		Food food = pacTile.getFood();
+		pacTile.setFood(null);
+		//if it was a fruit
+		this.fruitsTiles.remove(pacTile);
+		this.fruits.remove(food);
+
+
 	}
 
 
@@ -338,7 +333,7 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 	public void paint(Graphics g){	
 		if(this.start) {
 			//draw board
-			g.fillRect(0, 0, 800, 800);
+			g.fillRect(0, 0, 640, 640);
 			Image offIm = this.createImage(640 , 640);
 			Graphics offGr = offIm.getGraphics();	
 			for(int i=0; i<this.boardTiles.length; i = i+1) {
@@ -358,7 +353,14 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 		this.pacman.draw(this, g);
 		//fruits draw
 		for(int i=0; i<this.fruitsTiles.size(); i = i+1) {
-			g.drawImage(this.fruitsTiles.get(i).getImage(), this.fruitsTiles.get(i).getY()*20, this.fruitsTiles.get(i).getX()*20, this);
+			//System.out.println(this.fruits.size());
+			if(!isFruitsOn) {
+				g.drawImage(RoadTile.road.getImage(), this.fruitsTiles.get(i).getY()*20, this.fruitsTiles.get(i).getX()*20, this);
+
+			}
+			else {
+				g.drawImage(this.fruitsTiles.get(i).getImage(), this.fruitsTiles.get(i).getY()*20, this.fruitsTiles.get(i).getX()*20, this);
+			}
 		}
 
 		//ghosts draw
@@ -376,10 +378,10 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 
 		//score draw
 		g.setColor(Color.black);
-		g.fillRect(0,680, 200, 100);
+		g.fillRect(200,650, 200, 200);
 		g.setColor(Color.blue);
 		g.setFont(new Font(Font.DIALOG_INPUT,  Font.BOLD, 30));
-		g.drawString("Score: " + this.pacman.getScore(), 20, 720);
+		g.drawString("Score: " + this.pacman.getScore(), 200, 670);
 
 		//draw lives
 		drawLives(g);
@@ -387,10 +389,7 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 		//drawFruitsScors(g);
 	}
 
-	private void drawFruitsScors(Graphics g) {
-		for(int i=0 ;i<this.fruitsEaten.size(); i = i +1) {
-			g.drawImage(this.fruitsEaten.get(i).getBigImage(), 100 + 30*i, 650, this);	}
-		}
+
 	public BoardTile getBoardTile(Pair place) {
 		return this.boardTiles[place.getX()][place.getY()];
 	}
@@ -498,9 +497,8 @@ public class Board extends JFrame implements ActionListener, KeyListener {
 
 	}
 
-	public static void main(String[]args) {
-		new Board(1);
-	}
+
+
 
 }
 

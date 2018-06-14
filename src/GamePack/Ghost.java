@@ -30,7 +30,6 @@ public abstract class Ghost  implements Visitor, ActionListener {
 	private boolean isDim;
 	protected BoardTile[][]boardTiles;
 	protected Mode mode; 
-	protected int speed;
 	protected int ticks;
 
 
@@ -54,7 +53,6 @@ public abstract class Ghost  implements Visitor, ActionListener {
 		this.isChase = false;
 		this.isDim = false;
 		this.mode = Mode.ALIVE;
-		this.speed = 2;
 		this.ticks = 0;
 		this.currPositionIm = position.get(curPos);
 	}

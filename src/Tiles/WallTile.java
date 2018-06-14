@@ -6,7 +6,7 @@ public class WallTile extends BoardTile {
 
 	private ImageIcon [] pictures;
 	public WallTile (int level, int x, int y){
-		super(x,y ,false);
+		super(x,y ,true);
 		inisializePictures();
 		imageIcon = pictures[level-1]; 
 	}
@@ -16,7 +16,5 @@ public class WallTile extends BoardTile {
 		pictures[1] = new ImageIcon("pictures/boards/level2wall.png");
 		pictures[2] = new ImageIcon("pictures/boards/level3wall.png");
 	}
-	public boolean isMovable(Object Obj){
-		return false;
-	}
+	
 }

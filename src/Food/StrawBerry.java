@@ -8,4 +8,5 @@ public class StrawBerry extends Food{
 		this.worth = 300;
 
 	}
+
 }

@@ -49,12 +49,12 @@ public class GreenGhost extends Ghost {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(!this.mode.equals(Mode.DEAD)) {
-			if(this.mode.equals(Mode.DISAPPEAR) & this.ticks < speed * 5) {
+			if(this.mode.equals(Mode.DISAPPEAR) & this.ticks < 5) {
 				this.ticks= this.ticks+ 1;
 			}
 			else {
 				super.actionPerformed(e);
-				if(this.ticks== speed*5) {
+				if(this.ticks== 5) {
 					revive();
 				}
 				if(this.isStart) {
