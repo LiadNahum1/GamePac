@@ -42,7 +42,7 @@ public class Game extends JFrame implements ActionListener  {
 		//cp.add(this.bottomPanel);
 		this.board.setFocusable(true);
 		pack();
-		this.setVisible(true);
+		this.setVisible(true); 
 		this.setResizable(false);
 
 	}
