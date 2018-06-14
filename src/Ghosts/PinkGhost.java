@@ -1,4 +1,4 @@
-package GamePack;
+package Ghosts;
 
 import java.awt.Graphics;
 import java.awt.Image;
@@ -7,6 +7,12 @@ import java.util.Vector;
 
 import javax.swing.ImageIcon;
 
+import GamePack.Board;
+import GamePack.Pair;
+import Pacmen.AngryPacman;
+import Pacmen.DefendedPacman;
+import Pacmen.NicePacman;
+import Pacmen.Pacman;
 import Tiles.BoardTile;
 
 public class PinkGhost extends Ghost{

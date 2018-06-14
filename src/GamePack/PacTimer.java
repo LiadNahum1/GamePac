@@ -8,17 +8,17 @@ public class PacTimer  {
 	private Timer gameTimer; // main timer of the game ;
 	private int speed;
 
-	public PacTimer(ActionListener game ,ActionListener whiteGhost,ActionListener pinkGhost,ActionListener greenGhost,ActionListener redGhost,ActionListener yellowGhost, ActionListener pacman) {
-		this.gameTimer = new Timer(100, game);
-		this.gameTimer.addActionListener(pinkGhost);
-		this.gameTimer.addActionListener(whiteGhost);
-		this.gameTimer.addActionListener(greenGhost);
-		this.gameTimer.addActionListener(redGhost);
-		this.gameTimer.addActionListener(yellowGhost);
+	public PacTimer(ActionListener game , ActionListener pacman) {
+		this.gameTimer = new Timer(500, game);
 		this.gameTimer.addActionListener(pacman);
 		this.speed = 1;
 	}
 
+	
+	public void addLisenerArg(ActionListener arg) 
+	{
+	this.gameTimer.addActionListener(arg);
+	}
 	public Timer getGameTimer() {
 		return this.gameTimer;
 	}

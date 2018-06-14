@@ -1,8 +1,15 @@
-package GamePack;
+package Ghosts;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.util.Vector;
 
+import GamePack.Board;
+import GamePack.Mode;
+import GamePack.Pair;
+import Pacmen.AngryPacman;
+import Pacmen.DefendedPacman;
+import Pacmen.NicePacman;
+import Pacmen.Pacman;
 import Tiles.BoardTile;
 
 public class GreenGhost extends Ghost {

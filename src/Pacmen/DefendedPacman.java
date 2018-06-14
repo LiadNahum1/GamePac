@@ -1,4 +1,4 @@
-package GamePack;
+package Pacmen;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -6,6 +6,8 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.ImageIcon;
 
+import GamePack.Pair;
+import Ghosts.Visitor;
 import Tiles.BoardTile;
 
 public class DefendedPacman extends Pacman {	

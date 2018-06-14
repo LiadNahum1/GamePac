@@ -1,4 +1,4 @@
-package GamePack;
+package Pacmen;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
@@ -8,6 +8,8 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.ImageIcon;
 
+import GamePack.Pair;
+import Ghosts.Visitor;
 import Tiles.BoardTile;
 import Tiles.RoadTile;
 

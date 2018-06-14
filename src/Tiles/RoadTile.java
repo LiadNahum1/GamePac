@@ -8,20 +8,15 @@ import Food.*;
 
 public class RoadTile extends BoardTile {
 	public static ImageIcon road; 
-	protected Food food;
 
 	public RoadTile(int x, int y,boolean isSomethingOn, Food food) {
-		super(x,y,isSomethingOn);
+		super(x,y,isSomethingOn, food);
 		road = new ImageIcon("pictures/boards/road.png");
-		this.imageIcon = road;
-		this.food = food; 
+		imageIcon = road;
 		if(food!=null)
 			this.imageIcon = food.getImage();
 	}
-
-	public Food getFood() {
-		return this.food;
-	}
+	@Override
 	public void setFood(Food food) {
 		this.food = food; 
 		if(food == null) {
@@ -34,15 +29,6 @@ public class RoadTile extends BoardTile {
 		}
 	}
 
-	/*returns num of points the player gets for this eating*/
-	public int eaten() {
-		if(this.food!=null) {
-			int worth = this.food.getWorth();
-			return worth;
-		}
-		else
-			return 0; 
-	}
 }
 
 

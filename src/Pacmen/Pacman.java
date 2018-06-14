@@ -1,4 +1,5 @@
-package GamePack;
+package Pacmen;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -8,6 +9,9 @@ import java.awt.event.KeyEvent;
 import javax.swing.ImageIcon;
 
 import Food.Food;
+import GamePack.Board;
+import GamePack.Mode;
+import GamePack.Pair;
 import Tiles.BoardTile;
 import Tiles.RoadTile;
 
@@ -127,7 +131,7 @@ public abstract class Pacman implements Visited, ActionListener{
 		}
 	}
 	public void eat() {
-		RoadTile tile = ((RoadTile)this.board[getCurrentPosition().getX()][getCurrentPosition().getY()]);
+		BoardTile tile = this.board[getCurrentPosition().getX()][getCurrentPosition().getY()];
 		this.score = this.score + tile.eaten();
 	}
 
@@ -147,6 +151,7 @@ public abstract class Pacman implements Visited, ActionListener{
 			im = this.fullPac;
 			this.isFull = false;
 		}
+		g.setColor(Color.BLACK);
 		g.fillRect(this.lastPosition.getY()*20, this.lastPosition.getX()*20, 20, 20);
 		Image offIm = board.createImage(20 , 20);
 		Graphics offGr = offIm.getGraphics();	

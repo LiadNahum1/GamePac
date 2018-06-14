@@ -29,7 +29,7 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 
-public class End extends JFrame implements ActionListener {
+public class RecordsTable extends JFrame implements ActionListener {
 	private JPanel tabelPanel;
 	private JPanel restPanel;
 	private Table records;
@@ -39,11 +39,14 @@ public class End extends JFrame implements ActionListener {
 	private JTextField nameT;
 	private JTextField lastT;
 	private Board board;
+	private EndGame end; 
 
-	public End(Board board) {
-		super("The end");
+	public RecordsTable(Board board, EndGame end) {
+		super("Records Table");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.board = board; 
+		this.end = end; 
+		
 		this.tabelPanel = new JPanel();
 		this.tabelPanel.setLayout(new BorderLayout());
 		this.records = new Table(); 
@@ -55,28 +58,25 @@ public class End extends JFrame implements ActionListener {
 		this.tabelPanel.add(scrollPane, BorderLayout.CENTER);
 
 		this.restPanel = new JPanel();
+		enrollTabel();
 
 		Container cp = this.getContentPane();
 		cp.setLayout(new BoxLayout(cp,BoxLayout.Y_AXIS));
 		cp.add(tabelPanel);
 		cp.add(restPanel);	
 
-		this.nameT = new JTextField(20);
-		this.lastT = new JTextField(20);
-		this.enrollB = new JButton("Add");
-		this.enrollB.addActionListener(this);
+	
 		this.setSize(800, 700);
 		this.setVisible(true);
 		this.setResizable(false);
 
-		int result =JOptionPane.showConfirmDialog(this,"Do you want to be written in the records table?","",JOptionPane.YES_NO_OPTION );
-		if(result == JOptionPane.YES_OPTION) {
-			enrollTabel();
-			this.setVisible(true);
-		}
 	}
 
 	private void enrollTabel() {
+		this.nameT = new JTextField(20);
+		this.lastT = new JTextField(20);
+		this.enrollB = new JButton("Add");
+		this.enrollB.addActionListener(this);
 		JLabel nameL = new JLabel("Insert First Name: ");
 		JLabel lastL = new JLabel("Insert Last Name: ");
 		this.restPanel.add(nameL);
@@ -96,7 +96,8 @@ public class End extends JFrame implements ActionListener {
 			}
 
 			else {
-				String content = this.nameT.getText() +","+ this.lastT.getText() + "," + board.getNumTicksWithoutStop() + 
+				// board.getNumTicksWithoutStop()
+				String content = this.nameT.getText() +","+ this.lastT.getText() + "," +  
 						","+ board.getScoreOfPlayer();
 				this.records.writeIntoFile(content);
 				this.records.addToTable(content);

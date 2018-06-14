@@ -76,12 +76,12 @@ public class MainMenu extends JFrame implements ActionListener {
 			}
 		}
 		if(e.getSource().equals(this.start)) {
-			new Game(1);
 			this.setVisible(false);
+			new Game(1);
 		}
 		if(e.getSource().equals(this.top5)) {
-			new Top5(this);
 			this.setVisible(false);
+			new Top5(this);
 		}
 		
 	}
