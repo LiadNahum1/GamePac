@@ -32,7 +32,7 @@ import javax.swing.table.TableRowSorter;
 public class End extends JFrame implements ActionListener {
 	private JPanel tabelPanel;
 	private JPanel restPanel;
-	private JTable records;
+	private Table records;
 	private JLabel lblHeading; 
 	private JScrollPane scrollPane;
 	private JButton enrollB;
@@ -46,7 +46,11 @@ public class End extends JFrame implements ActionListener {
 		this.board = board; 
 		this.tabelPanel = new JPanel();
 		this.tabelPanel.setLayout(new BorderLayout());
-		creatingTable();
+		this.records = new Table(); 
+		this.records.fillTable();
+		this.scrollPane = new JScrollPane(this.records);
+		this.lblHeading = new JLabel("RECORDS");
+		this.lblHeading.setFont(new Font(Font.DIALOG_INPUT,  Font.BOLD, 40));
 		this.tabelPanel.add(lblHeading, BorderLayout.PAGE_START);
 		this.tabelPanel.add(scrollPane, BorderLayout.CENTER);
 
@@ -82,68 +86,8 @@ public class End extends JFrame implements ActionListener {
 		this.restPanel.add(enrollB);
 	}
 
-	private void creatingTable() {
-		DefaultTableModel model = new DefaultTableModel(); 
-		this.records = new JTable(model); 
-		//add columns
-		model.addColumn("First Name");
-		model.addColumn("Last Name");
-		model.addColumn("Time");
-		model.addColumn("Score");
-		this.scrollPane = new JScrollPane(this.records);
-		this.records.setFillsViewportHeight(true);
-		this.records.setEnabled(false);
-		this.lblHeading = new JLabel("RECORDS");
-		this.lblHeading.setFont(new Font(Font.DIALOG_INPUT,  Font.BOLD, 40));
-		fillTabel();
-
-	}
-	private void fillTabel() {
-		try  {
-			String path=System.getProperty("user.dir")+ "/records.txt";
-			File file = new File(path);
-			BufferedReader br = new BufferedReader(new FileReader(file));
-			String line; 
-			while((line = br.readLine()) != null){
-				addToTabel(line);
-			}
-			br.close();
-			sortTabel();
-		}
-		catch(Exception e){
-			System.out.println(e);
-		}
+	
 		
-	}
-	private void addToTabel(String content) {
-		DefaultTableModel model = (DefaultTableModel) this.records.getModel();
-		String []data = content.split(",");
-		model.addRow(new Object[] {data[0], data[1], data[2], data[3]});
-	}
-	private void sortTabel() {
-		
-		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(this.records.getModel());
-		this.records.setRowSorter(sorter);
-		List<RowSorter.SortKey> sortKeys = new ArrayList<>(2);
-		sortKeys.add(new RowSorter.SortKey(3, SortOrder.DESCENDING));
-		sorter.setSortKeys(sortKeys);
-	}
-
-	private void writeIntoFile(String content) {
-		try  {
-			String path=System.getProperty("user.dir")+ "/records.txt";
-			File file = new File(path);
-			FileWriter fw = new FileWriter(file.getAbsoluteFile(),true); //append to file
-			BufferedWriter bw = new BufferedWriter(fw);
-			// Write in file
-			bw.write(content+ "\n");
-			// Close connection
-			bw.close();
-		}
-		catch(Exception e){
-			System.out.println(e);
-		}
-	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource().equals(this.enrollB)) {
@@ -154,19 +98,15 @@ public class End extends JFrame implements ActionListener {
 			else {
 				String content = this.nameT.getText() +","+ this.lastT.getText() + "," + board.getNumTicksWithoutStop() + 
 						","+ board.getScoreOfPlayer();
-				writeIntoFile(content);
-				addToTabel(content);
-				sortTabel();
+				this.records.writeIntoFile(content);
+				this.records.addToTable(content);
+				this.records.sortTable();
 				this.restPanel.setVisible(false);
 			}
 		}
 
 	}
-	
-
-	
 }
-
-
-
+	
+	
 
