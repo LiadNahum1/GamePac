@@ -17,7 +17,7 @@ public class WhiteGhost extends Ghost{
 private boolean canHit;
 private Image cantHitIm;
 	public WhiteGhost(BoardTile[][]board, Pair inisialPositionTile,Pacman pacman, Vector<String> [][] neighbors) {
-		super(board, inisialPositionTile ,pacman, neighbors , "white" ,new Pair(1,1) , "l");
+		super(board, inisialPositionTile ,pacman, neighbors , "white" ,new Pair(1,1) , "u");
 		this.canHit = true;
 		this.cantHitIm = new ImageIcon("pictures/figures/scared.png").getImage();
 		

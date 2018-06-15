@@ -130,7 +130,7 @@ public abstract class Ghost  implements Visitor, ActionListener {
 	private String bestMove(Vector<String> posDirs) {
 		if(posDirs.contains("u"))
 			return "u";
-		if(this.chaseWall.getY() == 1 ) 
+		if(this.chaseWall.getY()==1  & posDirs.contains("l" ) ) 
 			return "l";
 		else
 			return "r";
