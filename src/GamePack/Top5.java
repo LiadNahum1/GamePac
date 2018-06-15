@@ -27,7 +27,7 @@ public class Top5 extends JFrame implements ActionListener{
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setLayout(new BorderLayout());
 		Container cp = getContentPane();
-		JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,02, 0));
+		JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,0, 0));
 		JPanel tablePanel = new JPanel(new BorderLayout());
 		//create top 5 table
 		this.top = new Table();
@@ -62,6 +62,7 @@ public class Top5 extends JFrame implements ActionListener{
 			model.addRow(new Object[]{modelAll.getValueAt(i, 0),modelAll.getValueAt(i, 1),modelAll.getValueAt(i, 2),
 					modelAll.getValueAt(i, 3)});
 		}
+		this.top.sortTable();
 		
 	}
 

@@ -2,6 +2,7 @@ package GamePack;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -30,6 +32,7 @@ import javax.swing.table.TableRowSorter;
 
 
 public class RecordsTable extends JFrame implements ActionListener {
+	private JPanel topPanel; 
 	private JPanel tabelPanel;
 	private JPanel restPanel;
 	private Table records;
@@ -38,14 +41,21 @@ public class RecordsTable extends JFrame implements ActionListener {
 	private JButton enrollB;
 	private JTextField nameT;
 	private JTextField lastT;
+	private JButton returnToMain; 
 	private Board board;
 	private EndGame end; 
 
-	public RecordsTable(Board board, EndGame end) {
+	public RecordsTable (EndGame end) {
 		super("Records Table");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.board = board; 
 		this.end = end; 
+		
+		this.topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,0, 0));	
+		this.returnToMain = new JButton();
+		this.returnToMain.setIcon(new ImageIcon("pictures\\extra\\back.png"));
+		this.returnToMain.setContentAreaFilled(false);
+		this.returnToMain.setBorderPainted(false);
+		this.returnToMain.addActionListener(this);
 		
 		this.tabelPanel = new JPanel();
 		this.tabelPanel.setLayout(new BorderLayout());
@@ -54,14 +64,16 @@ public class RecordsTable extends JFrame implements ActionListener {
 		this.scrollPane = new JScrollPane(this.records);
 		this.lblHeading = new JLabel("RECORDS");
 		this.lblHeading.setFont(new Font(Font.DIALOG_INPUT,  Font.BOLD, 40));
-		this.tabelPanel.add(lblHeading, BorderLayout.PAGE_START);
 		this.tabelPanel.add(scrollPane, BorderLayout.CENTER);
 
+		topPanel.add(returnToMain);
+		topPanel.add(lblHeading);
 		this.restPanel = new JPanel();
 		enrollTabel();
 
 		Container cp = this.getContentPane();
 		cp.setLayout(new BoxLayout(cp,BoxLayout.Y_AXIS));
+		cp.add(topPanel);
 		cp.add(tabelPanel);
 		cp.add(restPanel);	
 
@@ -96,14 +108,18 @@ public class RecordsTable extends JFrame implements ActionListener {
 			}
 
 			else {
-				// board.getNumTicksWithoutStop()
-				String content = this.nameT.getText() +","+ this.lastT.getText() + "," +  
-						","+ board.getScoreOfPlayer();
+				String content = this.nameT.getText() +","+ this.lastT.getText() + "," +  this.end.getTime()+ 
+						","+ this.end.getScore();
 				this.records.writeIntoFile(content);
 				this.records.addToTable(content);
 				this.records.sortTable();
 				this.restPanel.setVisible(false);
 			}
+		}
+		
+		if(e.getSource().equals(this.returnToMain)) {
+			this.end.setVisible(true);
+			this.setVisible(false);
 		}
 
 	}

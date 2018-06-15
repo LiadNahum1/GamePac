@@ -54,7 +54,7 @@ public abstract class Pacman implements Visited, ActionListener{
 		this.currentPosition = initialPosition;
 		this.lastPosition = new Pair(currentPosition.getX(), currentPosition.getY());
 		this.dx = 0;
-		this.dy = -1; 
+		this.dy = 0; 
 		this.direction = "l"; 
 		this.mode = Mode.ALIVE;  
 		this.freezeTicks = 0;
@@ -63,6 +63,7 @@ public abstract class Pacman implements Visited, ActionListener{
 	/*moves pacman if can */
 	public void move() {
 		if(checkIfCanMove()) {
+			System.out.println(dx + " " + dy);
 			this.lastPosition.setX(this.currentPosition.getX());
 			this.lastPosition.setY(this.currentPosition.getY());
 			this.currentPosition.sumSetX(this.dx);
@@ -93,23 +94,27 @@ public abstract class Pacman implements Visited, ActionListener{
 				this.direction = "l";
 				this.currentIcon = this.pacmanIcons[0];
 			}
-			if(e.getKeyCode()== KeyEvent.VK_RIGHT) {
+			else if(e.getKeyCode()== KeyEvent.VK_RIGHT) {
 				this.dx = 0;
 				this.dy= 1;
 				this.direction = "r";
 				this.currentIcon = this.pacmanIcons[1];
 			}
-			if(e.getKeyCode()== KeyEvent.VK_UP) {
+			else if(e.getKeyCode()== KeyEvent.VK_UP) {
 				this.dx = -1;
 				this.dy= 0;
 				this.direction = "u";
 				this.currentIcon = this.pacmanIcons[2];
 			}
-			if(e.getKeyCode()== KeyEvent.VK_DOWN) {
+			else if(e.getKeyCode()== KeyEvent.VK_DOWN) {
 				this.dx = 1;
 				this.dy= 0;
 				this.direction = "d";
 				this.currentIcon = this.pacmanIcons[3];
+			}
+			else {
+				this.dx =0;
+				this.dy = 0;
 			}
 			move();
 			eat();
@@ -143,14 +148,14 @@ public abstract class Pacman implements Visited, ActionListener{
 	}
 	public void draw(Board board, Graphics g) {
 		ImageIcon im = getCurrentIcon();
-		if(!isFull) {
+		/*if(!isFull) {
 			im = getCurrentIcon();
 			this.isFull = true; 
 		}
 		else {
 			im = this.fullPac;
 			this.isFull = false;
-		}
+		}*/
 		g.setColor(Color.BLACK);
 		g.fillRect(this.lastPosition.getY()*20, this.lastPosition.getX()*20, 20, 20);
 		Image offIm = board.createImage(20 , 20);

@@ -23,7 +23,6 @@ import Pacmen.*;
 
 public class Game extends JFrame implements ActionListener , KeyListener {
 	private int level;
-
 	private Board board; 
 	private JLabel[]lifePic;
 	private PacTimer timer;
@@ -46,7 +45,10 @@ public class Game extends JFrame implements ActionListener , KeyListener {
 	public Game(int level) {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setContentPane(new JLabel(new ImageIcon("pictures\\extra\\pacBackground.jpg")));
+		
 		Container cp = this.getContentPane();
+		//cp.setBackground(Color.BLACK);
+		
 		this.setPreferredSize(new Dimension(1000,1000));
 		this.setLayout(new BoxLayout(cp, BoxLayout.PAGE_AXIS));
 		this.level = level;
@@ -57,13 +59,11 @@ public class Game extends JFrame implements ActionListener , KeyListener {
 		cp.add(this.board);
 		cp.add(this.show);
 		addKeyListener(this);
-		//	this.board.setFocusable(true);
+		//	this.board.setFocusable(true); 
 		pack();
 		this.setVisible(true);
 		this.setResizable(false);
 	}
-
-
 
 	private void inisializeArg() {
 		this.numOfLives = 3;
@@ -92,7 +92,7 @@ public class Game extends JFrame implements ActionListener , KeyListener {
 
 
 	public static void main(String[]args) {
-		new Game(1);
+		new Game(2);
 	}
 
 	private void inisializeBattons() {
@@ -112,9 +112,6 @@ public class Game extends JFrame implements ActionListener , KeyListener {
 		fastForword.addActionListener(this);
 		buttons.add(fastForword);
 		show.add(buttons);
-
-
-
 	}
 
 
@@ -173,6 +170,30 @@ public class Game extends JFrame implements ActionListener , KeyListener {
 				this.timer.setSpeed(1);
 			}
 		}
+		
+		if(this.board.getNumLives()==0) {
+			endGame();
+		}
+		if(this.board.checkIfWinLevel()) {
+			
+			if(this.level == 3) {
+				this.timer.stop();
+				endGame();
+			}
+			else {
+				this.level = this.level + 1;
+				this.board= new Board(this.level, this.timer);
+				this.getContentPane().removeAll();
+				this.getContentPane().add(this.board);
+				this.getContentPane().add(this.show);
+			}
+		}
+	}
+	
+	private void endGame() {
+		new EndGame(this.scors, this.level, this.timesShow );
+		this.setVisible(false);
+
 	}
 	private void fruitEaten() {
 		Food nowEated = board.getFruitsEaten().get(board.getFruitsEaten().size()-1);
@@ -185,7 +206,7 @@ public class Game extends JFrame implements ActionListener , KeyListener {
 	private void decresLives() {
 		this.numOfLives--;
 		if(numOfLives > 0)
-		this.lifePic[numOfLives].setIcon(new ImageIcon("pictures\\boards\\þþdead.png"));
+			this.lifePic[numOfLives].setIcon(new ImageIcon("pictures\\boards\\þþdead.png"));
 	}
 
 
@@ -200,21 +221,6 @@ public class Game extends JFrame implements ActionListener , KeyListener {
 			stop.setText("pause");
 		}
 		isStop =!isStop;
-	}
-
-
-
-	public void nextLevel() {
-		if(level == 3) {
-			//endGame();
-		}
-		else {
-			this.board.setVisible(false);
-			this.board = new Board(this.level + 1, this.timer);
-			this.getContentPane().add(this.board);
-			this.board.setFocusable(true);
-			this.board.requestFocus();
-		}
 	}
 
 

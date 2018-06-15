@@ -54,6 +54,10 @@ public class Board extends JPanel implements ActionListener, KeyListener { //to 
 	private int numOfLives ;
 
 	public Board(int level ,PacTimer timer) {
+		initializeBoardPanel(level, timer);
+		
+	}
+	public void initializeBoardPanel(int level, PacTimer timer) {
 		this.level = level; 
 		this.setBackground(Color.BLACK);
 		this.start = true; 
@@ -74,7 +78,6 @@ public class Board extends JPanel implements ActionListener, KeyListener { //to 
 		this.setPreferredSize(new Dimension(640,640));
 		this.setVisible(true);
 	}
-
 	public Pacman getPacman(){
 		return this.pacman;
 	}
@@ -245,11 +248,7 @@ public class Board extends JPanel implements ActionListener, KeyListener { //to 
 		int timerSpeed = this.timer.getSpeed();
 		if(this.pacman.getMode().equals(Mode.DEAD)) {
 			this.numOfLives = this.numOfLives - 1;
-			if(this.numOfLives == 0) {
-				//this.timer.stop();
-			}
-			else {
-
+			if(this.numOfLives > 0) {
 				repaint();
 			}
 		}
@@ -365,6 +364,7 @@ public class Board extends JPanel implements ActionListener, KeyListener { //to 
 		this.pacman.manageMovement(e);
 		checkIfPacEat();
 		repaint();
+		
 	}
 
 
@@ -412,9 +412,9 @@ public class Board extends JPanel implements ActionListener, KeyListener { //to 
 			}
 		}
 		if(start) {
-			 g.setFont(new Font("TimesRoman", Font.PLAIN, 50));    
+			 g.setFont(new Font("TimesRoman", Font.PLAIN, 20));    
 			    g.setColor(Color.red);
-			g.drawString("Start Game", 200, 300);
+			g.drawString("Start Game", 270, 380);
 			start = false;
 		}
 	}
