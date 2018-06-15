@@ -1,6 +1,5 @@
 package GamePack;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -12,12 +11,14 @@ import java.awt.event.KeyListener;
 import java.util.Random;
 import java.util.Vector;
 
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import Food.*;
+import Food.Apple;
+import Food.Energy;
+import Food.Food;
+import Food.PineApple;
+import Food.RegDot;
+import Food.StrawBerry;
 import Ghosts.GreenGhost;
 import Ghosts.PinkGhost;
 import Ghosts.RedGhost;
@@ -46,7 +47,8 @@ public class Board extends JPanel implements ActionListener, KeyListener { //to 
 	private PinkGhost pinkGhost;
 	private boolean start; 
 	private boolean isFruitsOn;
-	private Vector<Food> fruits; 
+	private Vector<Food> fruitsLeft;
+	private Vector<Food> fruitsEaten;
 	private Vector<BoardTile> fruitsTiles; 
 	private int numTicksOfGame;
 	private int numOfLives ;
@@ -113,33 +115,34 @@ public class Board extends JPanel implements ActionListener, KeyListener { //to 
 		}	
 	}
 	public void initializeFruits() {
-		this.fruits = new Vector<>();
+		this.fruitsLeft = new Vector<>();
+		this.fruitsEaten = new Vector<>();
 		if(this.level == 1) {
 			for(int i=0; i< 2; i = i+1) {
-				this.fruits.add(new PineApple());
+				this.fruitsLeft.add(new PineApple());
 			}
 			for(int i=0; i< 2; i = i+1) {
-				this.fruits.add(new Apple());
+				this.fruitsLeft.add(new Apple());
 			}
 		}
 		else if(this.level == 2) {
 			for(int i=0; i< 4; i = i+1) {
-				this.fruits.add(new PineApple());
+				this.fruitsLeft.add(new PineApple());
 			}
 			for(int i=0; i< 4; i = i+1) {
-				this.fruits.add(new Apple());
+				this.fruitsLeft.add(new Apple());
 			}
-			this.fruits.add(new StrawBerry());
+			this.fruitsLeft.add(new StrawBerry());
 		}
 		else {
 			for(int i=0; i< 5; i = i+1) {
-				this.fruits.add(new PineApple());
+				this.fruitsLeft.add(new PineApple());
 			}
 			for(int i=0; i< 5; i = i+1) {
-				this.fruits.add(new Apple());
+				this.fruitsLeft.add(new Apple());
 			}
 			for(int i=0; i< 2; i = i+1) {
-				this.fruits.add(new StrawBerry());
+				this.fruitsLeft.add(new StrawBerry());
 			}
 		}
 	}
@@ -204,14 +207,14 @@ public class Board extends JPanel implements ActionListener, KeyListener { //to 
 			this.fruitsTiles.get(i).setFood(null);
 		}
 		this.fruitsTiles.clear();
-		for(int i=0; i< this.fruits.size(); i = i+1) {
+		for(int i=0; i< this.fruitsLeft.size(); i = i+1) {
 			while(b.getIsSomethingOn()) {
 				x = rand.nextInt(32);
 				y = rand.nextInt(32);
 				b = this.boardTiles[x][y];
 			}
 			if(!b.getIsSomethingOn()) {
-				b.setFood(this.fruits.get(i));
+				b.setFood(this.fruitsLeft.get(i));
 				this.fruitsTiles.add(b);
 			}
 		}
@@ -259,7 +262,7 @@ public class Board extends JPanel implements ActionListener, KeyListener { //to 
 			//fruits
 			if(this.numTicksOfGame > 10 * timerSpeed) {
 				if(this.numTicksOfGame % 6*timerSpeed == 0 ) {
-					if(!this.fruits.isEmpty()) {
+					if(!this.fruitsLeft.isEmpty()) {
 						drawFruits();
 						this.isFruitsOn = true;
 					}
@@ -350,8 +353,10 @@ public class Board extends JPanel implements ActionListener, KeyListener { //to 
 		Food food = pacTile.getFood();
 		pacTile.setFood(null);
 		//if it was a fruit
-		this.fruitsTiles.remove(pacTile);
-		this.fruits.remove(food);
+		if(this.fruitsTiles.remove(pacTile)) {
+		this.fruitsEaten.add(food);
+		this.fruitsLeft.remove(food);
+		}
 	}
 
 
@@ -415,7 +420,9 @@ public class Board extends JPanel implements ActionListener, KeyListener { //to 
 	}
 
 
-
+	public Vector<Food> getFruitsEaten (){
+		return this.fruitsEaten;
+	}
 
 
 	public BoardTile getBoardTile(Pair place) {

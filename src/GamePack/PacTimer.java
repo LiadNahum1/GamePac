@@ -9,7 +9,7 @@ public class PacTimer  {
 	private int speed;
 
 	public PacTimer(ActionListener game , ActionListener pacman) {
-		this.gameTimer = new Timer(500, game);
+		this.gameTimer = new Timer(1000, game);
 		this.gameTimer.addActionListener(pacman);
 		this.speed = 1;
 	}
@@ -31,7 +31,8 @@ public class PacTimer  {
 		updateGameSpeed();
 	}
 	private void updateGameSpeed() {
-		this.gameTimer.setDelay(1/speed*1000);
+		double newDely = (1/(double)speed)*1000;
+		this.gameTimer.setDelay((int)newDely);
 	}
 	public void stop() {
 		this.gameTimer.stop();

@@ -31,8 +31,9 @@ public class Game extends JFrame implements ActionListener , KeyListener {
 	private boolean start; 
 	private boolean isStop;
 	private Vector<Food> fruits; 
+	private int numTicksOfTimer;
 	private int numTicksWithoutStop;
-	private int numOfLives = 3;
+	private int numOfLives;
 	private JLabel scors;
 	private JLabel StartGsme;
 	private JLabel timesShow;
@@ -56,18 +57,21 @@ public class Game extends JFrame implements ActionListener , KeyListener {
 		cp.add(this.board);
 		cp.add(this.show);
 		addKeyListener(this);
-	//	this.board.setFocusable(true);
+		//	this.board.setFocusable(true);
 		pack();
-		 this.setVisible(true);
+		this.setVisible(true);
 		this.setResizable(false);
 	}
 
-	
-	
+
+
 	private void inisializeArg() {
+		this.numOfLives = 3;
+		this.fruits = new Vector<>();
 		this.timer = new PacTimer(this ,this.pacman);
 		this.board = new Board(level,timer);
 		this.pacman = board.getPacman();
+		this.numTicksOfTimer = 1;
 		this.numTicksWithoutStop = 1;
 		this.isStop = false;
 		this.show = new JPanel();
@@ -81,16 +85,16 @@ public class Game extends JFrame implements ActionListener , KeyListener {
 	public void keyPressed(KeyEvent e) {
 		start = true;
 		if(e.getKeyCode() == KeyEvent.VK_SPACE) {
-		this.timer.getGameTimer().start();
-		stopGame();
+			this.timer.getGameTimer().start();
+			stopGame();
+		}
 	}
-	}
-	
+
 
 	public static void main(String[]args) {
 		new Game(1);
 	}
-	
+
 	private void inisializeBattons() {
 		buttons = new JPanel();
 		buttons.setOpaque(false);
@@ -108,9 +112,9 @@ public class Game extends JFrame implements ActionListener , KeyListener {
 		fastForword.addActionListener(this);
 		buttons.add(fastForword);
 		show.add(buttons);
-		
-		
-		
+
+
+
 	}
 
 
@@ -137,34 +141,65 @@ public class Game extends JFrame implements ActionListener , KeyListener {
 		}
 		show.add(data);
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		if(arg0.getSource().equals(timer.getGameTimer())) {
 			this.pacman.getScore();
 			scors.setText(String.valueOf(this.pacman.getScore()));
 			timesShow.setText(String.valueOf(numTicksWithoutStop));
-			numTicksWithoutStop++;
+			if(numTicksOfTimer % this.timer.getSpeed() == 0)
+				numTicksWithoutStop++;
+			numTicksOfTimer++;
+			if(board.getNumLives()!= this.numOfLives){
+				decresLives();
 			}
-			if(arg0.getSource().equals(stop)){
+		//	if(board.getFruitsEaten().size()!= this.fruits.size()) {
+			//	fruitEaten();
+		//	}
+		}
+		if(arg0.getSource().equals(stop)){
 			stopGame();
-			}
+		}
 
-			if(arg0.getSource().equals(exit)){
-				this.setVisible(false);
-				new MainMenu();
+		if(arg0.getSource().equals(exit)){
+			this.setVisible(false);
+			new MainMenu();
+		}
+		if(arg0.getSource().equals(fastForword)){
+			if(this.timer.getSpeed() < 16 )
+				this.timer.setSpeed(this.timer.getSpeed()*2);
+			else {
+				this.timer.setSpeed(1);
 			}
+		}
 	}
+	private void fruitEaten() {
+		Food nowEated = board.getFruitsEaten().get(board.getFruitsEaten().size()-1);
+	this.fruits.add(nowEated);
+	data.add(new JLabel (nowEated.getImage()));
+	}
+
+
+
+	private void decresLives() {
+		this.numOfLives--;
+		if(numOfLives > 0)
+		this.lifePic[numOfLives].setIcon(new ImageIcon("pictures\\boards\\þþdead.png"));
+	}
+
+
+
 	private void stopGame() {
 		if(isStop) {
 			this.timer.getGameTimer().stop();
 			stop.setText("continue");
-			}
-			else {
-				this.timer.getGameTimer().start();
-				stop.setText("pause");
-			}
-			isStop =!isStop;
+		}
+		else {
+			this.timer.getGameTimer().start();
+			stop.setText("pause");
+		}
+		isStop =!isStop;
 	}
 
 
@@ -187,7 +222,7 @@ public class Game extends JFrame implements ActionListener , KeyListener {
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 
@@ -195,7 +230,7 @@ public class Game extends JFrame implements ActionListener , KeyListener {
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }
