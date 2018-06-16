@@ -48,7 +48,6 @@ public class Board extends JPanel implements ActionListener, KeyListener { //to 
 	private boolean start; 
 	private boolean isFruitsOn;
 	private Vector<Food> fruitsLeft;
-	private Vector<Food> fruitsEaten;
 	private Vector<BoardTile> fruitsTiles; 
 	private int numTicksOfGame;
 	private int numOfLives ;
@@ -60,7 +59,7 @@ public class Board extends JPanel implements ActionListener, KeyListener { //to 
 	public void initializeBoardPanel(int level, PacTimer timer) {
 		this.level = level; 
 		this.setBackground(Color.BLACK);
-		this.start = true; 
+		this.start = false; 
 		this.isFruitsOn = false; 
 		this.numOfLives = 3;
 		this.fruitsTiles = new Vector<>();
@@ -119,7 +118,6 @@ public class Board extends JPanel implements ActionListener, KeyListener { //to 
 	}
 	public void initializeFruits() {
 		this.fruitsLeft = new Vector<>();
-		this.fruitsEaten = new Vector<>();
 		if(this.level == 1) {
 			for(int i=0; i< 2; i = i+1) {
 				this.fruitsLeft.add(new PineApple());
@@ -219,7 +217,7 @@ public class Board extends JPanel implements ActionListener, KeyListener { //to 
 			if(!b.getIsSomethingOn()) {
 				b.setFood(this.fruitsLeft.get(i));
 				this.fruitsTiles.add(b);
-			}
+			} 
 		}
 	}
 
@@ -228,7 +226,7 @@ public class Board extends JPanel implements ActionListener, KeyListener { //to 
 		return this.pacman.getScore();
 	}
 	public boolean checkIfWinLevel() {
-		if(this.pacman.getScore() > 1)
+		if(this.pacman.getScore() > 500)
 			return true;
 		else
 			return false;
@@ -343,6 +341,9 @@ public class Board extends JPanel implements ActionListener, KeyListener { //to 
 	public int getNumLives() {
 		return this.numOfLives;
 	}
+	public void start() {
+		this.start = true;
+	}
 	private void checkIfPacEat() {
 		int i = this.pacman.getCurrentPosition().getX();
 		int j = this.pacman.getCurrentPosition().getY();
@@ -353,7 +354,6 @@ public class Board extends JPanel implements ActionListener, KeyListener { //to 
 		pacTile.setFood(null);
 		//if it was a fruit
 		if(this.fruitsTiles.remove(pacTile)) {
-		this.fruitsEaten.add(food);
 		this.fruitsLeft.remove(food);
 		}
 	}
@@ -411,18 +411,18 @@ public class Board extends JPanel implements ActionListener, KeyListener { //to 
 				g.drawImage(this.fruitsTiles.get(i).getImage(), this.fruitsTiles.get(i).getY()*20, this.fruitsTiles.get(i).getX()*20, this);
 			}
 		}
-		if(start) {
-			 g.setFont(new Font("TimesRoman", Font.PLAIN, 20));    
-			    g.setColor(Color.red);
-			g.drawString("Start Game", 270, 380);
-			start = false;
+		if(!start) {
+			drowstartGame(g);
 		}
 	}
 
 
-	public Vector<Food> getFruitsEaten (){
-		return this.fruitsEaten;
+	private void drowstartGame(Graphics g) {
+		 g.setFont(new Font("TimesRoman", Font.PLAIN, 20));    
+		    g.setColor(Color.red);
+		g.drawString("Start Game", 270, 380);
 	}
+	
 
 
 	public BoardTile getBoardTile(Pair place) {

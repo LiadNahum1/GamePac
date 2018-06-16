@@ -37,7 +37,7 @@ public class GreenGhost extends Ghost {
 	public void visit(AngryPacman pacman) {
 		die();
 	}
-	public void disappear() {
+	public void disappear() { //this will dissapere the ghost
 		this.mode = Mode.DISAPPEAR;
 		int x = getBoardTileIn().getX();
 		int y = getBoardTileIn().getY();
@@ -64,8 +64,8 @@ public class GreenGhost extends Ghost {
 				if(this.ticks== 5) {
 					revive();
 				}
-				if(this.isStart) {
-					if( timeFromStart%2 == 0) {
+				if(this.isStart) { 
+					if( timeFromStart%2 == 0) { //this will move the ghost one tile every two ticks of the timer 
 						if(timeFromChase != 1 & timeFromChase != 2) 
 							this.move();
 						if( timeFromChase!= 0)

@@ -25,14 +25,15 @@ private Image cantHitIm;
 
 	@Override
 	public void visit(NicePacman pacman) {
-		// TODO Auto-generated method stub
-		
+		if(this.canHit)
+	this.pacman.dead();
 	}
 
 	@Override
 	public void visit(DefendedPacman pacman) {
 		if(this.canHit)
-	this.pacman.freeze();	}
+	this.pacman.freeze();
+		}
 
 	@Override
 	public void visit(AngryPacman pacman) {
@@ -43,8 +44,8 @@ private Image cantHitIm;
 	public void actionPerformed(ActionEvent e) {
 		super.actionPerformed(e);
 		Pair boardTileOfPac = new Pair(this.pacman.getCurrentPosition().getX(), this.pacman.getCurrentPosition().getY());
-			if(this.isStart) {
-				if(timeFromChase % 20 == 0 & timeFromChase >= 11) {
+			if(this.isStart) { 
+				if(timeFromChase % 20 == 0 & timeFromChase >= 11) { //every 20 timers ticks this ghost will transpose to the pacman location and transpose to scare mode so it wont immediately kill the pacman
 				this.lastBoardTileIn.setX(this.boardTileIn.getX());
 				this.lastBoardTileIn.setY(this.boardTileIn.getY());
 				this.boardTileIn.setX(boardTileOfPac.getX());
@@ -59,7 +60,7 @@ private Image cantHitIm;
 							this.move();
 						}
 				}
-				if(timeFromChase >= 5 & timeFromChase < 11) 
+				if(timeFromChase >= 5 & timeFromChase < 11) //this will dim the ghost before she can attack
 					dimGhost();
 				if(!canHit)
 					this.currPositionIm = this.cantHitIm;

@@ -68,12 +68,12 @@ public class YellowGhost extends Ghost{
 				g.drawImage(offIm2,this.tileAnderAttack.getY()*20, this.tileAnderAttack.getX()*20, board);
 			}
 	}
-	public void advanceAttack() { //to finish
+	public void advanceAttack() { //if the ghost is already in the attack this will continue it the same direction
 		if(inAttack) {
 			this.prevTileAnderAttack.setX(this.tileAnderAttack.getX());
 			this.prevTileAnderAttack.setY(this.tileAnderAttack.getY());
 			Vector<String> posDirs = this.neighbors[prevTileAnderAttack.getX()][prevTileAnderAttack.getY()];
-			if(attackPos == "u" & posDirs.contains("u")) 
+			if(attackPos == "u" & posDirs.contains("u"))  //this will find the attack direction and check if it can continue with the attack 
 				this.tileAnderAttack.sumSetX(-1);
 			else if(attackPos == "d" & posDirs.contains("d")) 
 				this.tileAnderAttack.sumSetX(1);
@@ -83,7 +83,7 @@ public class YellowGhost extends Ghost{
 				this.tileAnderAttack.sumSetY(1);
 			else inAttack = false;
 		}
-		else {inAttack = true;
+		else {inAttack = true; //if the last attack is finished the it start a new one
 		attackPos = this.curPos;
 		this.tileAnderAttack = advanceMove();
 		if(this.neighbors[tileAnderAttack.getX()][tileAnderAttack.getY()] == null)
@@ -98,7 +98,7 @@ public class YellowGhost extends Ghost{
 		}
 		else
 		{
-			if(this.ticks == 5) {
+			if(this.ticks == 5) { //if the ghost is freezed release it after 5 timer ticks
 				unfreeze();
 			}
 			super.actionPerformed(e);
@@ -107,10 +107,10 @@ public class YellowGhost extends Ghost{
 				collide(this.pacman);
 			if(this.isStart) {
 				if( timeFromStart%4 == 0) {
-					if(timeFromChase != 1 & timeFromChase != 2) //should the ghost wait two steps or two seconds
+					if(timeFromChase != 1 & timeFromChase != 2)  //this wall stop the ghost moment after she hits the wall
 						this.move();
 				}
-				if(timeFromChase >= 5 & timeFromChase < 11) 
+				if(timeFromChase >= 5 & timeFromChase < 11)  //this will dim the ghost before she can attack
 					dimGhost();
 				if(timeFromChase >= 11) 
 					advanceAttack();

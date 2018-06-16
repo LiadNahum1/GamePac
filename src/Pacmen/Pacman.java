@@ -29,6 +29,9 @@ public abstract class Pacman implements Visited, ActionListener{
 	private String direction; //"l", "r", "u","d"
 	private Mode mode;
 	private int score;
+	private int appleNum;
+	private int pineAppleNum;
+	private int strawBerryNum;
 	private int freezeTicks;
 	private ImageIcon [] freezeIcon; 
 
@@ -41,6 +44,9 @@ public abstract class Pacman implements Visited, ActionListener{
 		this.board = board;
 		this.boardStr = boardStr;
 		this.score = 0;
+		this.pineAppleNum = 0;
+		this.appleNum = 0;
+		this.strawBerryNum = 0;
 		initializePacman(initialPosition);
 	}
 	private void initialFreezeIcons() {
@@ -137,11 +143,31 @@ public abstract class Pacman implements Visited, ActionListener{
 	}
 	public void eat() {
 		BoardTile tile = this.board[getCurrentPosition().getX()][getCurrentPosition().getY()];
-		this.score = this.score + tile.eaten();
+		int points =  tile.eaten();
+		this.score = this.score + points;
+		checkForFruit(points);
+		
 	}
 
+	private void checkForFruit(int points) {
+		if(points == 100)
+			this.pineAppleNum++;
+		if(points == 200)
+			this.appleNum++;
+		if(points == 300)
+			this.strawBerryNum++;
+	}
 	public int getScore() {
 		return this.score;
+	}
+	public int getPineAppleNum() {
+		return this.pineAppleNum;
+	}
+	public int getAppleNum() {
+		return this.appleNum;
+	}
+	public int getStrawBerryNum() {
+		return this.strawBerryNum;
 	}
 	public void reduceScore(int reduce) {
 		this.score = this.score - reduce;

@@ -64,9 +64,9 @@ public class RedGhost extends Ghost {
 	public void advanceAttack() {
 		int yAxsis;
 		int xAxsis;
-		if(inAttack) {
+		if(inAttack) { //if the ghost is already in the attack this will continue it the same direction
 			this.prevTileAnderAttack.setX(this.tileAnderAttack.getX());
-			this.prevTileAnderAttack.setY(this.tileAnderAttack.getY());
+			this.prevTileAnderAttack.setY(this.tileAnderAttack.getY()); //this will find the attack direction
 			if(attackPos == "u") 
 				this.tileAnderAttack.sumSetX(-1);
 			if(attackPos == "d") 
@@ -76,13 +76,13 @@ public class RedGhost extends Ghost {
 			if(attackPos == "r") 
 				this.tileAnderAttack.sumSetY(1);
 		}
-		else {inAttack = true;
+		else {inAttack = true; //if the last attack is finished the it start a new one 
 		attackPos = this.curPos;
 		this.tileAnderAttack = advanceMove();
 		}
 		yAxsis = tileAnderAttack.getX();
 		xAxsis = tileAnderAttack.getY();
-		if(yAxsis <0 | yAxsis >31 | xAxsis < 0 | xAxsis > 31)
+		if(yAxsis <0 | yAxsis >31 | xAxsis < 0 | xAxsis > 31) //if the attack reached the end of the board stop it
 			this.inAttack = false;
 	}
 
@@ -98,7 +98,7 @@ public class RedGhost extends Ghost {
 					if(timeFromChase != 1 & timeFromChase != 2) //should the ghost wait two steps or two seconds
 						this.move();
 				}
-				if(timeFromChase >= 5 & timeFromChase < 11) 
+				if(timeFromChase >= 5 & timeFromChase < 11)  //this will dim the ghost before she can attack
 					dimGhost();
 				if(timeFromChase >= 11) 
 					advanceAttack();

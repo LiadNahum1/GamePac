@@ -4,7 +4,6 @@ import javax.swing.ImageIcon;
 public class Apple extends Food{
 	public Apple() {
 		this.image = new ImageIcon("pictures/boards/apple.png");
-		this.bigImage = new ImageIcon("pictures/boards/Bapple.png").getImage();
 		this.worth = 200;	
-	}
+		}
 }

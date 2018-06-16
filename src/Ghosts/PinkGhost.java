@@ -30,13 +30,12 @@ public class PinkGhost extends Ghost{
 
 	@Override
 	public void visit(DefendedPacman pacman) {
-		// TODO Auto-generated method stub
-
+		this.pacman.freeze();
 	}
 
 	@Override
 	public void visit(AngryPacman pacman) {
-this.pacman.dead();
+		this.pacman.dead();
 	}
 	@Override
 	public void draw(Board board, Graphics g) { 
@@ -45,18 +44,18 @@ this.pacman.dead();
 	public void actionPerformed(ActionEvent e) {
 		super.actionPerformed(e);
 		if(this.isStart) {
-			if( timeFromStart%8 == 0  & (timeFromChase % 100 > 80 | timeFromChase <= 12)) {
-				if(timeFromChase != 1 & timeFromChase != 2) //should the ghost wait two steps or two seconds
+			if( timeFromStart%8 == 0  & (timeFromChase % 100 > 80 | timeFromChase <= 12)) {//this will return the ghost speed to the normal tile in 8 timer tickis
+				if(timeFromChase != 1 & timeFromChase != 2) 
 					this.move();
 			}
 			else {
 				
-				if(timeFromChase > 12 & timeFromChase % 100 <= 80) {
+				if(timeFromChase > 12 & timeFromChase % 100 <= 80) {//this will make the ghost move fast and turn picture to crazy ghost
 					move();
 					this.currPositionIm = this.fastImg;
 				}
 			}
-			if(timeFromChase >= 5 & timeFromChase < 11) 
+			if(timeFromChase >= 5 & timeFromChase < 11)  //this will make the ghost dim for two timer ticks
 				dimGhost();
 				if( timeFromChase != 0) 
 					timeFromChase++;

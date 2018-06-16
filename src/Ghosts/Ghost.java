@@ -75,9 +75,9 @@ public abstract class Ghost  implements Visitor, ActionListener {
 	public void collide(Pacman pacman) {
 		pacman.impact(this);
 	}
-	public void move() {
+	public void move() { 
 		String dir = findMoveDir();
-		this.currPositionIm = this.position.get(dir);
+		this.currPositionIm = this.position.get(dir); //update the picture of the direction 
 		this.curPos = dir;
 		this.lastBoardTileIn.setX(this.boardTileIn.getX());
 		this.lastBoardTileIn.setY(this.boardTileIn.getY());
@@ -87,9 +87,9 @@ public abstract class Ghost  implements Visitor, ActionListener {
 			this.timeFromChase = 1;
 		}
 	}
-	public Pair advanceMove() {
+	public Pair advanceMove() { //this will update the next tile that the ghost would be in according to the chosen direction
 		Pair nextTile = new Pair(0,0);
-		if(curPos == "u")
+		if(curPos == "u") 
 		{
 			nextTile = new Pair(this.boardTileIn.getX()-1,this.boardTileIn.getY());
 		}
@@ -110,15 +110,15 @@ public abstract class Ghost  implements Visitor, ActionListener {
 	private String findMoveDir() {
 		@SuppressWarnings("unchecked")
 		Vector <String> posDirs =(Vector<String>) neighbors[this.boardTileIn.getX()][this.boardTileIn.getY()].clone();
-		if(posDirs.contains(curPos)) {
+		if(posDirs.contains(curPos)) { //this prevent the ghost from changing direction while in straight line
 			if(curPos == "u") posDirs.remove("d");
 			if(curPos == "d") posDirs.remove("u");
 			if(curPos == "r") posDirs.remove("l");
 			if(curPos == "l") posDirs.remove("r");
 		}
-		if(posDirs.size() == 1) 
+		if(posDirs.size() == 1) //if there is only one direction take it
 			return posDirs.get(0);
-		if(isChase) {
+		if(isChase) { //if the ghost already reached the wall the goes to random direction
 			Random r = new Random ();
 			int  n = r.nextInt(posDirs.size());
 			return posDirs.get(n);
@@ -127,7 +127,7 @@ public abstract class Ghost  implements Visitor, ActionListener {
 			return bestMove(posDirs);
 	}
 
-	private String bestMove(Vector<String> posDirs) {
+	private String bestMove(Vector<String> posDirs) { // if the ghost chase the wall so it goes in the direction of the wall
 		if(posDirs.contains("u"))
 			return "u";
 		if(this.chaseWall.getY()==1  & posDirs.contains("l" ) ) 
@@ -162,6 +162,7 @@ public abstract class Ghost  implements Visitor, ActionListener {
 			collide(this.pacman);
 		}
 	}
+	//Getters and setter
 	public void setLastBoardTileIn(Pair boardTile) {
 		this.lastBoardTileIn = boardTile;
 	}

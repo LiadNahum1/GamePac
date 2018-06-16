@@ -5,20 +5,21 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Vector;
+import java.io.InputStream;
 
-import javax.swing.BoxLayout;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import GamePack.Board;
 
+//this class will be the first menu when the player open the game
 public class MainMenu extends JFrame implements ActionListener {
 	private JButton start;
 	private JButton exit; 
@@ -31,7 +32,6 @@ public class MainMenu extends JFrame implements ActionListener {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setContentPane(new JLabel(handlePicSize(new ImageIcon("pictures/extra/pacWwlcome.png"), size)));
 		Container cp = getContentPane();       
-
 		this.start = new JButton("Start Game");
 		this.start.setBackground(Color.RED);
 		this.start.setBounds(180, 250, 150, 35);
