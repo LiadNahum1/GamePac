@@ -5,6 +5,7 @@ import java.util.Vector;
 
 import GamePack.Board;
 import GamePack.Mode;
+import GamePack.PacTimer;
 import GamePack.Pair;
 import Pacmen.AngryPacman;
 import Pacmen.DefendedPacman;
@@ -13,8 +14,8 @@ import Pacmen.Pacman;
 import Tiles.BoardTile;
 
 public class GreenGhost extends Ghost {
-	public GreenGhost( BoardTile[][]board, Pair inisialPositionTile, Pacman pacman,Vector<String>[][] neighbors) {
-		super(board, inisialPositionTile , pacman, neighbors,"green",new Pair(1,1) ,"u");
+	public GreenGhost( BoardTile[][]board, Pair inisialPositionTile, Pacman pacman,Vector<String>[][] neighbors, PacTimer timer) {
+		super(board, inisialPositionTile , pacman, neighbors,"green",new Pair(1,1) ,"u", timer);
 		this.ticks= 0;
 	}
 

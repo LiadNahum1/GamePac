@@ -8,6 +8,7 @@ import javax.swing.ImageIcon;
 
 import GamePack.Board;
 import GamePack.Mode;
+import GamePack.PacTimer;
 import GamePack.Pair;
 import Pacmen.AngryPacman;
 import Pacmen.DefendedPacman;
@@ -23,8 +24,8 @@ public class YellowGhost extends Ghost{
 	private String attackPos;
 	private Image freeze; 
 
-	public YellowGhost(BoardTile[][]board, Pair boardTileIn, Pacman pacman, Vector<String>[][] neighbors ) {
-		super(board, boardTileIn,pacman, neighbors, "yellow",new Pair(1,30) ,"u");
+	public YellowGhost(BoardTile[][]board, Pair boardTileIn, Pacman pacman, Vector<String>[][] neighbors, PacTimer timer ) {
+		super(board, boardTileIn,pacman, neighbors, "yellow",new Pair(1,30) ,"u", timer);
 		this.attackImg = new ImageIcon("pictures/figures/iceWave.png").getImage();
 		this.inAttack = false;
 		prevTileAnderAttack = new Pair(0,0);
@@ -46,27 +47,29 @@ public class YellowGhost extends Ghost{
 	@Override
 	/*ghost freeze for 5 seconds*/
 	public void visit(AngryPacman pacman) {
-		this.mode = Mode.FREEZE; 
-		this.ticks = this.ticks + 1;
-		setCurrentPositionIm(this.freeze);
-		this.prevTileAnderAttack.setX(this.tileAnderAttack.getX());
-		this.prevTileAnderAttack.setY(this.tileAnderAttack.getY());
-		this.inAttack = false; 
-		
+		if(this.mode!= Mode.FREEZE) {
+			this.mode = Mode.FREEZE; 
+			this.ticks = this.ticks + 1;
+			setCurrentPositionIm(this.freeze);
+			this.prevTileAnderAttack.setX(this.tileAnderAttack.getX());
+			this.prevTileAnderAttack.setY(this.tileAnderAttack.getY());
+			this.inAttack = false; 
+		}
+
 	}
 	@Override
 	public void draw(Board board, Graphics g) { 
-			super.draw(board, g);
-			Image offIm1 = board.createImage(20, 20);//this will draw last board tile
-			Graphics offGr1 = offIm1.getGraphics();	
-			offGr1.drawImage(board.getBoardTile(this.prevTileAnderAttack).getImage(),0,0, board);
-			g.drawImage(offIm1,this.prevTileAnderAttack.getY()*20,this.prevTileAnderAttack.getX()*20, board);
-			if(inAttack) {
-				Image offIm2 = board.createImage(20 , 20);//this will draw next board tile
-				Graphics offGr2 = offIm2.getGraphics();	
-				offGr2.drawImage(this.attackImg, 0,0, board);
-				g.drawImage(offIm2,this.tileAnderAttack.getY()*20, this.tileAnderAttack.getX()*20, board);
-			}
+		super.draw(board, g);
+		Image offIm1 = board.createImage(20, 20);//this will draw last board tile
+		Graphics offGr1 = offIm1.getGraphics();	
+		offGr1.drawImage(board.getBoardTile(this.prevTileAnderAttack).getImage(),0,0, board);
+		g.drawImage(offIm1,this.prevTileAnderAttack.getY()*20,this.prevTileAnderAttack.getX()*20, board);
+		if(inAttack) {
+			Image offIm2 = board.createImage(20 , 20);//this will draw next board tile
+			Graphics offGr2 = offIm2.getGraphics();	
+			offGr2.drawImage(this.attackImg, 0,0, board);
+			g.drawImage(offIm2,this.tileAnderAttack.getY()*20, this.tileAnderAttack.getX()*20, board);
+		}
 	}
 	public void advanceAttack() { //if the ghost is already in the attack this will continue it the same direction
 		if(inAttack) {
@@ -93,12 +96,12 @@ public class YellowGhost extends Ghost{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(this.mode.equals(Mode.FREEZE) & this.ticks < 5) {
+		if(this.mode.equals(Mode.FREEZE) & this.ticks < 5*this.timer.getSpeed()) {
 			this.ticks = this.ticks +1;
 		}
 		else
 		{
-			if(this.ticks == 5) { //if the ghost is freezed release it after 5 timer ticks
+			if(this.ticks == 5*this.timer.getSpeed()) { //if the ghost is freezed release it after 5 timer ticks
 				unfreeze();
 			}
 			super.actionPerformed(e);

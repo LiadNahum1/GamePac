@@ -8,6 +8,7 @@ import java.util.Vector;
 import javax.swing.ImageIcon;
 
 import GamePack.Board;
+import GamePack.PacTimer;
 import GamePack.Pair;
 import Pacmen.AngryPacman;
 import Pacmen.DefendedPacman;
@@ -18,8 +19,8 @@ import Tiles.BoardTile;
 public class PinkGhost extends Ghost{
 	private Image fastImg;
 
-	public PinkGhost(BoardTile[][]board, Pair inisialPositionTile,Pacman pacman, Vector<String> [][] neighbors) {
-		super(board, inisialPositionTile ,pacman, neighbors , "pink" ,new Pair(1,30) , "l");
+	public PinkGhost(BoardTile[][]board, Pair inisialPositionTile,Pacman pacman, Vector<String> [][] neighbors, PacTimer timer) {
+		super(board, inisialPositionTile ,pacman, neighbors , "pink" ,new Pair(1,30) , "l", timer);
 		this.fastImg = new ImageIcon("pictures/figures/space.png").getImage();
 	}
 

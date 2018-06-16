@@ -1,8 +1,6 @@
-liad,nahum,76,720
-liad2,nahum,105,800
-liad3,nahum,130,800
-liad3,nahum,74,380
-liad,1,37,0
-1,1,36,0
-l,n,120,260
-Liad,2,28,0
+Liad,Nahum,67,1610,2,2,0
+Lishay,Aben Sour,21,0,0,0,0
+Liad,n,39,310,1,1,0
+h,h,42,400,2,1,0
+hi,h,68,560,1,2,0
+l,b,24,200,0,0,0

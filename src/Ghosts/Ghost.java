@@ -14,6 +14,7 @@ import javax.swing.ImageIcon;
 
 import GamePack.Board;
 import GamePack.Mode;
+import GamePack.PacTimer;
 import GamePack.Pair;
 import Pacmen.AngryPacman;
 import Pacmen.DefendedPacman;
@@ -38,15 +39,17 @@ public abstract class Ghost  implements Visitor, ActionListener {
 	protected BoardTile[][]boardTiles;
 	protected Mode mode; 
 	protected int ticks;
+	protected PacTimer timer; 
 
 
-	public Ghost(BoardTile[][]board, Pair boardTileIn ,Pacman pacman, Vector<String> [][] neighbors ,String ghostColor ,Pair closestWall ,String curPos ) {
+	public Ghost(BoardTile[][]board, Pair boardTileIn ,Pacman pacman, Vector<String> [][] neighbors ,String ghostColor ,Pair closestWall ,String curPos, PacTimer timer ) {
 		updateDirsPic(ghostColor);
 		inisializeData(boardTileIn , new Pair(0,0) , curPos);
 		this.neighbors = neighbors;
 		this.chaseWall = closestWall;     
 		this.pacman = pacman;
 		this.boardTiles = board;
+		this.timer = timer; 
 	}
 
 

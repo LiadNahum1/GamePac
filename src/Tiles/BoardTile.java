@@ -1,21 +1,18 @@
 package Tiles;
 import java.awt.Image;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-
 import Food.Food;
+import GamePack.Pair;
 
+/*abstract class which defines a BoardTile*/
 public abstract class BoardTile {
-	private int x; //position on matrix
-	private int y; 
+	private Pair p; //position of cell on matrix while x is row and y is column 
 	protected ImageIcon imageIcon; 
 	private boolean isSomethingOn;
 	protected Food food; 
 
 	public BoardTile(int x, int y , boolean isSomethingOn, Food food) {
-		this.x = x;
-		this.y = y; 
+		this.p = new Pair(x, y);
 		this.isSomethingOn = isSomethingOn;
 		this.food = food;
 
@@ -25,10 +22,10 @@ public abstract class BoardTile {
 	}
 	
 	public int getX() {
-		return this.x;
+		return this.p.getX();
 	}
 	public int getY() {
-		return this.y;
+		return this.p.getY();
 	}
 
 	public boolean getIsSomethingOn() {
@@ -37,12 +34,13 @@ public abstract class BoardTile {
 	public void setIsSomethingOn(boolean bool) {
 		this.isSomethingOn = bool;
 	}
+	
+	/*get food that is painted on top of this BoardTile*/
 	public Food getFood() {
 		return this.food;
 	}
-	public void setFood(Food food) {
-		
-	}
+	/*set food that will be painted on top of this BoardTile*/
+	public void setFood(Food food) {}
 
 	/*returns num of points the player gets for this eating*/
 	public int eaten() {

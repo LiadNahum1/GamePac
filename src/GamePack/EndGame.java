@@ -23,10 +23,15 @@ public class EndGame extends JFrame implements ActionListener {
 	private JButton playAgain; 
 	private JButton records; 
 	private JButton exit; 
+	private int score;
+	private int time; 
+	private int pineApple;
+	private int apple;
+	private int strawBerry; 
 	private final int size = 600; 
 	
 	/*constructor*/
-	public EndGame(JLabel score, int level, JLabel time) {
+	public EndGame(int score, int level, int time, int pineApple, int apple, int strawBerry) {
 		super("The End");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setBackground(Color.black);		
@@ -40,9 +45,9 @@ public class EndGame extends JFrame implements ActionListener {
 		title.setFont(new Font("Serif", Font.BOLD, 100));
 		title.setBounds(50, 0,600, 100);
 		
-		this.scoreL = new JLabel("Score: " + score.getText());
+		this.scoreL = new JLabel("Score: " + score);
 		this.levelL = new JLabel("Level: " + level);
-		this.timeL = new JLabel("Time: " + time.getText());
+		this.timeL = new JLabel("Time: " + time);
 		this.scoreL.setForeground(Color.LIGHT_GRAY);
 		this.timeL.setForeground(Color.LIGHT_GRAY);
 		this.levelL.setForeground(Color.LIGHT_GRAY);
@@ -81,6 +86,11 @@ public class EndGame extends JFrame implements ActionListener {
 		cp.add(records);
 		cp.add(exit);
 
+		this.score = score;
+		this.time= time;
+		this.pineApple = pineApple;
+		this.apple = apple;
+		this.strawBerry = strawBerry; 
 		this.setSize(size, size);
 		this.setResizable(false);
 		this.setVisible(true);
@@ -93,11 +103,20 @@ public class EndGame extends JFrame implements ActionListener {
 		return new ImageIcon(newimage);
 	}
 
-	public String getScore() {
-		return this.scoreL.getText();
+	public int getScore() {
+		return this.score;
 	}
-	public String getTime() {
-		return this.timeL.getText();
+	public int getTime() {
+		return this.time;
+	}
+	public int getPineApples() {
+		return this.pineApple;
+	}
+	public int getApples() {
+		return this.apple;
+	}
+	public int getStrawBerry() {
+		return this.strawBerry;
 	}
 	@Override
 	/*If the client presses on the exit button, the function raises a dialog whether he is sure or not.

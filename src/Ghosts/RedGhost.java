@@ -7,6 +7,7 @@ import java.util.Vector;
 import javax.swing.ImageIcon;
 
 import GamePack.Board;
+import GamePack.PacTimer;
 import GamePack.Pair;
 import Pacmen.AngryPacman;
 import Pacmen.DefendedPacman;
@@ -21,8 +22,8 @@ public class RedGhost extends Ghost {
 	private String attackPos;
 	private boolean inAttack;
 
-	public RedGhost(BoardTile[][]board, Pair inisialPositionTile,Pacman pacman, Vector<String> [][] neighbors) {
-		super(board, inisialPositionTile ,pacman, neighbors , "red" ,new Pair(1,1) , "r");
+	public RedGhost(BoardTile[][]board, Pair inisialPositionTile,Pacman pacman, Vector<String> [][] neighbors, PacTimer timer) {
+		super(board, inisialPositionTile ,pacman, neighbors , "red" ,new Pair(1,1) , "r", timer);
 		this.attackImg = new ImageIcon("pictures/figures/fire.png").getImage();
 		this.inAttack = false;
 		this.prevTileAnderAttack = new Pair(0,0);

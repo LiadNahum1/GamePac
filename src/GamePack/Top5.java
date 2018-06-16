@@ -60,7 +60,7 @@ public class Top5 extends JFrame implements ActionListener{
 		DefaultTableModel model = (DefaultTableModel) this.top.getModel();
 		for(int i =0; i<allTable.getRowCount() && i< 5; i = i+1) {
 			model.addRow(new Object[]{modelAll.getValueAt(i, 0),modelAll.getValueAt(i, 1),modelAll.getValueAt(i, 2),
-					modelAll.getValueAt(i, 3)});
+					Integer.parseInt(modelAll.getValueAt(i, 3).toString()), modelAll.getValueAt(i, 4),modelAll.getValueAt(i, 5),modelAll.getValueAt(i, 6)});
 		}
 		this.top.sortTable();
 		

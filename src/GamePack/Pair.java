@@ -1,7 +1,7 @@
 package GamePack;
 
 
-/*The class defines a pair */
+/*The class defines a pair of (x, y) which defines the place(cell) of an object in a matrix   */
 public class Pair {
 	private int x;
 	private int y;
@@ -28,10 +28,11 @@ public class Pair {
 	public int setY(int y) {
 		return this.y = y;
 	}
+	/*adds x to the x field*/
 	public int sumSetX(int x) {
 		return this.x= this.x + x;
 	}
-	
+	/*adds y to the y field*/
 	public int sumSetY(int y) {
 		return this.y = this.y + y;
 	}

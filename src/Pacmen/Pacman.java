@@ -5,25 +5,22 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-
 import javax.swing.ImageIcon;
-
-import Food.Food;
 import GamePack.Board;
 import GamePack.Mode;
+import GamePack.PacTimer;
 import GamePack.Pair;
 import Tiles.BoardTile;
-import Tiles.RoadTile;
 
+/*abstract class which defines a Pacman figure and implements Visited and ActionListener*/ 
 public abstract class Pacman implements Visited, ActionListener{
 	protected ImageIcon [] pacmanIcons;
+	private ImageIcon [] freezeIcon; 
 	protected ImageIcon currentIcon;
 	private Pair currentPosition; // on board
 	private Pair lastPosition;
 	private int dx;
 	private int dy; 
-	private ImageIcon fullPac; 
-	private boolean isFull;
 	private BoardTile [][] board;
 	private String [][]boardStr; 
 	private String direction; //"l", "r", "u","d"
@@ -33,28 +30,27 @@ public abstract class Pacman implements Visited, ActionListener{
 	private int pineAppleNum;
 	private int strawBerryNum;
 	private int freezeTicks;
-	private ImageIcon [] freezeIcon; 
+	private PacTimer timer; 
 
-	public Pacman(Pair initialPosition, BoardTile[][]board, String [][]boardStr) {
+	public Pacman(Pair initialPosition, BoardTile[][]board, String [][]boardStr, PacTimer timer) {
 		this.pacmanIcons = new ImageIcon[5];
-		this.freezeIcon = new ImageIcon[4];
-		this.fullPac = new ImageIcon("pictures\\figures\\NicePacman\\fullPac.png");
-		initialFreezeIcons();
-		this.isFull = false; 
+		this.freezeIcon = new ImageIcon[4];	
+		initializeFreezeIcons();
 		this.board = board;
 		this.boardStr = boardStr;
+		this.timer = timer; 
 		this.score = 0;
 		this.pineAppleNum = 0;
 		this.appleNum = 0;
 		this.strawBerryNum = 0;
 		initializePacman(initialPosition);
 	}
-	private void initialFreezeIcons() {
-		this.freezeIcon[0] = new ImageIcon("pictures\\figures\\freeze\\l.png");
-		this.freezeIcon[1] = new ImageIcon("pictures\\figures\\freeze\\r.png");
-		this.freezeIcon[2] = new ImageIcon("pictures\\figures\\freeze\\u.png");
-		this.freezeIcon[3] = new ImageIcon("pictures\\figures\\freeze\\d.png");
-	}
+
+	/*The function gets an initial position for pacman on the matrix of the board and initialize Pacman:
+	 * The initial direction of Pacman is left, its mode is alive and in the beginning the delta x and y 
+	 * that determines the movement of Pacman on the matrix cells are 0
+	 * The function is called at the start o the game and also every time that Pacman dies and revives
+	 */
 	public void initializePacman(Pair initialPosition) {
 		this.currentIcon = this.pacmanIcons[0];
 		this.currentPosition = initialPosition;
@@ -64,20 +60,30 @@ public abstract class Pacman implements Visited, ActionListener{
 		this.direction = "l"; 
 		this.mode = Mode.ALIVE;  
 		this.freezeTicks = 0;
-
+		
 	}
-	/*moves pacman if can */
+	/*The function fill the freezeIcon array with freeze pacman images for each direction*/ 
+	private void initializeFreezeIcons() {
+		this.freezeIcon[0] = new ImageIcon("pictures\\figures\\freeze\\l.png");
+		this.freezeIcon[1] = new ImageIcon("pictures\\figures\\freeze\\r.png");
+		this.freezeIcon[2] = new ImageIcon("pictures\\figures\\freeze\\u.png");
+		this.freezeIcon[3] = new ImageIcon("pictures\\figures\\freeze\\d.png");
+	}
+
+	/*The function make Pacman moves if possible. Updates the lastPosition and the currentPosition */
 	public void move() {
 		if(checkIfCanMove()) {
-			System.out.println(dx + " " + dy);
 			this.lastPosition.setX(this.currentPosition.getX());
 			this.lastPosition.setY(this.currentPosition.getY());
 			this.currentPosition.sumSetX(this.dx);
 			this.currentPosition.sumSetY(this.dy);
 		}
-		
+
 	}
-	public boolean checkIfCanMove() {
+	/*Checks if Pacman can move according to the string matrix. If in the cell that matches the position of pacman
+	 * there is a "w" - which symbols wall or "gh" or "g" - which symbol the gate opening and the cage, the
+	 * pacman can't move. Otherwise, he can and the function returns true*/
+	private boolean checkIfCanMove() {
 		int x = this.currentPosition.getX() + this.dx;
 		int y = this.currentPosition.getY() + this.dy; 
 		if(this.boardStr[x][y].equals("w") |this.boardStr[x][y].equals("gh")|this.boardStr[x][y].equals("g")) {
@@ -85,13 +91,11 @@ public abstract class Pacman implements Visited, ActionListener{
 		}
 		return true; 
 	}
-	public ImageIcon getCurrentIcon() {
-		return this.currentIcon;
-	}
 
-	public Pair getCurrentPosition() {
-		return this.currentPosition;
-	}
+	/*The function deals with KeyEvent. If pacman isn't freeze it checks which KeyBoard has been pressed
+	 * and changes dx,dy, direction and currentImage according to it. If none of the arrows was pressed
+	 * the function updates dx and dy to be 0 and makes pacman stand still. 
+	 * Then, calls move() and eat() */
 	public void manageMovement(KeyEvent e) {
 		if(!this.mode.equals(Mode.FREEZE)) {
 			if(e.getKeyCode()== KeyEvent.VK_LEFT) {
@@ -126,29 +130,52 @@ public abstract class Pacman implements Visited, ActionListener{
 			eat();
 		}
 	}
-	public void actionPerformed(ActionEvent e) {
-		if(this.mode.equals(Mode.FREEZE) & this.freezeTicks < 4*3) {
-			this.freezeTicks = this.freezeTicks +1;
-			System.out.println(this.freezeTicks);
-		}
-		else {
-			if(this.freezeTicks == 4*3) {
-				this.mode = Mode.ALIVE;
-				this.freezeTicks = 0;
-			}
-			
-		//	move(); //move pacman	
-		//	eat();
-		}
-	}
+	/*The function updates the number of score of pacman*/
 	public void eat() {
 		BoardTile tile = this.board[getCurrentPosition().getX()][getCurrentPosition().getY()];
 		int points =  tile.eaten();
 		this.score = this.score + points;
 		checkForFruit(points);
-		
 	}
 
+	/*return current ImageIcon of pacman*/
+	public ImageIcon getCurrentIcon() {
+		return this.currentIcon;
+	}
+	/*gets an array of ImageIcon and set currentIcon according to the diresction field*/
+	public void setIcon(ImageIcon [] arrayIm) {
+		if(this.direction.equals("l"))
+			this.currentIcon = arrayIm[0];
+		else if(this.direction.equals("r"))
+			this.currentIcon = arrayIm[1];
+		else if(this.direction.equals("u"))
+			this.currentIcon = arrayIm[2];
+		else
+			this.currentIcon = arrayIm[3];
+	}
+
+	/*returns current position*/
+	public Pair getCurrentPosition() {
+		return this.currentPosition;
+	}
+
+	/*The function is called every tick of the timer of the game.
+	 *If pacman is in Freeze mode the function counts 3 seconds and then change pacman's mode
+	 *back to be Alive */
+	public void actionPerformed(ActionEvent e) {
+		if(this.mode.equals(Mode.FREEZE) & this.freezeTicks < 3*this.timer.getSpeed()) {
+			this.freezeTicks = this.freezeTicks +1;
+		}
+		else {
+			if(this.freezeTicks == 3*this.timer.getSpeed()) {
+				this.mode = Mode.ALIVE;
+				setIcon(this.pacmanIcons);
+				this.freezeTicks = 0;
+			}
+		}
+	}
+
+	/*The function counts how many fruits did pacman eat of each kind according to the points of each fruit*/
 	private void checkForFruit(int points) {
 		if(points == 100)
 			this.pineAppleNum++;
@@ -157,9 +184,45 @@ public abstract class Pacman implements Visited, ActionListener{
 		if(points == 300)
 			this.strawBerryNum++;
 	}
+
+	/*The function is called every time pacman freezes. it reduces 10 points from his score.
+	 * If the score after the reduce is less than 0, the player loses*/
+	public void reduceScore(int reduce) {
+		if(this.score - reduce < 0)
+			dead();
+		else {
+			this.score = this.score - reduce;
+		}
+	}
+	/*The function draws a black rectangle in the last position of pacman and draws pacman in the new position of it */
+	public void draw(Board board, Graphics g) {
+		ImageIcon im = getCurrentIcon();
+		g.setColor(Color.BLACK);
+		g.fillRect(this.lastPosition.getY()*20, this.lastPosition.getX()*20, 20, 20);
+		Image offIm = board.createImage(20 , 20);
+		Graphics offGr = offIm.getGraphics();	
+		offGr.drawImage(im.getImage(), 0,0, board);
+		g.drawImage(offIm,this.currentPosition.getY() * 20, this.currentPosition.getX()*20, board);
+	}
+	
+	/*change pacman mode to DEAD mode*/
+	public void dead() {
+		this.mode = Mode.DEAD;
+	}
+	
+	/*change pacman mode to FREEZE mode, reduce 10 points of his score and set its icon to be frozen*/
+	public void freeze() {
+		if(this.mode != Mode.FREEZE) {
+			this.mode = Mode.FREEZE;
+			reduceScore(10);
+			setIcon(this.freezeIcon);
+		}
+	}
+
 	public int getScore() {
 		return this.score;
 	}
+	
 	public int getPineAppleNum() {
 		return this.pineAppleNum;
 	}
@@ -169,48 +232,10 @@ public abstract class Pacman implements Visited, ActionListener{
 	public int getStrawBerryNum() {
 		return this.strawBerryNum;
 	}
-	public void reduceScore(int reduce) {
-		this.score = this.score - reduce;
-	}
-	public void draw(Board board, Graphics g) {
-		ImageIcon im = getCurrentIcon();
-		/*if(!isFull) {
-			im = getCurrentIcon();
-			this.isFull = true; 
-		}
-		else {
-			im = this.fullPac;
-			this.isFull = false;
-		}*/
-		g.setColor(Color.BLACK);
-		g.fillRect(this.lastPosition.getY()*20, this.lastPosition.getX()*20, 20, 20);
-		Image offIm = board.createImage(20 , 20);
-		Graphics offGr = offIm.getGraphics();	
-		offGr.drawImage(im.getImage(), 0,0, board);
-		g.drawImage(offIm,this.currentPosition.getY() * 20, this.currentPosition.getX()*20, board);
-	}
-	public void dead() {
-		this.mode = Mode.DEAD;
-
-	}
-	public void freeze() {
-		this.mode = Mode.FREEZE;
-		if(this.freezeTicks == 0)
-			reduceScore(10);
-		if(this.direction.equals("l"))
-			this.currentIcon = this.freezeIcon[0];
-		if(this.direction.equals("r"))
-			this.currentIcon = this.freezeIcon[1];
-		if(this.direction.equals("u"))
-			this.currentIcon = this.freezeIcon[2];
-		else
-			this.currentIcon = this.freezeIcon[3];
-
-	}
-
+	
 	public Mode getMode() {
 		return this.mode;
 	}
-
+	
 }
 

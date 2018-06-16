@@ -33,7 +33,8 @@ import Tiles.GateTile;
 import Tiles.RoadTile;
 import Tiles.WallTile;
 
-public class Board extends JPanel implements ActionListener, KeyListener { //to do what if pressed button before start game
+/*The class defines the board on it the game is happening*/  
+public class Board extends JPanel implements ActionListener, KeyListener { 
 	private BoardTile [][] boardTiles;
 	private String [][] boardTilesS; 
 	private PacTimer timer;
@@ -50,67 +51,70 @@ public class Board extends JPanel implements ActionListener, KeyListener { //to 
 	private Vector<Food> fruitsLeft;
 	private Vector<BoardTile> fruitsTiles; 
 	private int numTicksOfGame;
-	private int numOfLives ;
 
 	public Board(int level ,PacTimer timer) {
 		initializeBoardPanel(level, timer);
-		
+
 	}
 	public void initializeBoardPanel(int level, PacTimer timer) {
 		this.level = level; 
 		this.setBackground(Color.BLACK);
-		this.start = false; 
+		this.start = false; //the game isn't start yet. waiting for press on space 
 		this.isFruitsOn = false; 
-		this.numOfLives = 3;
 		this.fruitsTiles = new Vector<>();
 		this.timer =timer;
 		timer.addLisenerArg(this);
-		initializeFruits();
+
 		initializeBoardTilesS();
 		initializeBoard();
 		initializePacman();
 		inisializeNeighborsMat();
 		InisializeGhosts();
+		initializeFruits();
+
 		this.numTicksOfGame = 1;
 		this.setFocusable(true);
 		this.addKeyListener(this);
 		this.setPreferredSize(new Dimension(640,640));
 		this.setVisible(true);
 	}
+
+	/*initializes Pacman according to the level and add it to action listener list of timer*/
+	public void initializePacman() {
+		if(level == 1) 
+			this.pacman = new NicePacman(new Pair(14,16),this.boardTiles, this.boardTilesS, this.timer); 
+		if(level == 2)
+			this.pacman = new DefendedPacman(new Pair(14,16),this.boardTiles, this.boardTilesS, this.timer);
+		if(level == 3)
+			this.pacman = new AngryPacman(new Pair(14,16),this.boardTiles, this.boardTilesS, this.timer);
+		this.timer.addLisenerArg(this.pacman);
+	}
+	/*return Pacman */
 	public Pacman getPacman(){
 		return this.pacman;
 	}
-	private void initializePacman() {
-		if(level == 1) 
-			this.pacman = new NicePacman(new Pair(14,16),this.boardTiles, this.boardTilesS); 
-		if(level == 2)
-			this.pacman = new DefendedPacman(new Pair(14,16),this.boardTiles, this.boardTilesS);
-		if(level == 3)
-			this.pacman = new AngryPacman(new Pair(14,16),this.boardTiles, this.boardTilesS);
-	}
 
-	private void InisializeGhosts() {
-
-		this.greenGhost = new GreenGhost(this.boardTiles, new Pair(16,15), this.pacman, neighbors);
-		this.pinkGhost = new PinkGhost(this.boardTiles, new Pair(16,17),this.pacman, neighbors);
-		this.yellowGhost = new YellowGhost(this.boardTiles, new Pair(16,16),this.pacman, neighbors);
+	public void InisializeGhosts() {
+		this.greenGhost = new GreenGhost(this.boardTiles, new Pair(16,15), this.pacman, neighbors, this.timer);
+		this.pinkGhost = new PinkGhost(this.boardTiles, new Pair(16,17),this.pacman, neighbors, this.timer);
+		this.yellowGhost = new YellowGhost(this.boardTiles, new Pair(16,16),this.pacman, neighbors, this.timer);
 		if(level == 1 ) {
-			this.redGhost = new RedGhost(this.boardTiles, new Pair(16,13),this.pacman, neighbors);
-			this.whiteGhost = new WhiteGhost(this.boardTiles, new Pair(16,14),this.pacman, neighbors);
+			this.redGhost = new RedGhost(this.boardTiles, new Pair(16,13),this.pacman, neighbors, this.timer);
+			this.whiteGhost = new WhiteGhost(this.boardTiles, new Pair(16,14),this.pacman, neighbors, this.timer);
 			timer.addLisenerArg(greenGhost);
 			timer.addLisenerArg(pinkGhost);
 			timer.addLisenerArg(whiteGhost);
 		}
 		if(level == 2 ) {
-			this.redGhost = new RedGhost(this.boardTiles, new Pair(16,13),this.pacman, neighbors);
-			this.whiteGhost = new WhiteGhost(this.boardTiles, new Pair(16,14),this.pacman, neighbors);
+			this.redGhost = new RedGhost(this.boardTiles, new Pair(16,13),this.pacman, neighbors,this.timer);
+			this.whiteGhost = new WhiteGhost(this.boardTiles, new Pair(16,14),this.pacman, neighbors,this.timer);
 			timer.addLisenerArg(whiteGhost);
 			timer.addLisenerArg(greenGhost);
 			timer.addLisenerArg(yellowGhost);
 		}
 		if(level == 3 ) {
-			this.redGhost = new RedGhost(this.boardTiles, new Pair(16,14),this.pacman, neighbors);
-			this.whiteGhost = new WhiteGhost(this.boardTiles, new Pair(16,13),this.pacman, neighbors);
+			this.redGhost = new RedGhost(this.boardTiles, new Pair(16,14),this.pacman, neighbors,this.timer);
+			this.whiteGhost = new WhiteGhost(this.boardTiles, new Pair(16,13),this.pacman, neighbors,this.timer);
 			timer.addLisenerArg(greenGhost);
 			timer.addLisenerArg(redGhost);
 			timer.addLisenerArg(yellowGhost);
@@ -226,11 +230,8 @@ public class Board extends JPanel implements ActionListener, KeyListener { //to 
 		return this.pacman.getScore();
 	}
 	public boolean checkIfWinLevel() {
-		if(this.pacman.getScore() > 500)
-			return true;
-		else
-			return false;
-		/*for(int i=0; i <this.boardTiles.length; i = i+1) {
+
+		for(int i=0; i <this.boardTiles.length; i = i+1) {
 			for(int j=0; j <this.boardTiles.length; j = j+1) {
 				BoardTile b = boardTiles[i][j];
 				if(!this.fruitsTiles.contains(b) & b.getFood()!=null) {
@@ -238,45 +239,38 @@ public class Board extends JPanel implements ActionListener, KeyListener { //to 
 				}
 			}
 		}
-		return true;*/
+		return true;
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		this.requestFocusInWindow();
 		int timerSpeed = this.timer.getSpeed();
-		if(this.pacman.getMode().equals(Mode.DEAD)) {
-			this.numOfLives = this.numOfLives - 1;
-			if(this.numOfLives > 0) {
-				repaint();
-			}
+		if(e.getSource().equals(this.timer.getGameTimer())) {
+			if(this.numTicksOfGame <12)
+				checkStart();
+			this.numTicksOfGame =this.numTicksOfGame + 1;
 		}
-		else {
-			if(e.getSource().equals(this.timer.getGameTimer())) {
-				if(this.numTicksOfGame <12)
-					checkStart();
-				this.numTicksOfGame =this.numTicksOfGame + 1;
-			}
-			//fruits
-			if(this.numTicksOfGame > 10 * timerSpeed) {
-				if(this.numTicksOfGame % 6*timerSpeed == 0 ) {
-					if(!this.fruitsLeft.isEmpty()) {
-						drawFruits();
-						this.isFruitsOn = true;
-					}
-					else
-						this.isFruitsOn = false;
+		//fruits
+		if(this.numTicksOfGame > 10 * timerSpeed) {
+			if(numTicksOfGame%timerSpeed == 0 & this.numTicksOfGame/timerSpeed  % 6== 0 ) {
+				if(!this.fruitsLeft.isEmpty()) {
+					drawFruits();
+					this.isFruitsOn = true;
 				}
-				if(numTicksOfGame % 6*timerSpeed > 2*timerSpeed & numTicksOfGame% 6*timerSpeed <5*timerSpeed) { // dim
-					isFruitsOn = !isFruitsOn; 
-				}
-				if(numTicksOfGame % 6*timerSpeed == 5*timerSpeed) { //disappear
+				else
 					this.isFruitsOn = false;
-				}
 			}
-			checkIfPacEat();
-			repaint();
+			if(numTicksOfGame%timerSpeed == 0 & numTicksOfGame/timerSpeed % 6 > 2 & numTicksOfGame/timerSpeed% 6 <5) { // dim
+				isFruitsOn = !isFruitsOn; 
+			}
+			if(numTicksOfGame%timerSpeed == 0 &numTicksOfGame/timerSpeed % 6 == 5) { //disappear
+				this.isFruitsOn = false;
+			}
 		}
+		checkIfPacEat();
+		repaint();
 	}
+
 	private void checkStart() {
 		if(level == 1 ) {
 			if(this.numTicksOfGame == 7) 
@@ -318,7 +312,7 @@ public class Board extends JPanel implements ActionListener, KeyListener { //to 
 		}
 	}
 
-	private void revivePacman() {		
+	public void revivePacman() {		
 		this.pacman.initializePacman(new Pair(14,16));
 		if(level == 1) {
 			this.greenGhost.inisializeData(new Pair(16,15), new Pair(0,0), "u");
@@ -338,9 +332,6 @@ public class Board extends JPanel implements ActionListener, KeyListener { //to 
 		this.numTicksOfGame = 1;
 	}
 
-	public int getNumLives() {
-		return this.numOfLives;
-	}
 	public void start() {
 		this.start = true;
 	}
@@ -354,7 +345,7 @@ public class Board extends JPanel implements ActionListener, KeyListener { //to 
 		pacTile.setFood(null);
 		//if it was a fruit
 		if(this.fruitsTiles.remove(pacTile)) {
-		this.fruitsLeft.remove(food);
+			this.fruitsLeft.remove(food);
 		}
 	}
 
@@ -364,7 +355,7 @@ public class Board extends JPanel implements ActionListener, KeyListener { //to 
 		this.pacman.manageMovement(e);
 		checkIfPacEat();
 		repaint();
-		
+
 	}
 
 
@@ -412,17 +403,17 @@ public class Board extends JPanel implements ActionListener, KeyListener { //to 
 			}
 		}
 		if(!start) {
-			drowstartGame(g);
+			drowGetReady(g);
 		}
 	}
 
 
-	private void drowstartGame(Graphics g) {
-		 g.setFont(new Font("TimesRoman", Font.PLAIN, 20));    
-		    g.setColor(Color.red);
-		g.drawString("Start Game", 270, 380);
+	private void drowGetReady(Graphics g) {
+		g.setFont(new Font("TimesRoman", Font.PLAIN, 20));    
+		g.setColor(Color.red);
+		g.drawString("Get Ready", 270, 380);
 	}
-	
+
 
 
 	public BoardTile getBoardTile(Pair place) {

@@ -6,6 +6,7 @@ import java.util.Vector;
 
 import javax.swing.ImageIcon;
 
+import GamePack.PacTimer;
 import GamePack.Pair;
 import Pacmen.AngryPacman;
 import Pacmen.DefendedPacman;
@@ -16,8 +17,8 @@ import Tiles.BoardTile;
 public class WhiteGhost extends Ghost{
 private boolean canHit;
 private Image cantHitIm;
-	public WhiteGhost(BoardTile[][]board, Pair inisialPositionTile,Pacman pacman, Vector<String> [][] neighbors) {
-		super(board, inisialPositionTile ,pacman, neighbors , "white" ,new Pair(1,1) , "u");
+	public WhiteGhost(BoardTile[][]board, Pair inisialPositionTile,Pacman pacman, Vector<String> [][] neighbors, PacTimer timer) {
+		super(board, inisialPositionTile ,pacman, neighbors , "white" ,new Pair(1,1) , "u", timer);
 		this.canHit = true;
 		this.cantHitIm = new ImageIcon("pictures/figures/scared.png").getImage();
 		

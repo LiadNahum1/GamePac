@@ -1,5 +1,4 @@
 package Pacmen;
-
 import Ghosts.Visitor;
 
 public interface Visited {

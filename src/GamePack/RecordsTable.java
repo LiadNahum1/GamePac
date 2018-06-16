@@ -49,7 +49,7 @@ public class RecordsTable extends JFrame implements ActionListener {
 		super("Records Table");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.end = end; 
-		
+
 		this.topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,0, 0));	
 		this.returnToMain = new JButton();
 		this.returnToMain.setIcon(new ImageIcon("pictures\\extra\\back.png"));
@@ -109,7 +109,8 @@ public class RecordsTable extends JFrame implements ActionListener {
 
 			else {
 				String content = this.nameT.getText() +","+ this.lastT.getText() + "," +  this.end.getTime()+ 
-						","+ this.end.getScore();
+						","+ this.end.getScore() + ',' + this.end.getPineApples() + "," + this.end.getApples() 
+						+"," + this.end.getStrawBerry();
 				this.records.writeIntoFile(content);
 				this.records.addToTable(content);
 				this.records.sortTable();
@@ -118,7 +119,7 @@ public class RecordsTable extends JFrame implements ActionListener {
 		}
 		
 		if(e.getSource().equals(this.returnToMain)) {
-			this.end.setVisible(true);
+			new MainMenu();
 			this.setVisible(false);
 		}
 

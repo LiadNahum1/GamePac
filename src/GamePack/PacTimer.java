@@ -8,9 +8,8 @@ public class PacTimer  {
 	private Timer gameTimer; // main timer of the game ;
 	private int speed;
 
-	public PacTimer(ActionListener game , ActionListener pacman) {
+	public PacTimer(ActionListener game ) {
 		this.gameTimer = new Timer(1000, game);
-		this.gameTimer.addActionListener(pacman);
 		this.speed = 1;
 	}
 

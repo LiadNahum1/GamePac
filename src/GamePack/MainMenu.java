@@ -5,14 +5,6 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -59,7 +51,7 @@ public class MainMenu extends JFrame implements ActionListener {
 	}
 
 	/*The function gets an image and integer size and resizes the image */
-	public ImageIcon handlePicSize(ImageIcon image, int size) {
+	private ImageIcon handlePicSize(ImageIcon image, int size) {
 		Image imageconvert = image.getImage();  
 		Image newimage = imageconvert.getScaledInstance(size,size,java.awt.Image.SCALE_SMOOTH);   
 		return new ImageIcon(newimage);
@@ -67,7 +59,8 @@ public class MainMenu extends JFrame implements ActionListener {
 	@Override
 	/*If the client presses on the exit button, the function raises a dialog whether he is sure or not.
 	 * If he is, the program closes itself. 
-	 * If the client presses on the start button, the function opens the game Window*/
+	 * If the client presses on the start button, the function opens the game Window in level 1
+	 * If the client presses on the top5 button the Top5 window is open*/
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource().equals(this.exit)) {
 			int result = JOptionPane.showConfirmDialog(new JFrame(), "Are you sure? ", "Dialog",JOptionPane.YES_NO_OPTION);

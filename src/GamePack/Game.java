@@ -9,16 +9,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.Vector;
-
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
-import Food.Food;
 import Pacmen.*;
 /* this is the game class which will show all the details of the game*/
 public class Game extends JFrame implements ActionListener , KeyListener {
@@ -31,7 +27,11 @@ public class Game extends JFrame implements ActionListener , KeyListener {
 	private int numTicksOfTimer;
 	private int numTicksWithoutStop;
 	private int numOfLives;
+	private int score; 
 	private JLabel scors;
+	private int appleNum;
+	private int pineAppleNum;
+	private int strawBerryNum;
 	private JLabel apples;
 	private JLabel pineApples;
 	private JLabel strawBerry;
@@ -64,9 +64,11 @@ public class Game extends JFrame implements ActionListener , KeyListener {
 //Initialize the fields of the game
 	private void inisializeArg() {
 		this.numOfLives = 3;
-		this.timer = new PacTimer(this ,this.pacman);
+		this.score = 0 ; 
+		this.timer = new PacTimer(this);
 		this.board = new Board(level,timer);
 		this.pacman = board.getPacman();
+
 		this.numTicksOfTimer = 1;
 		this.numTicksWithoutStop = 1;
 		this.isStop = true;
@@ -82,15 +84,11 @@ public class Game extends JFrame implements ActionListener , KeyListener {
 	public void keyPressed(KeyEvent e) {
 		this.requestFocus();
 		if(e.getKeyCode() == KeyEvent.VK_SPACE) {
-			stopGame();
+			this.timer.getGameTimer().start();
 			this.board.start();
 		}
 	}
 
-
-	public static void main(String[]args) {
-		new Game(2);
-	}
 
 	private void inisializeBattons() {
 		buttons = new JPanel();
@@ -153,20 +151,30 @@ public class Game extends JFrame implements ActionListener , KeyListener {
 		data.add(pacData);
 		show.add(data);
 	}
+	
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
+		if(this.pacman.getMode().equals(Mode.DEAD)) {
+			this.numOfLives = this.numOfLives -1;
+			if(this.numOfLives > 0) {
+				this.board.revivePacman();
+				this.lifePic[numOfLives].setIcon(new ImageIcon("pictures\\boards\\þþdead.png"));
+			}
+			else {
+				this.timer.stop();
+				endGame();
+			}
+		}
+			
 		if(arg0.getSource().equals(timer.getGameTimer())) {
 			this.pacman.getScore();
-			scors.setText(String.valueOf(this.pacman.getScore())); //update the pacman score display
+			scors.setText(String.valueOf(this.score + this.pacman.getScore())); //update the pacman score display
 			timesShow.setText(String.valueOf(numTicksWithoutStop)); // update the tie display
 			checkforFruits(); 
 			if(numTicksOfTimer % this.timer.getSpeed() == 0) //a real second has passed if 1000 milliseconds past
 				numTicksWithoutStop++;
 			numTicksOfTimer++;
-			if(board.getNumLives()!= this.numOfLives){
-				decresLives();
-			}
 		}
 		if(arg0.getSource().equals(stop)){
 			stopGame();
@@ -183,19 +191,22 @@ public class Game extends JFrame implements ActionListener , KeyListener {
 				this.timer.setSpeed(1);
 			}
 			this.fastForword.setText("speed X" + this.timer.getSpeed());
+			this.requestFocusInWindow();
 		}
 		
-		if(this.board.getNumLives()==0) {
-			endGame();
-		}
 		if(this.board.checkIfWinLevel()) {
-			stopGame();
-			if(this.level == 3) {
+			this.timer.stop();
+			this.level = this.level + 1;
+			this.score = this.score + this.pacman.getScore();
+			this.pineAppleNum = this.pineAppleNum + this.pacman.getPineAppleNum();
+			this.appleNum = this.appleNum + this.pacman.getAppleNum();
+			this.strawBerryNum = this.strawBerryNum + this.pacman.getStrawBerryNum(); 
+			if(this.level > 3) {
 				endGame();
 			}
 			else {
-				this.level = this.level + 1;
 				this.board= new Board(this.level, this.timer);
+				this.pacman = this.board.getPacman();
 				this.getContentPane().remove(board);
 				this.getContentPane().removeAll();
 				this.getContentPane().add(this.board);
@@ -205,26 +216,16 @@ public class Game extends JFrame implements ActionListener , KeyListener {
 	}
 	
 	private void checkforFruits() { //update the number of the pacman eat
-		apples.setText("apples:" + this.pacman.getAppleNum());
-		pineApples.setText("pineApples:" +this.pacman.getPineAppleNum());
-		strawBerry.setText("strawBerry:" + this.pacman.getStrawBerryNum());
+		apples.setText("apples:" + (this.appleNum + this.pacman.getAppleNum()));
+		pineApples.setText("pineApples:" +(this.pineAppleNum + this.pacman.getPineAppleNum()));
+		strawBerry.setText("strawBerry:" + (this.strawBerryNum + this.pacman.getStrawBerryNum()));
 		}
 
 	private void endGame() { // this will update the date
-		new EndGame(this.scors, this.level, this.timesShow );
+		new EndGame(this.score, this.level, this.numTicksWithoutStop, this.pineAppleNum,this.appleNum, this.strawBerryNum);
 		this.setVisible(false);
 
 	}
-
-
-	private void decresLives() { //this will update the display of the life 
-		this.numOfLives--;
-		if(numOfLives > 0)
-			this.lifePic[numOfLives].setIcon(new ImageIcon("pictures\\boards\\þþdead.png"));
-	}
-
-
-
 	private void stopGame() { //this will stop the timer and update the button display
 		if(!isStop) {
 			this.timer.getGameTimer().stop();

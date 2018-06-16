@@ -1,6 +1,4 @@
 package GamePack;
-
-import java.awt.Font;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -8,9 +6,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
@@ -20,8 +15,20 @@ import javax.swing.table.TableRowSorter;
 
 public class Table extends JTable {
 	DefaultTableModel model;
+	@SuppressWarnings("serial")
 	public Table() {
-		this.model = new DefaultTableModel(); 
+		 this.model = new DefaultTableModel() {
+	            @Override
+	            public Class<?> getColumnClass(int column) {
+	                switch (column) {
+	                    case 3:
+	                    	return Integer.class;
+	        
+	                    default:
+	                        return String.class;
+	                }
+	            }
+	        };
 		this.setModel(this.model);
 		creatingTable();
 	}
@@ -32,13 +39,16 @@ public class Table extends JTable {
 		this.model.addColumn("Last Name");
 		this.model.addColumn("Time");
 		this.model.addColumn("Score");
+		this.model.addColumn("PineApple");
+		this.model.addColumn("Apple");
+		this.model.addColumn("StrawBerry");
+
 		this.setFillsViewportHeight(true);
 		this.setEnabled(false);
 	}
 
 	public void fillTable() {
 		try  {
-			
 			String path=System.getProperty("user.dir")+ "/records.txt";
 			File file = new File(path);
 			BufferedReader br = new BufferedReader(new FileReader(file));
@@ -57,10 +67,10 @@ public class Table extends JTable {
 	public void addToTable(String content) {
 		DefaultTableModel model = (DefaultTableModel) this.getModel();
 		String []data = content.split(",");
-		model.addRow(new Object[] {data[0], data[1], data[2], data[3]});
+		model.addRow(new Object[] {data[0], data[1], data[2], new Integer(data[3]), data[4],data[5], data[6]});
+
 	}
 	public void sortTable() {
-		
 		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(this.getModel());
 		this.setRowSorter(sorter);
 		List<RowSorter.SortKey> sortKeys = new ArrayList<>(2);
