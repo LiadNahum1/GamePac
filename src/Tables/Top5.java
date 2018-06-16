@@ -1,4 +1,4 @@
-package GamePack;
+package Tables;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 
+import GamePack.MainMenu;
 
 public class Top5 extends JFrame implements ActionListener{
 	private Table top;
@@ -63,7 +64,6 @@ public class Top5 extends JFrame implements ActionListener{
 					Integer.parseInt(modelAll.getValueAt(i, 3).toString()), modelAll.getValueAt(i, 4),modelAll.getValueAt(i, 5),modelAll.getValueAt(i, 6)});
 		}
 		this.top.sortTable();
-		
 	}
 
 	@Override

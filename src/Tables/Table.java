@@ -1,4 +1,4 @@
-package GamePack;
+package Tables;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -33,6 +33,7 @@ public class Table extends JTable {
 		creatingTable();
 	}
 
+	/*adding columns to table*/
 	public void creatingTable() {
 		//add columns
 		this.model.addColumn("First Name");
@@ -47,6 +48,7 @@ public class Table extends JTable {
 		this.setEnabled(false);
 	}
 
+	/*fill table with data from records.txt file*/
 	public void fillTable() {
 		try  {
 			String path=System.getProperty("user.dir")+ "/records.txt";
@@ -64,12 +66,14 @@ public class Table extends JTable {
 		}
 		
 	}
+	/*add row to table which inclueds content data*/
 	public void addToTable(String content) {
 		DefaultTableModel model = (DefaultTableModel) this.getModel();
 		String []data = content.split(",");
 		model.addRow(new Object[] {data[0], data[1], data[2], new Integer(data[3]), data[4],data[5], data[6]});
 
 	}
+	/*sorting table by score*/
 	public void sortTable() {
 		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(this.getModel());
 		this.setRowSorter(sorter);
@@ -78,6 +82,7 @@ public class Table extends JTable {
 		sorter.setSortKeys(sortKeys);
 	}
 
+	
 	public void writeIntoFile(String content) {
 		try  {
 			String path=System.getProperty("user.dir")+ "/records.txt";

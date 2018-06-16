@@ -11,6 +11,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
+import Tables.Top5;
+
 //this class will be the first menu when the player open the game
 public class MainMenu extends JFrame implements ActionListener {
 	private JButton start;

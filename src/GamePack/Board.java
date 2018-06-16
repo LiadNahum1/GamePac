@@ -10,9 +10,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Random;
 import java.util.Vector;
-
 import javax.swing.JPanel;
-
 import Food.Apple;
 import Food.Energy;
 import Food.Food;
@@ -33,7 +31,7 @@ import Tiles.GateTile;
 import Tiles.RoadTile;
 import Tiles.WallTile;
 
-/*The class defines the board on it the game is happening*/  
+/*The class defines the board of the game - on it will be painted the maze and the figures - pacman, ghosts and fruits*/  
 public class Board extends JPanel implements ActionListener, KeyListener { 
 	private BoardTile [][] boardTiles;
 	private String [][] boardTilesS; 
@@ -68,7 +66,7 @@ public class Board extends JPanel implements ActionListener, KeyListener {
 		initializeBoardTilesS();
 		initializeBoard();
 		initializePacman();
-		inisializeNeighborsMat();
+		initializeNeighborsMat();
 		InisializeGhosts();
 		initializeFruits();
 
@@ -94,6 +92,7 @@ public class Board extends JPanel implements ActionListener, KeyListener {
 		return this.pacman;
 	}
 
+	/*initializes ghosts and add them to action listener list of timer according to the level */
 	public void InisializeGhosts() {
 		this.greenGhost = new GreenGhost(this.boardTiles, new Pair(16,15), this.pacman, neighbors, this.timer);
 		this.pinkGhost = new PinkGhost(this.boardTiles, new Pair(16,17),this.pacman, neighbors, this.timer);
@@ -120,6 +119,7 @@ public class Board extends JPanel implements ActionListener, KeyListener {
 			timer.addLisenerArg(yellowGhost);
 		}	
 	}
+	/*initializes fruits vector according to the level */
 	public void initializeFruits() {
 		this.fruitsLeft = new Vector<>();
 		if(this.level == 1) {
@@ -152,7 +152,7 @@ public class Board extends JPanel implements ActionListener, KeyListener {
 		}
 	}
 	@SuppressWarnings("unchecked")
-	private void inisializeNeighborsMat() {
+	private void initializeNeighborsMat() {
 		neighbors=(Vector<String>[][]) new Vector[32][32];
 		for(int i=0;i<32;i++) {
 			for(int j=0;j<32;j++) {
@@ -180,7 +180,9 @@ public class Board extends JPanel implements ActionListener, KeyListener {
 		}
 
 	}
-	private void initializeBoard() {
+	
+	/*initialize BoardTile matrix according to BoardTileS matrix*/
+	public void initializeBoard() {
 		this.boardTiles = new BoardTile [32][32];  
 		for(int i=0;i<32;i++){
 			for(int j=0;j<32;j++){
@@ -203,34 +205,10 @@ public class Board extends JPanel implements ActionListener, KeyListener {
 			boardTiles [x][y] = new RoadTile(x,y, true, new Energy());
 		}
 	}
-	public void drawFruits() {
-		Random rand = new Random();
-		int x =0;
-		int y=0;
-		BoardTile b = this.boardTiles[x][y];
-		for(int i=0; i< this.fruitsTiles.size(); i = i+1) {
-			this.fruitsTiles.get(i).setFood(null);
-		}
-		this.fruitsTiles.clear();
-		for(int i=0; i< this.fruitsLeft.size(); i = i+1) {
-			while(b.getIsSomethingOn()) {
-				x = rand.nextInt(32);
-				y = rand.nextInt(32);
-				b = this.boardTiles[x][y];
-			}
-			if(!b.getIsSomethingOn()) {
-				b.setFood(this.fruitsLeft.get(i));
-				this.fruitsTiles.add(b);
-			} 
-		}
-	}
+	
 
-
-	public int getScoreOfPlayer() {
-		return this.pacman.getScore();
-	}
+	/*The function checks if Pacman ate all pills on screen. If he does return true, otherwise false*/
 	public boolean checkIfWinLevel() {
-
 		for(int i=0; i <this.boardTiles.length; i = i+1) {
 			for(int j=0; j <this.boardTiles.length; j = j+1) {
 				BoardTile b = boardTiles[i][j];
@@ -241,7 +219,13 @@ public class Board extends JPanel implements ActionListener, KeyListener {
 		}
 		return true;
 	}
+	
 	@Override
+	/*The function is responsible for:
+	 * 1. starting the movement of the ghosts
+	 * 2. drawing the fruits, dim them for 3 seconds and make them disappear after 5 seconds
+	 * 3. check if Pacman eat something
+	 * */
 	public void actionPerformed(ActionEvent e) {
 		this.requestFocusInWindow();
 		int timerSpeed = this.timer.getSpeed();
@@ -312,6 +296,8 @@ public class Board extends JPanel implements ActionListener, KeyListener {
 		}
 	}
 
+	/*The function is called after Pacman died but didn't lose all his lives
+	 * The function returns all figures to their initial position*/
 	public void revivePacman() {		
 		this.pacman.initializePacman(new Pair(14,16));
 		if(level == 1) {
@@ -332,14 +318,16 @@ public class Board extends JPanel implements ActionListener, KeyListener {
 		this.numTicksOfGame = 1;
 	}
 
+	/*The function is called when there is a press on space and then the game starts*/
 	public void start() {
 		this.start = true;
 	}
-	private void checkIfPacEat() {
+	/*The function purpose is to check if Pacman ate a fruit. If he does, the function delete the food of the Food vector
+	 * and of the BoardTile that he was on*/ 
+	public void checkIfPacEat() {
 		int i = this.pacman.getCurrentPosition().getX();
 		int j = this.pacman.getCurrentPosition().getY();
 
-		//position of pacman in matrix is for sure a RoadTile
 		BoardTile pacTile = this.boardTiles[i][j];
 		Food food = pacTile.getFood();
 		pacTile.setFood(null);
@@ -348,30 +336,15 @@ public class Board extends JPanel implements ActionListener, KeyListener {
 			this.fruitsLeft.remove(food);
 		}
 	}
-
-
 	@Override
 	public void keyPressed(KeyEvent e) {
 		this.pacman.manageMovement(e);
 		checkIfPacEat();
 		repaint();
-
 	}
 
-
-	@Override
-	public void keyReleased(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-	@Override
-	public void keyTyped(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
+	/*The function is responsible for painting the board: all its tiles and all the figures: pacman, ghosts and food*/
 	public void paintComponent(Graphics g){	
-
 		//draw board
 		g.fillRect(0, 0, 640, 640);
 		Image offIm = this.createImage(640 , 640);
@@ -382,43 +355,68 @@ public class Board extends JPanel implements ActionListener, KeyListener {
 			}
 		}
 		g.drawImage(offIm, 0, 0, this);
+		
+		//draw ghost 
 		this.greenGhost.draw(this, g);
 		this.whiteGhost.draw(this, g);		
 		this.pinkGhost.draw(this, g);
 		this.redGhost.draw(this, g);		
 		this.yellowGhost.draw(this, g);
-		if(this.pacman.getMode().equals(Mode.DEAD)) {
-			revivePacman();
-		}
+		
+		
 		//pacman draw
 		this.pacman.draw(this, g);
-		//fruits draw
+		
+		//draw fruits
 		for(int i=0; i<this.fruitsTiles.size(); i = i+1) {
 			if(!isFruitsOn) {
 				g.drawImage(RoadTile.road.getImage(), this.fruitsTiles.get(i).getY()*20, this.fruitsTiles.get(i).getX()*20, this);
-
 			}
 			else {
 				g.drawImage(this.fruitsTiles.get(i).getImage(), this.fruitsTiles.get(i).getY()*20, this.fruitsTiles.get(i).getX()*20, this);
 			}
 		}
+		
 		if(!start) {
-			drowGetReady(g);
+			drawGetReady(g);
 		}
 	}
 
-
-	private void drowGetReady(Graphics g) {
+	/*The function finds an empty RoadTiles for putting fruits on them by using random Object*/
+	public void drawFruits() {
+		Random rand = new Random();
+		int x =0;
+		int y=0;
+		BoardTile b = this.boardTiles[x][y];
+		for(int i=0; i< this.fruitsTiles.size(); i = i+1) {
+			this.fruitsTiles.get(i).setFood(null);
+		}
+		this.fruitsTiles.clear();
+		for(int i=0; i< this.fruitsLeft.size(); i = i+1) {
+			while(b.getIsSomethingOn()) {
+				x = rand.nextInt(32);
+				y = rand.nextInt(32);
+				b = this.boardTiles[x][y];
+			}
+			if(!b.getIsSomethingOn()) {
+				b.setFood(this.fruitsLeft.get(i));
+				this.fruitsTiles.add(b);
+			} 
+		}
+	}
+	
+	/*draw "Get Ready" string in the middle of the board*/
+	private void drawGetReady(Graphics g) {
 		g.setFont(new Font("TimesRoman", Font.PLAIN, 20));    
 		g.setColor(Color.red);
 		g.drawString("Get Ready", 270, 380);
 	}
 
-
-
 	public BoardTile getBoardTile(Pair place) {
 		return this.boardTiles[place.getX()][place.getY()];
 	}
+	
+	/*Build a string matrix according to the level that defines the board of the game*/
 	public void initializeBoardTilesS() {
 		if(level == 1)
 			this.boardTilesS = new String[][] 
@@ -520,6 +518,17 @@ public class Board extends JPanel implements ActionListener, KeyListener {
 					{"w", "d","w","w","w","w","d","w","w","w","w","w","w","w","w","d","w","d","w","w","w","w","w","w","d","w","w","w","w","w","d","w"},
 					{"w", "e","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","d","e","w"},
 					{"w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w","w"}};
+
+	}
+
+	@Override
+	public void keyReleased(KeyEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+	@Override
+	public void keyTyped(KeyEvent arg0) {
+		// TODO Auto-generated method stub
 
 	}
 

@@ -11,11 +11,10 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
+import Tables.RecordsTable;
+
 @SuppressWarnings("serial")
-/*The class defines the End Game Window. 
- * Show the client his accomplishment: the amount of time and steps that took him to solve the puzzle.
- * And suggests the client two options: play again or exit.
- */
+/*The class defines the End Game Window. */
 public class EndGame extends JFrame implements ActionListener {
 	private JLabel scoreL; 
 	private JLabel timeL;
@@ -96,13 +95,6 @@ public class EndGame extends JFrame implements ActionListener {
 		this.setVisible(true);
 	}
 	
-	/*The function gets an image and integer size and resizes the image */
-	public ImageIcon handlePicSize(ImageIcon image, int size) {
-		Image imageconvert = image.getImage();  
-		Image newimage = imageconvert.getScaledInstance(size,size,  java.awt.Image.SCALE_SMOOTH);   
-		return new ImageIcon(newimage);
-	}
-
 	public int getScore() {
 		return this.score;
 	}

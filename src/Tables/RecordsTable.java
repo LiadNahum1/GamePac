@@ -1,19 +1,10 @@
-package GamePack;
-
+package Tables;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -22,27 +13,21 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.RowSorter;
-import javax.swing.SortOrder;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
+import GamePack.EndGame;
+import GamePack.MainMenu;
 
-
+/*A frame of the records*/
 public class RecordsTable extends JFrame implements ActionListener {
 	private JPanel topPanel; 
 	private JPanel tabelPanel;
 	private JPanel restPanel;
 	private Table records;
 	private JLabel lblHeading; 
-	private JScrollPane scrollPane;
 	private JButton enrollB;
 	private JTextField nameT;
 	private JTextField lastT;
 	private JButton returnToMain; 
-	private Board board;
 	private EndGame end; 
 
 	public RecordsTable (EndGame end) {
@@ -61,7 +46,7 @@ public class RecordsTable extends JFrame implements ActionListener {
 		this.tabelPanel.setLayout(new BorderLayout());
 		this.records = new Table(); 
 		this.records.fillTable();
-		this.scrollPane = new JScrollPane(this.records);
+		JScrollPane scrollPane = new JScrollPane(this.records);
 		this.lblHeading = new JLabel("RECORDS");
 		this.lblHeading.setFont(new Font(Font.DIALOG_INPUT,  Font.BOLD, 40));
 		this.tabelPanel.add(scrollPane, BorderLayout.CENTER);
@@ -84,7 +69,8 @@ public class RecordsTable extends JFrame implements ActionListener {
 
 	}
 
-	private void enrollTabel() {
+	/*Open text boxes for enroll the records table*/
+	public void enrollTabel() {
 		this.nameT = new JTextField(20);
 		this.lastT = new JTextField(20);
 		this.enrollB = new JButton("Add");
@@ -97,10 +83,9 @@ public class RecordsTable extends JFrame implements ActionListener {
 		this.restPanel.add(lastT);
 		this.restPanel.add(enrollB);
 	}
-
-	
 		
 	@Override
+	/*If player press on enroll button, write his details into the records table*/
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource().equals(this.enrollB)) {
 			if(this.nameT.getText().equals("") | this.lastT.getText().equals("")) {
