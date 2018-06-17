@@ -34,7 +34,11 @@ public class YellowGhost extends Ghost{
 		this.freeze = new ImageIcon("pictures/figures/freeze.png").getImage();
 
 	}
-
+	@Override
+	public void inisializeData( Pair a, Pair b, String color) {
+		super.inisializeData(a, b, color);
+		this.inAttack = false;
+	}
 	@Override
 	public void visit(NicePacman pacman) {
 

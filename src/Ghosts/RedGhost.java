@@ -30,7 +30,12 @@ public class RedGhost extends Ghost {
 		this.prevTileAnderAttack = new Pair(0,0);
 		tileAnderAttack = new Pair(0,0);
 	}
-
+	@Override
+	public void inisializeData( Pair a, Pair b, String color) {
+		super.inisializeData(a, b, color);
+		this.inAttack = false;
+	}
+	
 	@Override
 	public void visit(NicePacman pacman) {
 		// TODO Auto-generated method stub
