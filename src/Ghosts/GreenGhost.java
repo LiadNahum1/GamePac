@@ -12,7 +12,7 @@ import Pacmen.DefendedPacman;
 import Pacmen.NicePacman;
 import Pacmen.Pacman;
 import Tiles.BoardTile;
-
+//this ghost is the most simple one it  chase the pacman and try to kill him
 public class GreenGhost extends Ghost {
 	public GreenGhost( BoardTile[][]board, Pair inisialPositionTile, Pacman pacman,Vector<String>[][] neighbors, PacTimer timer) {
 		super(board, inisialPositionTile , pacman, neighbors,"green",new Pair(1,1) ,"u", timer);

@@ -12,7 +12,7 @@ public class PacTimer  {
 		this.speed = 1;
 	}
 
-	
+	//this function will get an Action Listener and sign in to this timer
 	public void addLisenerArg(ActionListener arg) 
 	{
 	this.gameTimer.addActionListener(arg);
@@ -28,13 +28,17 @@ public class PacTimer  {
 		this.speed = speed;
 		updateGameSpeed();
 	}
+	/*this function will update the game speed
+	*by changing the timer delay so that everything will move faster*/
 	private void updateGameSpeed() {
 		double newDely = (1/(double)speed)*1000;
 		this.gameTimer.setDelay((int)newDely);
 	}
+	//this function will stop the timer 
 	public void stop() {
 		this.gameTimer.stop();
 	}
 	
 
 }
+

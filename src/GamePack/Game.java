@@ -37,7 +37,7 @@ public class Game extends JFrame implements ActionListener , KeyListener {
 	private JLabel strawBerry;
 	private JLabel timesShow;
 	private JButton stop;
-	private JButton fastForword;
+	private JButton fastForward;
 	private JButton exit;
 	private JPanel show;
 	private JPanel buttons;
@@ -102,10 +102,10 @@ public class Game extends JFrame implements ActionListener , KeyListener {
 		stop.setFont(new Font("Serif", Font.BOLD, 30));
 		stop.addActionListener(this);
 		buttons.add(stop);
-		this.fastForword = new JButton("speed X1");
-		fastForword.setFont(new Font("Serif", Font.BOLD, 30));
-		fastForword.addActionListener(this);
-		buttons.add(fastForword);
+		this.fastForward = new JButton("speed X1");
+		fastForward.setFont(new Font("Serif", Font.BOLD, 30));
+		fastForward.addActionListener(this);
+		buttons.add(fastForward);
 		show.add(buttons);
 	}
 
@@ -176,21 +176,21 @@ public class Game extends JFrame implements ActionListener , KeyListener {
 				numTicksWithoutStop++;
 			numTicksOfTimer++;
 		}
-		if(arg0.getSource().equals(stop)){
+		if(arg0.getSource().equals(stop)){//stop the game
 			stopGame();
 		}
 
-		if(arg0.getSource().equals(exit)){
+		if(arg0.getSource().equals(exit)){//exit from the game
 			this.setVisible(false);
 			new MainMenu();
 		}
-		if(arg0.getSource().equals(fastForword)){
-			if(this.timer.getSpeed() < 16 )
+		if(arg0.getSource().equals(fastForward)){//fast forward up to 8 times faster
+			if(this.timer.getSpeed() < 8 )
 				this.timer.setSpeed(this.timer.getSpeed()*2);
 			else {
 				this.timer.setSpeed(1);
 			}
-			this.fastForword.setText("speed X" + this.timer.getSpeed());
+			this.fastForward.setText("speed X" + this.timer.getSpeed());
 			this.requestFocusInWindow();
 		}
 		

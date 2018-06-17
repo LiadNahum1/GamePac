@@ -21,7 +21,8 @@ import Pacmen.DefendedPacman;
 import Pacmen.NicePacman;
 import Pacmen.Pacman;
 import Tiles.BoardTile;
-
+/* ghost is a monster that try to prevent pacman from eating the food on the board
+ * it has pictures for each direction that it can move and functions that handles her behavior over the game*/
 public abstract class Ghost  implements Visitor, ActionListener {
 	protected String curPos;
 	protected Vector<String> [][] neighbors;
@@ -110,6 +111,7 @@ public abstract class Ghost  implements Visitor, ActionListener {
 		}
 		return nextTile;
 	}
+	//this will find the best move to go next
 	private String findMoveDir() {
 		@SuppressWarnings("unchecked")
 		Vector <String> posDirs =(Vector<String>) neighbors[this.boardTileIn.getX()][this.boardTileIn.getY()].clone();

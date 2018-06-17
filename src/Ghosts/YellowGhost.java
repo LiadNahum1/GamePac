@@ -15,7 +15,8 @@ import Pacmen.DefendedPacman;
 import Pacmen.NicePacman;
 import Pacmen.Pacman;
 import Tiles.BoardTile;
-
+/*this ghost will attack the pacman by launching  a water ball on him 
+ * that will brack when hiiting a wall*/
 public class YellowGhost extends Ghost{
 	private  Pair tileAnderAttack;
 	private Pair prevTileAnderAttack;

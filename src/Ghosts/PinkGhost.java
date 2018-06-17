@@ -15,7 +15,7 @@ import Pacmen.DefendedPacman;
 import Pacmen.NicePacman;
 import Pacmen.Pacman;
 import Tiles.BoardTile;
-
+//this ghost will attack the pacman by changing to realy fast speed every 20 timer ticks for 80 timer ticks and has a better chance to reach him
 public class PinkGhost extends Ghost{
 	private Image fastImg;
 

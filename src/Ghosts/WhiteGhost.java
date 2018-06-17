@@ -13,7 +13,7 @@ import Pacmen.DefendedPacman;
 import Pacmen.NicePacman;
 import Pacmen.Pacman;
 import Tiles.BoardTile;
-
+/* this ghost will move to pacman location every 20 timer ticks */
 public class WhiteGhost extends Ghost{
 private boolean canHit;
 private Image cantHitIm;

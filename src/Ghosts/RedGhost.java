@@ -14,7 +14,8 @@ import Pacmen.DefendedPacman;
 import Pacmen.NicePacman;
 import Pacmen.Pacman;
 import Tiles.BoardTile;
-
+/*this ghost can attack with a fire ball that goes 
+ * in one diraction and can go threw walls*/
 public class RedGhost extends Ghost {
 	private  Pair tileAnderAttack;
 	private Pair prevTileAnderAttack;
@@ -61,7 +62,7 @@ public class RedGhost extends Ghost {
 		}
 	}
 
-
+//this will launch and move attacks
 	public void advanceAttack() {
 		int yAxsis;
 		int xAxsis;
