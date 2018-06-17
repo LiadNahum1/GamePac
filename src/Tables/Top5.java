@@ -65,8 +65,10 @@ public class Top5 extends JFrame implements ActionListener{
 					Integer.parseInt(modelAll.getValueAt(i, 3).toString()), modelAll.getValueAt(i, 4),modelAll.getValueAt(i, 5),modelAll.getValueAt(i, 6)});
 		}
 		this.top.sortTable();
+		
 	}
 
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource().equals(this.returnToMain)) {
