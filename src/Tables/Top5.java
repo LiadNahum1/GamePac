@@ -17,11 +17,11 @@ import javax.swing.table.DefaultTableModel;
 
 import GamePack.MainMenu;
 
+/*This JFrame shows the details of the five players that have the best scores*/ 
 public class Top5 extends JFrame implements ActionListener{
 	private Table top;
 	private JButton returnToMain; 
 	private MainMenu main; 
-	private int size = 500; 
 	public Top5(MainMenu main) {
 		/*constructor*/ 
 		super("Top 5");
@@ -54,6 +54,7 @@ public class Top5 extends JFrame implements ActionListener{
 		this.setVisible(true);
 	}
 	
+	/*Build a table that includes all the player that have been signed and take only the best five of them*/ 
 	public void takeTop() {
 		Table allTable = new Table();
 		allTable.fillTable();
