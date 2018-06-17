@@ -18,6 +18,7 @@ import javax.swing.table.DefaultTableModel;
 import GamePack.MainMenu;
 
 /*This JFrame shows the details of the five players that have the best scores*/ 
+@SuppressWarnings("serial")
 public class Top5 extends JFrame implements ActionListener{
 	private Table top;
 	private JButton returnToMain; 

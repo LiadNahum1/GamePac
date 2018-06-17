@@ -13,6 +13,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
+@SuppressWarnings("serial")
 public class Table extends JTable {
 	DefaultTableModel model;
 	@SuppressWarnings("serial")

@@ -14,8 +14,11 @@ import javax.swing.JOptionPane;
 import Tables.Top5;
 
 //this class will be the first menu when the player open the game
+@SuppressWarnings("serial")
 public class MainMenu extends JFrame implements ActionListener {
-	private JButton start;
+	private JButton level1;
+	private JButton level2;
+	private JButton level3;
 	private JButton exit; 
 	private JButton top5; 
 	private final int size = 500;
@@ -26,12 +29,25 @@ public class MainMenu extends JFrame implements ActionListener {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setContentPane(new JLabel(handlePicSize(new ImageIcon("pictures/extra/pacWwlcome.png"), size)));
 		Container cp = getContentPane();       
-		this.start = new JButton("Start Game");
-		this.start.setBackground(Color.RED);
-		this.start.setBounds(180, 250, 150, 35);
-		start.setFont(new Font("Serif", Font.BOLD, 20));
-		this.start.addActionListener(this);	
-		cp.add(this.start);
+		this.level1 = new JButton("level 1");
+		this.level1.setBackground(Color.RED);
+		this.level1.setBounds(100, 250, 100, 35);
+		this.level2 = new JButton("level 2");
+		this.level2.setBackground(Color.RED);
+		this.level2.setBounds(205, 250, 100, 35);
+		this.level3 = new JButton("level 3");
+		this.level3.setBackground(Color.RED);
+		this.level3.setBounds(310, 250, 100, 35);
+		
+		level1.setFont(new Font("Serif", Font.BOLD, 20));
+		this.level1.addActionListener(this);	
+		cp.add(this.level1);
+		level2.setFont(new Font("Serif", Font.BOLD, 20));
+		this.level2.addActionListener(this);	
+		cp.add(this.level2);
+		level3.setFont(new Font("Serif", Font.BOLD, 20));
+		this.level3.addActionListener(this);	
+		cp.add(this.level3);
 
 		this.exit = new JButton("Exit");
 		this.exit.setBackground(Color.RED);
@@ -70,9 +86,17 @@ public class MainMenu extends JFrame implements ActionListener {
 				System.exit(0);
 			}
 		}
-		if(e.getSource().equals(this.start)) {
+		if(e.getSource().equals(this.level1)) {
 			this.setVisible(false);
 			new Game(1);
+		}
+		if(e.getSource().equals(this.level2)) {
+			this.setVisible(false);
+			new Game(2);
+		}
+		if(e.getSource().equals(this.level3)) {
+			this.setVisible(false);
+			new Game(3);
 		}
 		if(e.getSource().equals(this.top5)) {
 			this.setVisible(false);

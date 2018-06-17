@@ -32,6 +32,7 @@ import Tiles.RoadTile;
 import Tiles.WallTile;
 
 /*The class defines the board of the game - on it will be painted the maze and the figures - pacman, ghosts and fruits*/  
+@SuppressWarnings("serial")
 public class Board extends JPanel implements ActionListener, KeyListener { 
 	private BoardTile [][] boardTiles;
 	private String [][] boardTilesS; 

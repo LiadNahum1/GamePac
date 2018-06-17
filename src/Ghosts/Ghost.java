@@ -1,12 +1,10 @@
 
 package Ghosts;
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 

@@ -18,6 +18,7 @@ import GamePack.EndGame;
 import GamePack.MainMenu;
 
 /*A frame of the records*/
+@SuppressWarnings("serial")
 public class RecordsTable extends JFrame implements ActionListener {
 	private JPanel topPanel; 
 	private JPanel tabelPanel;
