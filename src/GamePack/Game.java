@@ -48,7 +48,7 @@ public class Game extends JFrame implements ActionListener , KeyListener {
 		this.setContentPane(new JLabel(new ImageIcon("pictures\\extra\\pacBackground.jpg")));
 		
 		Container cp = this.getContentPane();	
-		this.setPreferredSize(new Dimension(740,740));
+		this.setPreferredSize(new Dimension(740,800));
 		this.setLayout(new BoxLayout(cp, BoxLayout.PAGE_AXIS));
 		this.level = level;
 		inisializeArg();
